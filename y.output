@@ -1,0 +1,295 @@
+Terminals unused in grammar
+
+    START
+    END
+    ASSIGN
+    IF
+    ELSE
+    ELSEIF
+    WHILE
+    FOR
+    STRCPY
+    STRLEN
+    STRCMP
+    NR
+    ADD
+    DIV
+    BIGGER
+    SMALLER
+    MIN
+    MUL
+    EQUAL
+
+
+Grammar
+
+    0 $accept: start_program $end
+
+    1 start_program: declaration_section
+
+    2 declaration_section: declaration_section declaration_content
+    3                    | declaration_content
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+
+    5 list_param: list_param available_types ID ','
+    6           | available_types ID
+
+    7 function_content: %empty
+
+    8 available_types: INT
+    9                | CHAR
+   10                | FLOAT
+   11                | BOOL
+
+
+Terminals, with rules where they appear
+
+    $end (0) 0
+    ',' (44) 5
+    error (256)
+    START (258)
+    END (259)
+    INT (260) 8
+    CHAR (261) 9
+    FLOAT (262) 10
+    ASSIGN (263)
+    BOOL (264) 11
+    IF (265)
+    ELSE (266)
+    ELSEIF (267)
+    WHILE (268)
+    FOR (269)
+    STRCPY (270)
+    STRLEN (271)
+    STRCMP (272)
+    ID (273) 4 5 6
+    NR (274)
+    ADD (275)
+    DIV (276)
+    BIGGER (277)
+    SMALLER (278)
+    MIN (279)
+    MUL (280)
+    EQUAL (281)
+    OPEN_ROUND_BRACKET (282) 4
+    CLOSE_ROUND_BRACKET (283) 4
+    CLOSE_CURLY_BRACKET (284) 4
+    OPEN_CURLY_BRACKET (285) 4
+
+
+Nonterminals, with rules where they appear
+
+    $accept (32)
+        on left: 0
+    start_program (33)
+        on left: 1
+        on right: 0
+    declaration_section (34)
+        on left: 2 3
+        on right: 1 2
+    declaration_content (35)
+        on left: 4
+        on right: 2 3
+    list_param (36)
+        on left: 5 6
+        on right: 4 5
+    function_content (37)
+        on left: 7
+        on right: 4
+    available_types (38)
+        on left: 8 9 10 11
+        on right: 4 5 6
+
+
+State 0
+
+    0 $accept: . start_program $end
+
+    INT    shift, and go to state 1
+    CHAR   shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    BOOL   shift, and go to state 4
+
+    start_program        go to state 5
+    declaration_section  go to state 6
+    declaration_content  go to state 7
+    available_types      go to state 8
+
+
+State 1
+
+    8 available_types: INT .
+
+    $default  reduce using rule 8 (available_types)
+
+
+State 2
+
+    9 available_types: CHAR .
+
+    $default  reduce using rule 9 (available_types)
+
+
+State 3
+
+   10 available_types: FLOAT .
+
+    $default  reduce using rule 10 (available_types)
+
+
+State 4
+
+   11 available_types: BOOL .
+
+    $default  reduce using rule 11 (available_types)
+
+
+State 5
+
+    0 $accept: start_program . $end
+
+    $end  shift, and go to state 9
+
+
+State 6
+
+    1 start_program: declaration_section .
+    2 declaration_section: declaration_section . declaration_content
+
+    INT    shift, and go to state 1
+    CHAR   shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    BOOL   shift, and go to state 4
+
+    $default  reduce using rule 1 (start_program)
+
+    declaration_content  go to state 10
+    available_types      go to state 8
+
+
+State 7
+
+    3 declaration_section: declaration_content .
+
+    $default  reduce using rule 3 (declaration_section)
+
+
+State 8
+
+    4 declaration_content: available_types . ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+
+    ID  shift, and go to state 11
+
+
+State 9
+
+    0 $accept: start_program $end .
+
+    $default  accept
+
+
+State 10
+
+    2 declaration_section: declaration_section declaration_content .
+
+    $default  reduce using rule 2 (declaration_section)
+
+
+State 11
+
+    4 declaration_content: available_types ID . OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+
+    OPEN_ROUND_BRACKET  shift, and go to state 12
+
+
+State 12
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET . list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+
+    INT    shift, and go to state 1
+    CHAR   shift, and go to state 2
+    FLOAT  shift, and go to state 3
+    BOOL   shift, and go to state 4
+
+    list_param       go to state 13
+    available_types  go to state 14
+
+
+State 13
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param . CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+    5 list_param: list_param . available_types ID ','
+
+    INT                  shift, and go to state 1
+    CHAR                 shift, and go to state 2
+    FLOAT                shift, and go to state 3
+    BOOL                 shift, and go to state 4
+    CLOSE_ROUND_BRACKET  shift, and go to state 15
+
+    available_types  go to state 16
+
+
+State 14
+
+    6 list_param: available_types . ID
+
+    ID  shift, and go to state 17
+
+
+State 15
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET . OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET
+
+    OPEN_CURLY_BRACKET  shift, and go to state 18
+
+
+State 16
+
+    5 list_param: list_param available_types . ID ','
+
+    ID  shift, and go to state 19
+
+
+State 17
+
+    6 list_param: available_types ID .
+
+    $default  reduce using rule 6 (list_param)
+
+
+State 18
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET . function_content CLOSE_CURLY_BRACKET
+
+    $default  reduce using rule 7 (function_content)
+
+    function_content  go to state 20
+
+
+State 19
+
+    5 list_param: list_param available_types ID . ','
+
+    ','  shift, and go to state 21
+
+
+State 20
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content . CLOSE_CURLY_BRACKET
+
+    CLOSE_CURLY_BRACKET  shift, and go to state 22
+
+
+State 21
+
+    5 list_param: list_param available_types ID ',' .
+
+    $default  reduce using rule 5 (list_param)
+
+
+State 22
+
+    4 declaration_content: available_types ID OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET OPEN_CURLY_BRACKET function_content CLOSE_CURLY_BRACKET .
+
+    $default  reduce using rule 4 (declaration_content)

@@ -1,34 +1,12 @@
-functie1)g,h,k(
-{
-    tni a,b,c;
-    fi ) _ (
-        {
-          a _=_ _ ;
-        }
-        esle
-        {
-
-        }
+tni functie1)tni g,tni h,tni k(
 }
-
-functie2)(
-{
-rahc j,k,l;
-elihw)_(
-    {
-        fi ) _ (
-        {
-          a _=_ _ ;
-        }
-        
-
+    a=4
+    elihw)a(
     }
-
-    rof ) a _=_ _ ; _ ; a _=_ _; (
-        {}
-
-}
-
-:-)
-
-:-(
+      t=21
+      fi )sdfsfs(
+        }
+          
+        {
+    {
+{
