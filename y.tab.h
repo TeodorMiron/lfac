@@ -57,26 +57,31 @@ extern int yydebug;
     ASSIGN = 263,
     BOOL = 264,
     IF = 265,
-    ELSE = 266,
-    ELSEIF = 267,
-    WHILE = 268,
-    FOR = 269,
-    STRCPY = 270,
-    STRLEN = 271,
-    STRCMP = 272,
-    ID = 273,
-    NR = 274,
-    ADD = 275,
-    DIV = 276,
-    BIGGER = 277,
-    SMALLER = 278,
-    MIN = 279,
-    MUL = 280,
-    EQUAL = 281,
-    OPEN_ROUND_BRACKET = 282,
-    CLOSE_ROUND_BRACKET = 283,
-    CLOSE_CURLY_BRACKET = 284,
-    OPEN_CURLY_BRACKET = 285
+    ELSEIF = 266,
+    WHILE = 267,
+    FOR = 268,
+    STRCPY = 269,
+    STRLEN = 270,
+    STRCMP = 271,
+    ID = 272,
+    NR = 273,
+    ADD = 274,
+    DIV = 275,
+    BIGGER = 276,
+    SMALLER = 277,
+    MIN = 278,
+    MUL = 279,
+    EQUAL = 280,
+    OPEN_ROUND_BRACKET = 281,
+    CLOSE_ROUND_BRACKET = 282,
+    CLOSE_CURLY_BRACKET = 283,
+    OPEN_CURLY_BRACKET = 284,
+    INCR = 285,
+    CLASS = 286,
+    MAIN = 287,
+    ELSE = 288,
+    STRING = 289,
+    CONST = 290
   };
 #endif
 /* Tokens.  */
@@ -88,30 +93,50 @@ extern int yydebug;
 #define ASSIGN 263
 #define BOOL 264
 #define IF 265
-#define ELSE 266
-#define ELSEIF 267
-#define WHILE 268
-#define FOR 269
-#define STRCPY 270
-#define STRLEN 271
-#define STRCMP 272
-#define ID 273
-#define NR 274
-#define ADD 275
-#define DIV 276
-#define BIGGER 277
-#define SMALLER 278
-#define MIN 279
-#define MUL 280
-#define EQUAL 281
-#define OPEN_ROUND_BRACKET 282
-#define CLOSE_ROUND_BRACKET 283
-#define CLOSE_CURLY_BRACKET 284
-#define OPEN_CURLY_BRACKET 285
+#define ELSEIF 266
+#define WHILE 267
+#define FOR 268
+#define STRCPY 269
+#define STRLEN 270
+#define STRCMP 271
+#define ID 272
+#define NR 273
+#define ADD 274
+#define DIV 275
+#define BIGGER 276
+#define SMALLER 277
+#define MIN 278
+#define MUL 279
+#define EQUAL 280
+#define OPEN_ROUND_BRACKET 281
+#define CLOSE_ROUND_BRACKET 282
+#define CLOSE_CURLY_BRACKET 283
+#define OPEN_CURLY_BRACKET 284
+#define INCR 285
+#define CLASS 286
+#define MAIN 287
+#define ELSE 288
+#define STRING 289
+#define CONST 290
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+union YYSTYPE
+{
+#line 18 "iac.y"
+
+int intval;
+char* strval;
+_Bool boolval;
+char charval;
+float floatval;
+struct expr_info* expr_ptr;
+struct expr_info** list_expr_ptr;
+
+#line 137 "y.tab.h"
+
+};
+typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif

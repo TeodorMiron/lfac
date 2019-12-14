@@ -1,12 +1,29 @@
-tni functie1)tni g,tni h,tni k(
-}
-    a=4
-    elihw)a(
-    }
-      t=21
-      fi )sdfsfs(
-        }
-          
-        {
-    {
+custom ssalc
 {
+   #gavrilut,motroi tni
+   (i2 tni) functie tni
+   {
+      (2<3) fi
+      {
+      }
+      (2<3) elihw
+      {
+        a tni
+        2=a
+      }
+    }
+    
+   
+}
+()niam tni
+{
+  (a>b) fi
+  {
+    motroi tni
+  }
+  esle
+  {
+    motroit tni
+  }
+}
+
