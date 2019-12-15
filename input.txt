@@ -1,34 +1,22 @@
-functie1)g,h,k(
+custom ssalc
 {
-    tni a,b,c;
-    fi ) _ (
-        {
-          a _=_ _ ;
-        }
-        esle
-        {
-
-        }
-}
-
-functie2)(
-{
-rahc j,k,l;
-elihw)_(
-    {
-        fi ) _ (
-        {
-          a _=_ _ ;
-        }
-        
-
+   #gavrilut,motroi tni
+   (i2 tni) functie tni
+   {
+      (2<3) fi
+      {
+      }
+      (2<3) elihw
+      {
+        a tni
+        2=a
+      }
     }
-
-    rof ) a _=_ _ ; _ ; a _=_ _; (
-        {}
-
+    
+   
+}
+()niam tni
+{
+2.3+3.1
 }
 
-:-)
-
-:-(
