@@ -49,91 +49,113 @@ extern int yydebug;
 # define YYTOKENTYPE
   enum yytokentype
   {
-    START = 258,
-    END = 259,
-    INT = 260,
-    CHAR = 261,
-    FLOAT = 262,
-    ASSIGN = 263,
-    BOOL = 264,
-    IF = 265,
-    ELSEIF = 266,
-    WHILE = 267,
-    FOR = 268,
-    STRCPY = 269,
-    STRLEN = 270,
-    STRCMP = 271,
-    ID = 272,
-    NR = 273,
-    ADD = 274,
-    DIV = 275,
-    BIGGER = 276,
-    SMALLER = 277,
-    MIN = 278,
-    MUL = 279,
-    EQUAL = 280,
-    OPEN_ROUND_BRACKET = 281,
-    CLOSE_ROUND_BRACKET = 282,
-    CLOSE_CURLY_BRACKET = 283,
-    OPEN_CURLY_BRACKET = 284,
-    INCR = 285,
-    CLASS = 286,
-    MAIN = 287,
-    ELSE = 288,
-    STRING = 289,
-    CONST = 290
+    ADD = 258,
+    MUL = 259,
+    MIN = 260,
+    DIV = 261,
+    SMALLER = 262,
+    BIGGER = 263,
+    INCR = 264,
+    EQUAL = 265,
+    ELSE = 266,
+    OR = 267,
+    AND = 268,
+    NOT = 269,
+    STRCAT = 270,
+    STRCPY = 271,
+    STRLEN = 272,
+    CLASS = 273,
+    CLOSE_CURLY_BRACKET = 274,
+    OPEN_CURLY_BRACKET = 275,
+    CLOSE_ROUND_BRACKET = 276,
+    OPEN_ROUND_BRACKET = 277,
+    CONST = 278,
+    MAIN = 279,
+    END = 280,
+    ELSEIF = 281,
+    INT = 282,
+    CHAR = 283,
+    FLOAT = 284,
+    BOOL = 285,
+    STRING = 286,
+    NR = 287,
+    IF = 288,
+    WHILE = 289,
+    FOR = 290,
+    ASSIGN = 291,
+    ID = 292,
+    INT_NUMBER = 293,
+    STRING_VAL = 294,
+    SMALLER_EQUAL = 295,
+    GREATER_EQUAL = 296,
+    BOOL_FALSE = 297,
+    BOOL_TRUE = 298,
+    STRCMP = 299,
+    FLOAT_NR = 300,
+    CHAR_VAL = 301
   };
 #endif
 /* Tokens.  */
-#define START 258
-#define END 259
-#define INT 260
-#define CHAR 261
-#define FLOAT 262
-#define ASSIGN 263
-#define BOOL 264
-#define IF 265
-#define ELSEIF 266
-#define WHILE 267
-#define FOR 268
-#define STRCPY 269
-#define STRLEN 270
-#define STRCMP 271
-#define ID 272
-#define NR 273
-#define ADD 274
-#define DIV 275
-#define BIGGER 276
-#define SMALLER 277
-#define MIN 278
-#define MUL 279
-#define EQUAL 280
-#define OPEN_ROUND_BRACKET 281
-#define CLOSE_ROUND_BRACKET 282
-#define CLOSE_CURLY_BRACKET 283
-#define OPEN_CURLY_BRACKET 284
-#define INCR 285
-#define CLASS 286
-#define MAIN 287
-#define ELSE 288
-#define STRING 289
-#define CONST 290
+#define ADD 258
+#define MUL 259
+#define MIN 260
+#define DIV 261
+#define SMALLER 262
+#define BIGGER 263
+#define INCR 264
+#define EQUAL 265
+#define ELSE 266
+#define OR 267
+#define AND 268
+#define NOT 269
+#define STRCAT 270
+#define STRCPY 271
+#define STRLEN 272
+#define CLASS 273
+#define CLOSE_CURLY_BRACKET 274
+#define OPEN_CURLY_BRACKET 275
+#define CLOSE_ROUND_BRACKET 276
+#define OPEN_ROUND_BRACKET 277
+#define CONST 278
+#define MAIN 279
+#define END 280
+#define ELSEIF 281
+#define INT 282
+#define CHAR 283
+#define FLOAT 284
+#define BOOL 285
+#define STRING 286
+#define NR 287
+#define IF 288
+#define WHILE 289
+#define FOR 290
+#define ASSIGN 291
+#define ID 292
+#define INT_NUMBER 293
+#define STRING_VAL 294
+#define SMALLER_EQUAL 295
+#define GREATER_EQUAL 296
+#define BOOL_FALSE 297
+#define BOOL_TRUE 298
+#define STRCMP 299
+#define FLOAT_NR 300
+#define CHAR_VAL 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 18 "iac.y"
+#line 31 "iac.y"
 
-int intval;
-char* strval;
-_Bool boolval;
-char charval;
-float floatval;
-struct expr_info* expr_ptr;
-struct expr_info** list_expr_ptr;
+        int intval;
+        char* strval;
+        _Bool boolval;
+        char charval;
+        float floatval;
+        struct expr_info* expr_ptr;
+        struct expr_info** list_expr_ptr;
 
-#line 137 "y.tab.h"
+#line 159 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

@@ -17,13 +17,6 @@ custom ssalc
 }
 ()niam tni
 {
-  (a>b) fi
-  {
-    motroi tni
-  }
-  esle
-  {
-    motroit tni
-  }
+2.3+3.1
 }
 

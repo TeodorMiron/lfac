@@ -5,25 +5,24 @@
 %}
 %option noyywrap
 %%
-
 "/*"(.|\n)"*/" ;
-"tni" {yylval.intval=1; return INT;}
-"rahc" {yylval.intval=2;return CHAR;}
-"toafl" {yylval.intval=3;return FLOAT;}
-"loob" {yylval.intval=4;return BOOL;}
-"rahc*" {yylval.intval=5;return STRING;}
-\"[^\"\n]*\" {yylval.strval=strdup(yytext); return STRING_VAL;}
-\'[^\"\n]*\' {yylval.charval=yytext[0]; return CHAR_VAL;}
+":-)" {return START;}
+":-(" {return END;}
+"tni" {return INT;}
+\"[^\"\n]*\" {yylval.strval=strdup(yytext); return STRING;}
 "ssalc" {return CLASS;}
+"rahc" {return CHAR;}
+"toafl" {return FLOAT;}
+"loob" {return BOOL;}
 "fi" {return IF;}
 "esle" {return ELSE;}
 "fiesle" {return ELSEIF;}
 "elihw" {return WHILE;}
 "tsnoc" {return CONST;}
 "rof" {return FOR;}
-"ypcrts" {return STRCPY;}
-"nelrts" {return STRLEN;}
-"tacrts" {return STRCAT;}
+"strcpy" {return STRCPY;}
+"strlen" {return STRLEN;}
+"strcmp" {return STRCMP;}
 "niam" {return MAIN;}
 "eurt" {return BOOL_TRUE;}
 "eslaf" {return BOOL_FALSE;}
@@ -42,12 +41,10 @@
 "}" {return CLOSE_CURLY_BRACKET;}
 "(" {return OPEN_ROUND_BRACKET;}
 ")" {return CLOSE_ROUND_BRACKET;}
-"||" {return OR;}
-"&&" {return AND;}
-"!" {return NOT;}
 [A-Za-z][A-Za-z0-9]* {return ID;}
-[1-9][0-9]*|0 {yylval.intval=atoi(yytext);return NR;}
-([0-9]*[.])?[0-9]+ {yylval.floatval=atof(yytext);printf("Valoare:%lf",atof(yytext));return FLOAT_NR;}
+[1-9][0-9]*|0 {return NR;}
 [ \t] ;
 \n {yylineno++;}
 . {return yytext[0];}
+
+ 
