@@ -1,0 +1,46 @@
+;$georgiana tni
+;$altvariabile tni
+;$incauna tni
+custom ssalc
+{
+   ;#gavrilut,motroi tni
+   ;#cevafloat,altcevafloat taolf
+   (i2 tni,i3 toalf)functie tni
+   {
+      (2<3)fi
+      {
+        (a<b)elihw
+        {
+          (ceva<altceva)fi
+          {
+             ;$ab tni
+          }
+          esle
+          {
+
+          }
+        }
+      }
+      (2<3)elihw
+      {
+        ;$a tni
+        ;2+#(2+"aasdasd")f2=a
+      }
+    }
+}
+;$ceva custom
+()niam tni
+{
+    ;$2.0+3*2000+4+#(2.5665,5,#(6.215,ceva) altceva)completaltceva+(-256.242) =ovariablila tni
+    ;$[20000]vector tni
+    ;[1000]ab=[10000]bc
+    ;$eurt=ceva loob
+    ;#()functie=ceva.custom
+    ;$#(ceva.custom,20)ofunctie=ovariabila taolf
+    ;[#()functie.custom]vector = variabila
+    ;10=variabila.obiect
+    ;#ceva,altceva custom
+    ;#(ceva,altceva.oclasadeceva)functie.clasa
+    ;#(23,24)functie
+    ;"\\\\\random"=variabila
+}
