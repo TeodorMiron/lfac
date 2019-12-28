@@ -2,11 +2,18 @@
 ;$altvariabile loob
 ;$incauna *rahc
 ;$3=constanta tni tsnoc
-
+(a tni,b tni)functieTest tni
+{
+  ;$untestMic tni
+}
 custom ssalc
 {
   ;$incauna *rahc
   ;$motroi tni
+  (i2 taolf) altTest rahc
+  {
+    
+  }
    (i2 tni,i3 taolf)functie tni
    {
       (2<3)fi
@@ -21,6 +28,7 @@ custom ssalc
           {
 
           }
+          ;$CevaNou loob
         }
       }
       (2<3)elihw

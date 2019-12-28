@@ -52,9 +52,10 @@ struct Checker*head=NULL;
 void init_checker();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(struct Checker*head,const char*type,char*identifier);
-void add_func_node(char*identifier,const char*returntype,char*arg_list,struct Checker*head);
-void add_statement_node(struct Checker*head);
+void add_func_node(char*identifier,const char*returntype,char*arg_list);
+void add_statement_node();
 void add_class_node(char*identifier);
+void add_main_node();
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
@@ -123,26 +124,26 @@ inside_object:function_declaration
              | create_variable 
              ; 
                     
-function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL,head);} function_content CLOSE_CURLY_BRACKET 
-                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL,head);} CLOSE_CURLY_BRACKET 
+function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
                     ;
 
 list_param:list_param ',' ID available_types
            |ID available_types
            ;
 
-function_content: function_content instructions
-                | instructions
+function_content: function_content statements
+                | statements
                 ;
 
-multiple_instructions:multiple_instructions instructions
-                     | instructions
+multiple_statements:multiple_statements statements
+                     | statements
                      ;
 
-instructions: if_instr
-            | while_instr
-            | for_instr
-            | assign_instr 
+statements: if_statement
+            | while_statement
+            | for_statement
+            | assign_statement
             | create_variable 
             | ';'function_call
             | ';' object_call_function
@@ -157,28 +158,28 @@ list_call: expression  ',' list_call
          | expression
          ;
 
-if_instr:OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET multiple_instructions CLOSE_CURLY_BRACKET else_instr
-        |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET else_instr
+if_statement:OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();} else_statement
+        |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}else_statement 
         ;
 
-else_instr:ELSE OPEN_CURLY_BRACKET multiple_instructions CLOSE_CURLY_BRACKET
-          |ELSE OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
+else_statement:ELSE OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET{remove_node();}
+          |ELSE OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET{remove_node();}
           | 
           ;
 
-while_instr: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET multiple_instructions CLOSE_CURLY_BRACKET
-            |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
+while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET{remove_node();}
+            |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET{remove_node();}
             ;
 
-assign_instr: ';'expression ASSIGN ID 
+assign_statement: ';'expression ASSIGN ID 
             | ';'expression ASSIGN object_access_var
             | ';'expression ASSIGN access_vector
             ;
 
 
-for_instr: OPEN_ROUND_BRACKET assign_instr ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET multiple_instructions CLOSE_CURLY_BRACKET
-         | OPEN_ROUND_BRACKET assign_instr ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
-         | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
+for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();}
+         | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}
+         | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}
          ;
 
 create_variable: ';'create_single_variable 
@@ -253,7 +254,7 @@ object_access_var:ID'.'ID
 access_vector:'['expression']' ID
              ;
 
-main_section:OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET multiple_instructions CLOSE_CURLY_BRACKET
+main_section:OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET multiple_statements CLOSE_CURLY_BRACKET
             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
             ;
 %%
@@ -290,9 +291,19 @@ void free_entry(struct ListOfEntries*val)
 {
         g_free(val);
 }
-void add_func_node(char*identifier,const char*returntype,char*arg_list,struct Checker*head)
+void add_func_node(char*identifier,const char*returntype,char*arg_list)
 {
         head->counter++;
+        struct Checker*newNode=malloc(sizeof(struct Checker));
+        newNode->next=head;
+        char valuef[5];
+        sprintf(valuef,"%d",head->counter);
+        newNode->currentScope=malloc(strlen(head->currentScope)+strlen(valuef)+2);
+        strcpy(newNode->currentScope,head->currentScope);
+        strcat(newNode->currentScope,"-");
+        strcat(newNode->currentScope,valuef);
+        newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
+        head=newNode;
         struct SymTabEntry newEntry;
         newEntry.name=malloc(strlen(identifier)+1);
         strcpy(newEntry.name,identifier);
@@ -301,14 +312,10 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list,struct Ch
         strcpy(newEntry.dataType,returntype);
         newEntry.dataType[strlen(newEntry.dataType)]='\0';
         newEntry.whatIs=malloc(strlen("function-declaration")+1);
-        strcpy(newEntry.whatIs,"function_declaration");
+        strcpy(newEntry.whatIs,"function-declaration");
         newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
-        char value[5];
-        sprintf(value,"%d",head->counter);
-        newEntry.scope=malloc(strlen(head->currentScope)+strlen(value)+2);
+        newEntry.scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry.scope,head->currentScope);
-        strcat(newEntry.scope,"-");
-        strcat(newEntry.scope,value);
         newEntry.scope[strlen(newEntry.scope)]='\0';
         newEntry.lineOf=yylineno;
         struct ListOfEntries*val;
@@ -336,7 +343,6 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list,struct Ch
                 g_hash_table_insert(head->localScope,identifier,newVal);
         }
         
-
 
 }
 void add_new_variable(struct Checker*head,const char*type,char*identifier)
@@ -451,8 +457,7 @@ void remove_node()
 }
 void add_class_node(char*identifier)
 {
-        
-        head->counter++;
+        head->counter++; 
         struct Checker*newNode=malloc(sizeof(struct Checker));
         newNode->next=head;
         char valuef[5];
@@ -470,8 +475,6 @@ void add_class_node(char*identifier)
         newEntry.whatIs=malloc(strlen("class-declaration")+1);
         strcpy(newEntry.whatIs,"class-declaration");
         newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
-        char value[5];
-        sprintf(value,"%d",head->counter);
         newEntry.scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry.scope,head->currentScope);
         newEntry.scope[strlen(newEntry.scope)]='\0';
@@ -501,4 +504,20 @@ void add_class_node(char*identifier)
                 g_hash_table_insert(head->next->localScope,identifier,newVal);
 
         }
+                
 }
+void add_statement_node()
+{
+        head->counter++;
+        struct Checker*newNode=malloc(sizeof(struct Checker));
+        newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
+        char value[5];
+        sprintf(value,"%d",head->counter);
+        newNode->currentScope=malloc(strlen(head->currentScope)+strlen(value)+2);
+        strcpy(newNode->currentScope,head->currentScope);
+        strcat(newNode->currentScope,"-");
+        strcat(newNode->currentScope,value);
+        newNode->next=head;
+        head=newNode;
+}
+void add_main_node();
