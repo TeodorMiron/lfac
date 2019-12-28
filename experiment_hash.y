@@ -57,7 +57,7 @@ void add_statement_node(struct Checker*head);
 void add_class_node(char*identifier);
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
-void remove_node(struct Checker*head);
+void remove_node();
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
 
 %}
@@ -89,7 +89,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 
 
 %token<strname> ID
-%token<intval> INT_VAL;https://github.com/mirontio/lfac.git
+%token<intval> INT_VAL;
 %token<strval> STRING_VAL
 %token<floatval> FLOAT_VAL
 %token<charval> CHAR_VAL
@@ -110,7 +110,7 @@ declaration_content: function_declaration
                     ;
 
 
-object_declaration: ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}object_content CLOSE_CURLY_BRACKET 
+object_declaration: ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}object_content CLOSE_CURLY_BRACKET  {remove_node();}
                    | ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}CLOSE_CURLY_BRACKET
                    ;
 
@@ -266,8 +266,14 @@ int main(int argc, char** argv){
    yyin=fopen(argv[1],"r");
    init_checker();
    yyparse();
-   g_hash_table_foreach(head->localScope,print_key_value,NULL);
-   struct ListOfEntries*test;
+  // g_hash_table_foreach(head->localScope,print_key_value,NULL);
+   struct Checker*test=head;
+   while(test)
+   {
+           g_hash_table_foreach(test->localScope,print_key_value,NULL);
+           test=test->next;
+           printf("------------------------------\n");
+   }
    return 0;
 } 
 void init_checker()
@@ -275,9 +281,9 @@ void init_checker()
         head=malloc(sizeof(struct Checker));
         head->next=NULL;
         head->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
-        head->currentScope=malloc(2);
+        head->currentScope=malloc(5);
         strcpy(head->currentScope,"0");
-        head->currentScope[strlen(head->currentScope)]='\0';
+        //head->currentScope[strlen(head->currentScope)]='\0';
         head->counter=0;
 }
 void free_entry(struct ListOfEntries*val)
@@ -393,18 +399,70 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
         struct ListOfEntries*var=value;
         while(var)
         {
-           printf("%s \t%s\t %s \t %s\n",var->value.name,var->value.whatIs,var->value.dataType,var->value.scope);
-          // printf("%s\n",var->value.name);
+           printf("%s \t%s\t %s\n",var->value.name,var->value.whatIs,var->value.scope);
            var=var->next;
         }
 }
-void remove_head(struct Checker*head)
+void copy_hash(gpointer key,gpointer value,gpointer userdata)
 {
-        
+        struct ListOfEntries*content;
+        if((content=g_hash_table_lookup(head->next->localScope,key)))
+        {
+                struct ListOfEntries*concatList=malloc(sizeof(struct ListOfEntries));
+                struct ListOfEntries*itf=content;
+                while(itf)
+                {
+                        struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                        newNode->value=itf->value;
+                        newNode->next=concatList;
+                        concatList=newNode;
+                        itf=itf->next;
+                }
+                struct ListOfEntries*its=value;
+                while(its)
+                {
+                        struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                        newNode->value=its->value;
+                        newNode->next=concatList;
+                        concatList=newNode;
+                        its=its->next;
+                }
+                struct ListOfEntries*itt=concatList;
+                while(itt)
+                {
+                        if(itt->next->next==NULL)
+                                {
+                                        itt->next=NULL;
+                                        break;
+                                }
+                        itt=itt->next;
+                }
+                g_hash_table_replace(head->next->localScope,key,concatList);
+        }
+        else
+        {
+                 g_hash_table_insert(head->next->localScope,key,value);
+        }
+}
+void remove_node()
+{
+        g_hash_table_foreach(head->localScope,copy_hash,NULL);
+        head=head->next;
 }
 void add_class_node(char*identifier)
 {
+        
         head->counter++;
+        struct Checker*newNode=malloc(sizeof(struct Checker));
+        newNode->next=head;
+        char valuef[5];
+        sprintf(valuef,"%d",head->counter);
+        newNode->currentScope=malloc(strlen(head->currentScope)+strlen(valuef)+2);
+        strcpy(newNode->currentScope,head->currentScope);
+        strcat(newNode->currentScope,"-");
+        strcat(newNode->currentScope,valuef);
+        newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
+        head=newNode;
         struct SymTabEntry newEntry;
         newEntry.name=malloc(strlen(identifier)+1);
         strcpy(newEntry.name,identifier);
@@ -413,15 +471,13 @@ void add_class_node(char*identifier)
         strcpy(newEntry.whatIs,"class-declaration");
         newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
         char value[5];
-        sprintf(value,"%d",head->counter+1);
-        newEntry.scope=malloc(strlen(head->currentScope)+strlen(value)+2);
+        sprintf(value,"%d",head->counter);
+        newEntry.scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry.scope,head->currentScope);
-        strcat(newEntry.scope,"-");
-        strcat(newEntry.scope,value);
         newEntry.scope[strlen(newEntry.scope)]='\0';
         newEntry.lineOf=yylineno;
         struct ListOfEntries*val;
-        if((val=g_hash_table_lookup(head->localScope,identifier)))
+        if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {  
                 while(val)
                 {
@@ -435,15 +491,14 @@ void add_class_node(char*identifier)
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->value=newEntry;
                 newVal->next=val;
-                g_hash_table_replace(head->localScope,identifier,newVal);
+                g_hash_table_replace(head->next->localScope,identifier,newVal);
         }
         else
         {
-               
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->next=NULL;
                 newVal->value=newEntry;
-                g_hash_table_insert(head->localScope,identifier,newVal);
+                g_hash_table_insert(head->next->localScope,identifier,newVal);
 
         }
 }

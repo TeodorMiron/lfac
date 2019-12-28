@@ -2,9 +2,11 @@
 ;$altvariabile loob
 ;$incauna *rahc
 ;$3=constanta tni tsnoc
-;$incauna *rahc
+
 custom ssalc
 {
+  ;$incauna *rahc
+  ;$motroi tni
    (i2 tni,i3 taolf)functie tni
    {
       (2<3)fi
@@ -28,6 +30,7 @@ custom ssalc
       }
     }
 }
+
 altaclasa ssalc
 {
    ;$motroi tni
