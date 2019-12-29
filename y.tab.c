@@ -118,7 +118,7 @@ struct Checker
 
 };
 struct Checker*head=NULL;
-void init_checker();
+void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier);
 void add_func_node(char*identifier,const char*returntype,char*arg_list);
@@ -2098,7 +2098,7 @@ int yyerror(char * s){
 
 int main(int argc, char** argv){
    yyin=fopen(argv[1],"r");
-   init_checker();
+   init_prg();
    yyparse();
    struct Checker*test=head;
    while(test)
@@ -2108,7 +2108,7 @@ int main(int argc, char** argv){
    }
    return 0;
 } 
-void init_checker()
+void init_prg()
 {
         head=malloc(sizeof(struct Checker));
         head->next=NULL;

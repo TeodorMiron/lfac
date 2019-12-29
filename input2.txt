@@ -1,0 +1,18 @@
+;$variabilaint tni
+;$variabilafloat taolf
+;$variabilabool loob
+;$constint tni
+;$[20]variabilavector tni
+;$[20]variabilavector2 taolf
+;$[300]variabilavector3 loob
+(arg1 tni,arg2 taolf) functieGlob1 loob
+{
+    (true) fi
+    {
+     ;$variabilamembra tni
+    }
+}
+()niam tni
+{
+
+}
