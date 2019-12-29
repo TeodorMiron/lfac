@@ -2220,7 +2220,7 @@ void add_new_variable(const char*type,char*identifier)
                 {
                         if(strcmp(val->value.scope,newEntry.scope)==0 && strcmp(val->value.whatIs,"variable")==0)
                         {
-                                printf("Variabila [%s] de tipul %s a fost redeclarat in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry.name,newEntry.dataType,newEntry.scope);
+                                printf("Variabila [%s] de tipul %s a fost redeclarat in scope-ul %s\n",newEntry.name,newEntry.dataType,newEntry.scope);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
@@ -2255,9 +2255,13 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
            {
                    fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.dataType,var->value.intvalue,var->value.scope);
            }
-           if(strcmp(var->value.whatIs,"function-declaration"))
+           if(strcmp(var->value.whatIs,"function-declaration")==0)
            {
-                   //fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value.lineOf,var->)
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.dataType,var->value.paramlist,var->value.scope);
+           }
+           if(strcmp(var->value.whatIs,"class-declaration")==0)
+           {
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
            }
            var=var->next;
         }
