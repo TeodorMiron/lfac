@@ -9,7 +9,6 @@ extern int yylineno;
 int yydebug=1;
 int yylex();
 int yyerror(char *s);
-//commit test
 typedef struct expr_info
 {
         char*name;
@@ -49,6 +48,7 @@ struct Checker
 
 };
 struct Checker*head=NULL;
+FILE*SymTabDump=NULL;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier);
@@ -76,7 +76,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 }
 
 %start start_program
-%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL BOOL_TRUE BOOL_FALSE GREATER_EQUAL STRING_TYPE CONST
+%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL BOOL_TRUE BOOL_FALSE GREATER_EQUAL STRING_TYPE CONST RETURN
 %left ADD 
 %left MIN
 %left MUL
@@ -94,7 +94,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 %token<strval> STRING_VAL
 %token<floatval> FLOAT_VAL
 %token<charval> CHAR_VAL
-%token<type> INT STRING FLOAT CHAR BOOL
+%token<type> INT STRING FLOAT CHAR BOOL VOID
 %type<type> available_types 
 
 %%
@@ -127,9 +127,13 @@ inside_object:function_declaration
              | create_variable 
              ; 
                     
-function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content CLOSE_CURLY_BRACKET {remove_node();}
+function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
                     | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
                     ;
+
+return_statement:RETURN expression
+                | 
+                ;
 
 list_param:list_param ',' ID available_types
            |ID available_types
@@ -253,6 +257,7 @@ available_types: INT {$$=$1;}
                | FLOAT {$$=$1;}
                | BOOL {$$=$1;}
                | STRING {$$=$1;}
+               | VOID {$$=$1;}
                ;
 
 expression: ID 
@@ -316,8 +321,12 @@ void init_prg()
         head->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
         head->currentScope=malloc(5);
         strcpy(head->currentScope,"0");
-        //head->currentScope[strlen(head->currentScope)]='\0';
         head->counter=0;
+        if(NULL==(SymTabDump=fopen("symbol_table.txt","w")))
+        {
+                perror("Eroare la deschiderea fisierului symbol_table.txt\n");
+                exit(EXIT_FAILURE);
+        }
 }
 void free_entry(struct ListOfEntries*val)
 {
@@ -372,6 +381,11 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
 }
 void add_new_variable(const char*type,char*identifier)
 {
+        if(strcmp(type,"void")==0)
+        {
+                printf("Variabila [%s] declarata de tipul void\n",identifier);
+                exit(EXIT_FAILURE);
+        }
         struct SymTabEntry newEntry;
         newEntry.name=malloc(strlen(identifier)+1);
         newEntry.name[strlen(newEntry.name)]='\0';
@@ -414,7 +428,7 @@ const char*return_type(int type)
                 case 2:{return "float";}
                 case 3:{return "bool";}
                 case 4:{return "char*";}
-                case 5:{return "const";}
+                case 5:{return "void";}
         }
 
 }
@@ -424,6 +438,14 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
         while(var)
         {
            printf("%s \t%s\t %s\n",var->value.name,var->value.whatIs,var->value.scope);
+           if(strcmp(var->value.whatIs,"variable")==0)
+           {
+                   fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.dataType,var->value.intvalue,var->value.scope);
+           }
+           if(strcmp(var->value.whatIs,"function-declaration"))
+           {
+                   //fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value.lineOf,var->)
+           }
            var=var->next;
         }
 }

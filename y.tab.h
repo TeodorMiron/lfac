@@ -81,16 +81,18 @@ extern int yydebug;
     GREATER_EQUAL = 287,
     STRING_TYPE = 288,
     CONST = 289,
-    ID = 290,
-    INT_VAL = 291,
-    STRING_VAL = 292,
-    FLOAT_VAL = 293,
-    CHAR_VAL = 294,
-    INT = 295,
-    STRING = 296,
-    FLOAT = 297,
-    CHAR = 298,
-    BOOL = 299
+    RETURN = 290,
+    ID = 291,
+    INT_VAL = 292,
+    STRING_VAL = 293,
+    FLOAT_VAL = 294,
+    CHAR_VAL = 295,
+    INT = 296,
+    STRING = 297,
+    FLOAT = 298,
+    CHAR = 299,
+    BOOL = 300,
+    VOID = 301
   };
 #endif
 /* Tokens.  */
@@ -126,16 +128,18 @@ extern int yydebug;
 #define GREATER_EQUAL 287
 #define STRING_TYPE 288
 #define CONST 289
-#define ID 290
-#define INT_VAL 291
-#define STRING_VAL 292
-#define FLOAT_VAL 293
-#define CHAR_VAL 294
-#define INT 295
-#define STRING 296
-#define FLOAT 297
-#define CHAR 298
-#define BOOL 299
+#define RETURN 290
+#define ID 291
+#define INT_VAL 292
+#define STRING_VAL 293
+#define FLOAT_VAL 294
+#define CHAR_VAL 295
+#define INT 296
+#define STRING 297
+#define FLOAT 298
+#define CHAR 299
+#define BOOL 300
+#define VOID 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -152,7 +156,7 @@ union YYSTYPE
         float floatval;
         struct expr_info* expr_ptr;
 
-#line 156 "y.tab.h"
+#line 160 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

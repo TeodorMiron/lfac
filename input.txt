@@ -1,4 +1,4 @@
-;$georgiana taolf
+;$georgiana tni
 ;$altvariabile loob
 ;$incauna *rahc
 ;$3=constanta tni tsnoc
