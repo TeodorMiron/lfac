@@ -7,6 +7,10 @@
 {
   ;$untestMic tni
 }
+(ac tni) unaltTest loob
+{
+
+}
 custom ssalc
 {
   ;$incauna *rahc
@@ -44,7 +48,6 @@ altaclasa ssalc
    ;$motroi tni
 }
 ;$altaclasainstant altaclasa
-
 ()niam tni
 {
     ;$2.0+3*2000+4+#(2.5665,5,#(6.215,ceva) altceva)completaltceva+(-256.242) =ovariablila tni

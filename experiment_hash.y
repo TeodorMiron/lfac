@@ -98,7 +98,10 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 %type<type> available_types 
 
 %%
-start_program:{init_checker(head);} declaration_section main_section {printf("Programul este corect\n");}
+
+start_program: declaration_section main_section {printf("Programul este corect\n");}
+             | main_section {printf("Programul este corect\n");}
+             | {printf("Programul este corect!\n");}
              ;
 
 declaration_section:declaration_section declaration_content;
@@ -355,24 +358,16 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
                 {
                         if(strncmp(val->value.scope,newEntry.scope,strlen(newEntry.scope)-nLenght)==0 && strcmp(val->value.whatIs,"function-declaration")==0)
                         {
-                                printf("Functia [%s] de tipul %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry.name,newEntry.dataType,val->value.scope);
+                                printf("Functia [%s] de tipul de retur %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry.name,newEntry.dataType,val->value.scope);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
                 }
+        }
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->value=newEntry;
                 newVal->next=NULL;
                 g_hash_table_insert(head->localScope,identifier,newVal);
-        }
-        else
-        {
-                struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
-                newVal->value=newEntry;
-                newVal->next=NULL;
-                g_hash_table_insert(head->localScope,identifier,newVal);
-        }
-        
 
 }
 void add_new_variable(const char*type,char*identifier)
@@ -403,18 +398,11 @@ void add_new_variable(const char*type,char*identifier)
                         }
                         val=val->next;
                 }
-                struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
-                newVal->value=newEntry;
-                newVal->next=val;
-                g_hash_table_replace(head->localScope,identifier,newVal);
         }
-        else
-        {
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->value=newEntry;
                 newVal->next=NULL;
                 g_hash_table_insert(head->localScope,identifier,newVal);
-        }
 
 }
 const char*return_type(int type)
@@ -521,12 +509,6 @@ void add_class_node(char*identifier)
                         }
                         val=val->next;
                 }
-                /*
-                struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
-                newVal->value=newEntry;
-                newVal->next=val;
-                g_hash_table_replace(head->localScope,identifier,newVal);
-                */
         }
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->next=NULL;
