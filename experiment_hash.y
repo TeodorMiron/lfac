@@ -51,7 +51,7 @@ struct Checker
 struct Checker*head=NULL;
 void init_checker();
 void free_entry(struct ListOfEntries*val);
-void add_new_variable(struct Checker*head,const char*type,char*identifier);
+void add_new_variable(const char*type,char*identifier);
 void add_func_node(char*identifier,const char*returntype,char*arg_list);
 void add_statement_node();
 void add_class_node(char*identifier);
@@ -185,24 +185,58 @@ for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression
 create_variable: ';'create_single_variable 
              //  | ';''#'create_multiple_variable available_types
                | ';''$'create_array_variable
-               | ';'create_const_variable
+              // | ';'create_const_variable
                ;
 
-create_array_variable:'['expression']' ID available_types
+create_array_variable:'['expression']' ID available_types {
+                                 
+                                 char*customType=malloc(strlen(return_type($5))+strlen("50"));
+                                 strcpy(customType,return_type($5));
+                                 strcat(customType,"[");
+                                 strcat(customType,"50");
+                                 strcat(customType,"]");
+                                 add_new_variable(customType,$4);
+                        }
                      | '[' expression ']' ID ID
                      ;
 
-create_single_variable:  '$' ID available_types {add_new_variable(head,return_type($3),$2);}
-                        |'$' ID ID {add_new_variable(head,$3,$2);}
-                        |'$' expression ASSIGN ID available_types {add_new_variable(head,return_type($5),$4);}
-                        |'$' expression ASSIGN ID ID {add_new_variable(head,$5,$4);}
-                        |'$' expression ASSIGN ID available_types CONST {
+create_single_variable:  '$' ID available_types {add_new_variable(return_type($3),$2);}
+                        |'$' ID ID {
+                            struct Checker*iterator=head;
+                            while(iterator->next!=NULL)
+                            {
+                                    iterator=iterator->next;
+                            }
+                            struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$3);
+                            int objFound=0;
+                            while(list)
+                            {
+                                    if(strcmp(list->value.whatIs,"object-declaration"))
+                                    {
+                                            objFound=1;
+                                            break;
+                                    }
+                                    list=list->next;
+                            }
+                            if(objFound)
+                            {
+                               add_new_variable($3,$2);
+                            }
+                            else
+                            {
+                                    printf("Ati incercat sa instantiati clasa [%s] care nu existat\nProgramul a fost incheiat fortat!\n",$2);
+                                    exit(EXIT_FAILURE);
+                            }
 
+                        }
+                        |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4);}
+                        |'$' expression ASSIGN ID ID {add_new_variable($5,$4);}
+                        |'$' expression ASSIGN ID available_types CONST {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type($5))+1);
                                 strcpy(newtype,"const-");
                                 strcat(newtype,return_type($5));
                                 newtype[strlen(newtype)]='\0';
-                                add_new_variable(head,newtype,$4);
+                                add_new_variable(newtype,$4);
                         }
                         ;
 /*
@@ -210,9 +244,6 @@ create_multiple_variable:create_multiple_variable ',' ID
                         | ID
 */                     ;
 
-create_const_variable:expression ASSIGN ID CONST available_types
-                     | expression ASSIGN ID CONST ID
-                     ;
 
 available_types: INT {$$=$1;}
                | CHAR {$$=$1;}
@@ -254,8 +285,8 @@ object_access_var:ID'.'ID
 access_vector:'['expression']' ID
              ;
 
-main_section:OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET multiple_statements CLOSE_CURLY_BRACKET
-            | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET
+main_section:OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET {add_main_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();}
+            | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET {add_main_node();}CLOSE_CURLY_BRACKET{remove_node();}
             ;
 %%
 int yyerror(char * s){
@@ -267,13 +298,11 @@ int main(int argc, char** argv){
    yyin=fopen(argv[1],"r");
    init_checker();
    yyparse();
-  // g_hash_table_foreach(head->localScope,print_key_value,NULL);
    struct Checker*test=head;
    while(test)
    {
            g_hash_table_foreach(test->localScope,print_key_value,NULL);
            test=test->next;
-           printf("------------------------------\n");
    }
    return 0;
 } 
@@ -298,6 +327,7 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
         newNode->next=head;
         char valuef[5];
         sprintf(valuef,"%d",head->counter);
+        int nLenght=strlen(valuef)+1;
         newNode->currentScope=malloc(strlen(head->currentScope)+strlen(valuef)+2);
         strcpy(newNode->currentScope,head->currentScope);
         strcat(newNode->currentScope,"-");
@@ -319,11 +349,11 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
         newEntry.scope[strlen(newEntry.scope)]='\0';
         newEntry.lineOf=yylineno;
         struct ListOfEntries*val;
-        if((val=g_hash_table_lookup(head->localScope,identifier)))
+        if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {
                 while(val)
                 {
-                        if(strcmp(val->value.scope,newEntry.scope)==0 && strcmp(val->value.whatIs,"function-declaration")==0)
+                        if(strncmp(val->value.scope,newEntry.scope,strlen(newEntry.scope)-nLenght)==0 && strcmp(val->value.whatIs,"function-declaration")==0)
                         {
                                 printf("Functia [%s] de tipul %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry.name,newEntry.dataType,val->value.scope);
                                 exit(EXIT_FAILURE);
@@ -332,8 +362,8 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
                 }
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->value=newEntry;
-                newVal->next=val;
-                g_hash_table_replace(head->localScope,identifier,newVal);
+                newVal->next=NULL;
+                g_hash_table_insert(head->localScope,identifier,newVal);
         }
         else
         {
@@ -345,7 +375,7 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
         
 
 }
-void add_new_variable(struct Checker*head,const char*type,char*identifier)
+void add_new_variable(const char*type,char*identifier)
 {
         struct SymTabEntry newEntry;
         newEntry.name=malloc(strlen(identifier)+1);
@@ -491,19 +521,18 @@ void add_class_node(char*identifier)
                         }
                         val=val->next;
                 }
+                /*
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->value=newEntry;
                 newVal->next=val;
-                g_hash_table_replace(head->next->localScope,identifier,newVal);
+                g_hash_table_replace(head->localScope,identifier,newVal);
+                */
         }
-        else
-        {
                 struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
                 newVal->next=NULL;
                 newVal->value=newEntry;
-                g_hash_table_insert(head->next->localScope,identifier,newVal);
-
-        }
+                g_hash_table_insert(head->localScope,identifier,newVal);
+       
                 
 }
 void add_statement_node()
@@ -519,5 +548,43 @@ void add_statement_node()
         strcat(newNode->currentScope,value);
         newNode->next=head;
         head=newNode;
+        
 }
-void add_main_node();
+void add_main_node()
+{
+        head->counter++;
+        struct Checker*newNode=malloc(sizeof(struct Checker));
+        newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
+        char value[5];
+        sprintf(value,"%d",head->counter);
+        newNode->currentScope=malloc(strlen(head->currentScope)+strlen(value)+2);
+        strcpy(newNode->currentScope,head->currentScope);
+        strcat(newNode->currentScope,"-");
+        strcat(newNode->currentScope,value);
+        newNode->next=head;
+        head=newNode;
+        struct SymTabEntry newEntry;
+        newEntry.name=malloc(strlen("main")+1);
+        strcpy(newEntry.name,"main");
+        newEntry.whatIs=malloc(strlen("main-declaration")+1);
+        strcpy(newEntry.whatIs,"main-declaration");
+        newEntry.scope=malloc(strlen(head->currentScope)+1);
+        strcpy(newEntry.scope,head->currentScope);
+        struct ListOfEntries*val;
+         if((val=g_hash_table_lookup(head->next->localScope,"main")))
+        {  
+                while(val)
+                {
+                        if(strcmp(val->value.whatIs,"class-declaration")==0)
+                        {
+                                printf("Clasa [%s] a fost redeclarat\nProgramul a fost incheiat fortat!\n",newEntry.name);
+                                exit(EXIT_FAILURE);
+                        }
+                        val=val->next;
+                }
+        }
+                struct ListOfEntries*newVal=malloc(sizeof(struct ListOfEntries));
+                newVal->next=NULL;
+                newVal->value=newEntry;
+                g_hash_table_insert(head->localScope,"main",newVal);
+}

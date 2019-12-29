@@ -2,6 +2,7 @@
 ;$altvariabile loob
 ;$incauna *rahc
 ;$3=constanta tni tsnoc
+;$[5234324]unVector tni
 (a tni,b tni)functieTest tni
 {
   ;$untestMic tni
@@ -22,7 +23,7 @@ custom ssalc
         {
           (ceva<altceva)fi
           {
-             ;$ab tni
+             ;$2=ab tni
           }
           esle
           {
@@ -38,12 +39,12 @@ custom ssalc
       }
     }
 }
-
 altaclasa ssalc
 {
    ;$motroi tni
 }
-;$altaclasaisntant altaclasa
+;$altaclasainstant altaclasa
+
 ()niam tni
 {
     ;$2.0+3*2000+4+#(2.5665,5,#(6.215,ceva) altceva)completaltceva+(-256.242) =ovariablila tni
@@ -52,7 +53,6 @@ altaclasa ssalc
     ;$eurt=ceva loob
     ;$[54]obiecte custom
     ;#()functie=ceva.custom
-    ;25.5=ovariabila tsnoc taolf
     ;$#(ceva.custom,20)ofunctie=ovariabila taolf
     ;[#()functie.custom]vector = variabila
     ;10=variabila.obiect
