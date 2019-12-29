@@ -78,15 +78,6 @@ extern int yylineno;
 int yydebug=1;
 int yylex();
 int yyerror(char *s);
-typedef struct expr_info
-{
-        char*name;
-        int datatype;
-        int intvalue;
-        float floatvalue;
-        _Bool boolvalue;
-        
-} expr_info;
 
 struct SymTabEntry
 {
@@ -118,6 +109,7 @@ struct Checker
 };
 struct Checker*head=NULL;
 FILE*SymTabDump=NULL;
+int currLine;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier);
@@ -128,10 +120,11 @@ void add_main_node();
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
+void search_every_class(gpointer key,gpointer value,gpointer userdata);
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
 
 
-#line 135 "y.tab.c"
+#line 128 "y.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -266,7 +259,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 67 "experiment_hash.y"
+#line 60 "experiment_hash.y"
 
         int type;
         char*strname;
@@ -277,7 +270,7 @@ union YYSTYPE
         float floatval;
         struct expr_info* expr_ptr;
 
-#line 281 "y.tab.c"
+#line 274 "y.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -587,17 +580,17 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   102,   102,   103,   104,   107,   108,   111,   112,   113,
-     117,   117,   118,   118,   121,   122,   123,   126,   127,   130,
-     130,   131,   131,   134,   135,   138,   139,   142,   143,   146,
-     147,   150,   151,   152,   153,   154,   155,   156,   159,   160,
-     164,   165,   168,   168,   168,   169,   169,   169,   172,   172,
-     173,   173,   174,   177,   177,   178,   178,   181,   182,   183,
-     187,   187,   188,   188,   189,   189,   192,   194,   198,   207,
-     210,   211,   239,   240,   241,   255,   256,   257,   258,   259,
-     260,   263,   264,   265,   266,   267,   268,   269,   270,   271,
-     272,   273,   274,   275,   276,   277,   278,   279,   280,   281,
-     282,   283,   287,   290,   293,   296,   296,   297,   297
+       0,    95,    95,    96,    97,   100,   101,   104,   105,   106,
+     110,   110,   111,   111,   114,   115,   116,   119,   120,   123,
+     123,   124,   124,   127,   128,   131,   132,   135,   136,   139,
+     140,   143,   144,   145,   146,   147,   148,   149,   152,   153,
+     157,   158,   161,   161,   161,   162,   162,   162,   165,   165,
+     166,   166,   167,   170,   170,   171,   171,   174,   175,   176,
+     180,   180,   181,   181,   182,   182,   185,   187,   191,   200,
+     203,   204,   232,   233,   234,   248,   249,   250,   251,   252,
+     253,   256,   257,   258,   259,   260,   261,   262,   263,   264,
+     265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
+     275,   276,   280,   324,   327,   330,   330,   331,   331
 };
 #endif
 
@@ -1571,175 +1564,175 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 102 "experiment_hash.y"
+#line 95 "experiment_hash.y"
     {printf("Programul este corect\n");}
-#line 1577 "y.tab.c"
+#line 1570 "y.tab.c"
     break;
 
   case 3:
-#line 103 "experiment_hash.y"
+#line 96 "experiment_hash.y"
     {printf("Programul este corect\n");}
-#line 1583 "y.tab.c"
+#line 1576 "y.tab.c"
     break;
 
   case 4:
-#line 104 "experiment_hash.y"
+#line 97 "experiment_hash.y"
     {printf("Programul este corect!\n");}
-#line 1589 "y.tab.c"
+#line 1582 "y.tab.c"
     break;
 
   case 10:
-#line 117 "experiment_hash.y"
+#line 110 "experiment_hash.y"
     {add_class_node((yyvsp[-2].strname));}
-#line 1595 "y.tab.c"
+#line 1588 "y.tab.c"
     break;
 
   case 11:
-#line 117 "experiment_hash.y"
+#line 110 "experiment_hash.y"
     {remove_node();}
-#line 1601 "y.tab.c"
+#line 1594 "y.tab.c"
     break;
 
   case 12:
-#line 118 "experiment_hash.y"
+#line 111 "experiment_hash.y"
     {add_class_node((yyvsp[-2].strname));}
-#line 1607 "y.tab.c"
+#line 1600 "y.tab.c"
     break;
 
   case 19:
-#line 130 "experiment_hash.y"
+#line 123 "experiment_hash.y"
     {add_func_node((yyvsp[-2].strname),return_type((yyvsp[-1].type)),NULL);}
-#line 1613 "y.tab.c"
+#line 1606 "y.tab.c"
     break;
 
   case 20:
-#line 130 "experiment_hash.y"
+#line 123 "experiment_hash.y"
     {remove_node();}
-#line 1619 "y.tab.c"
+#line 1612 "y.tab.c"
     break;
 
   case 21:
-#line 131 "experiment_hash.y"
+#line 124 "experiment_hash.y"
     {add_func_node((yyvsp[-2].strname),return_type((yyvsp[-1].type)),NULL);}
-#line 1625 "y.tab.c"
+#line 1618 "y.tab.c"
     break;
 
   case 22:
-#line 131 "experiment_hash.y"
+#line 124 "experiment_hash.y"
     {remove_node();}
-#line 1631 "y.tab.c"
+#line 1624 "y.tab.c"
     break;
 
   case 42:
-#line 168 "experiment_hash.y"
+#line 161 "experiment_hash.y"
     {add_statement_node();}
-#line 1637 "y.tab.c"
+#line 1630 "y.tab.c"
     break;
 
   case 43:
-#line 168 "experiment_hash.y"
+#line 161 "experiment_hash.y"
     {remove_node();}
-#line 1643 "y.tab.c"
+#line 1636 "y.tab.c"
     break;
 
   case 45:
-#line 169 "experiment_hash.y"
+#line 162 "experiment_hash.y"
     {add_statement_node();}
-#line 1649 "y.tab.c"
+#line 1642 "y.tab.c"
     break;
 
   case 46:
-#line 169 "experiment_hash.y"
+#line 162 "experiment_hash.y"
     {remove_node();}
-#line 1655 "y.tab.c"
+#line 1648 "y.tab.c"
     break;
 
   case 48:
-#line 172 "experiment_hash.y"
+#line 165 "experiment_hash.y"
     {add_statement_node();}
-#line 1661 "y.tab.c"
+#line 1654 "y.tab.c"
     break;
 
   case 49:
-#line 172 "experiment_hash.y"
+#line 165 "experiment_hash.y"
     {remove_node();}
-#line 1667 "y.tab.c"
+#line 1660 "y.tab.c"
     break;
 
   case 50:
-#line 173 "experiment_hash.y"
+#line 166 "experiment_hash.y"
     {add_statement_node();}
-#line 1673 "y.tab.c"
+#line 1666 "y.tab.c"
     break;
 
   case 51:
-#line 173 "experiment_hash.y"
+#line 166 "experiment_hash.y"
     {remove_node();}
-#line 1679 "y.tab.c"
+#line 1672 "y.tab.c"
     break;
 
   case 53:
-#line 177 "experiment_hash.y"
+#line 170 "experiment_hash.y"
     {add_statement_node();}
-#line 1685 "y.tab.c"
+#line 1678 "y.tab.c"
     break;
 
   case 54:
-#line 177 "experiment_hash.y"
+#line 170 "experiment_hash.y"
     {remove_node();}
-#line 1691 "y.tab.c"
+#line 1684 "y.tab.c"
     break;
 
   case 55:
-#line 178 "experiment_hash.y"
+#line 171 "experiment_hash.y"
     {add_statement_node();}
-#line 1697 "y.tab.c"
+#line 1690 "y.tab.c"
     break;
 
   case 56:
-#line 178 "experiment_hash.y"
+#line 171 "experiment_hash.y"
     {remove_node();}
-#line 1703 "y.tab.c"
+#line 1696 "y.tab.c"
     break;
 
   case 60:
-#line 187 "experiment_hash.y"
+#line 180 "experiment_hash.y"
     {add_statement_node();}
-#line 1709 "y.tab.c"
+#line 1702 "y.tab.c"
     break;
 
   case 61:
-#line 187 "experiment_hash.y"
+#line 180 "experiment_hash.y"
     {remove_node();}
-#line 1715 "y.tab.c"
+#line 1708 "y.tab.c"
     break;
 
   case 62:
-#line 188 "experiment_hash.y"
+#line 181 "experiment_hash.y"
     {add_statement_node();}
-#line 1721 "y.tab.c"
+#line 1714 "y.tab.c"
     break;
 
   case 63:
-#line 188 "experiment_hash.y"
+#line 181 "experiment_hash.y"
     {remove_node();}
-#line 1727 "y.tab.c"
+#line 1720 "y.tab.c"
     break;
 
   case 64:
-#line 189 "experiment_hash.y"
+#line 182 "experiment_hash.y"
     {add_statement_node();}
-#line 1733 "y.tab.c"
+#line 1726 "y.tab.c"
     break;
 
   case 65:
-#line 189 "experiment_hash.y"
+#line 182 "experiment_hash.y"
     {remove_node();}
-#line 1739 "y.tab.c"
+#line 1732 "y.tab.c"
     break;
 
   case 68:
-#line 198 "experiment_hash.y"
+#line 191 "experiment_hash.y"
     {
                                  
                                  char*customType=malloc(strlen(return_type((yyvsp[0].type)))+strlen("50"));
@@ -1749,17 +1742,17 @@ yyreduce:
                                  strcat(customType,"]");
                                  add_new_variable(customType,(yyvsp[-1].strname));
                         }
-#line 1753 "y.tab.c"
+#line 1746 "y.tab.c"
     break;
 
   case 70:
-#line 210 "experiment_hash.y"
+#line 203 "experiment_hash.y"
     {add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname));}
-#line 1759 "y.tab.c"
+#line 1752 "y.tab.c"
     break;
 
   case 71:
-#line 211 "experiment_hash.y"
+#line 204 "experiment_hash.y"
     {
                             struct Checker*iterator=head;
                             while(iterator->next!=NULL)
@@ -1788,23 +1781,23 @@ yyreduce:
                             }
 
                         }
-#line 1792 "y.tab.c"
+#line 1785 "y.tab.c"
     break;
 
   case 72:
-#line 239 "experiment_hash.y"
+#line 232 "experiment_hash.y"
     {add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname));}
-#line 1798 "y.tab.c"
+#line 1791 "y.tab.c"
     break;
 
   case 73:
-#line 240 "experiment_hash.y"
+#line 233 "experiment_hash.y"
     {add_new_variable((yyvsp[0].strname),(yyvsp[-1].strname));}
-#line 1804 "y.tab.c"
+#line 1797 "y.tab.c"
     break;
 
   case 74:
-#line 241 "experiment_hash.y"
+#line 234 "experiment_hash.y"
     {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type((yyvsp[-1].type)))+1);
                                 strcpy(newtype,"const-");
@@ -1812,71 +1805,117 @@ yyreduce:
                                 newtype[strlen(newtype)]='\0';
                                 add_new_variable(newtype,(yyvsp[-2].strname));
                         }
-#line 1816 "y.tab.c"
+#line 1809 "y.tab.c"
     break;
 
   case 75:
-#line 255 "experiment_hash.y"
+#line 248 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1822 "y.tab.c"
+#line 1815 "y.tab.c"
     break;
 
   case 76:
-#line 256 "experiment_hash.y"
+#line 249 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1828 "y.tab.c"
+#line 1821 "y.tab.c"
     break;
 
   case 77:
-#line 257 "experiment_hash.y"
+#line 250 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1834 "y.tab.c"
+#line 1827 "y.tab.c"
     break;
 
   case 78:
-#line 258 "experiment_hash.y"
+#line 251 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1840 "y.tab.c"
+#line 1833 "y.tab.c"
     break;
 
   case 79:
-#line 259 "experiment_hash.y"
+#line 252 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1846 "y.tab.c"
+#line 1839 "y.tab.c"
     break;
 
   case 80:
-#line 260 "experiment_hash.y"
+#line 253 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 1852 "y.tab.c"
+#line 1845 "y.tab.c"
+    break;
+
+  case 102:
+#line 281 "experiment_hash.y"
+    {
+                                struct Checker *allScope=head;
+                                int classFound=0;
+                                while(allScope && !classFound)
+                                {
+                                        struct ListOfEntries*searchList;
+                                        if(searchList=g_hash_table_lookup(allScope->localScope,(yyvsp[0].strname)))
+                                        {
+                                                printf("Am gasit %s in scope-ul %s\n",(yyvsp[0].strname),allScope->currentScope);
+                                                while(searchList && !classFound)
+                                                {
+                                                        struct Checker*globalScope=head;
+                                                        while(globalScope->next!=NULL)
+                                                        {
+                                                                globalScope=globalScope->next;
+                                                        }       
+                                                        struct ListOfEntries*insideList;
+                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                        {
+                                                                while(insideList)
+                                                                {
+                                                                        if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                        {
+                                                                                classFound=1;
+                                                                                break;
+                                                                        }
+                                                                        insideList=insideList->next;
+                                                                }
+                                                        }
+                                                        searchList=searchList->next;
+                                                }
+                                        }
+                                        allScope=allScope->next;
+                                }
+                                if(!classFound)
+                                {
+                                        printf("Identificatorul [%s] nu desemneaza un obiect\n",(yyvsp[0].strname));
+                                        exit(EXIT_FAILURE);
+                                }
+
+                        }
+#line 1891 "y.tab.c"
     break;
 
   case 105:
-#line 296 "experiment_hash.y"
+#line 330 "experiment_hash.y"
     {add_main_node();}
-#line 1858 "y.tab.c"
+#line 1897 "y.tab.c"
     break;
 
   case 106:
-#line 296 "experiment_hash.y"
+#line 330 "experiment_hash.y"
     {remove_node();}
-#line 1864 "y.tab.c"
+#line 1903 "y.tab.c"
     break;
 
   case 107:
-#line 297 "experiment_hash.y"
+#line 331 "experiment_hash.y"
     {add_main_node();}
-#line 1870 "y.tab.c"
+#line 1909 "y.tab.c"
     break;
 
   case 108:
-#line 297 "experiment_hash.y"
+#line 331 "experiment_hash.y"
     {remove_node();}
-#line 1876 "y.tab.c"
+#line 1915 "y.tab.c"
     break;
 
 
-#line 1880 "y.tab.c"
+#line 1919 "y.tab.c"
 
       default: break;
     }
@@ -2108,7 +2147,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 299 "experiment_hash.y"
+#line 333 "experiment_hash.y"
 
 int yyerror(char * s){
     printf("eroare: %s la linia:%d\n",s,yylineno);
@@ -2263,6 +2302,10 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
            {
                    fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
            }
+           if(strcmp(var->value.whatIs,"main-declaration")==0)
+           {
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
+           }
            var=var->next;
         }
 }
@@ -2392,6 +2435,7 @@ void add_main_node()
         newEntry.scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry.scope,head->currentScope);
         struct ListOfEntries*val;
+        newEntry.lineOf=yylineno;
          if((val=g_hash_table_lookup(head->next->localScope,"main")))
         {  
                 while(val)

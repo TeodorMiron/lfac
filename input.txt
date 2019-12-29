@@ -48,8 +48,11 @@ altaclasa ssalc
    ;$motroi tni
 }
 ;$altaclasainstant altaclasa
+;$test custom
 ()niam tni
 {
+    ;$unobiectrandom custom
+    ;#()functie.unobiectrandom
     ;$2.0+3*2000+4+#(2.5665,5,#(6.215,ceva) altceva)completaltceva+(-256.242) =ovariablila tni
     ;$[20000]vector tni
     ;[1000]ab=[10000]bc
@@ -57,8 +60,6 @@ altaclasa ssalc
     ;$[54]obiecte custom
     ;#()functie=ceva.custom
     ;$#(ceva.custom,20)ofunctie=ovariabila taolf
-    ;[#()functie.custom]vector = variabila
     ;10=variabila.obiect
-    ;#(ceva,altceva.oclasadeceva)functie.clasa
     ;#(23,24)functie
 }

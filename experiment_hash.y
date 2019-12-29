@@ -9,15 +9,6 @@ extern int yylineno;
 int yydebug=1;
 int yylex();
 int yyerror(char *s);
-typedef struct expr_info
-{
-        char*name;
-        int datatype;
-        int intvalue;
-        float floatvalue;
-        _Bool boolvalue;
-        
-} expr_info;
 
 struct SymTabEntry
 {
@@ -49,6 +40,7 @@ struct Checker
 };
 struct Checker*head=NULL;
 FILE*SymTabDump=NULL;
+int currLine;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier);
@@ -59,6 +51,7 @@ void add_main_node();
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
+void search_every_class(gpointer key,gpointer value,gpointer userdata);
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
 
 %}
@@ -105,7 +98,7 @@ start_program: declaration_section main_section {printf("Programul este corect\n
              ;
 
 declaration_section:declaration_section declaration_content;
-                    | declaration_content
+                    | declaration_content 
                     ;
 
 declaration_content: function_declaration 
@@ -285,7 +278,47 @@ expression: ID
 
 
 object_call_function:function_call '.' ID
-                    ;
+                        {
+                                struct Checker *allScope=head;
+                                int classFound=0;
+                                while(allScope && !classFound)
+                                {
+                                        struct ListOfEntries*searchList;
+                                        if(searchList=g_hash_table_lookup(allScope->localScope,$3))
+                                        {
+                                                while(searchList && !classFound)
+                                                {
+                                                        struct Checker*globalScope=head;
+                                                        while(globalScope->next!=NULL)
+                                                        {
+                                                                globalScope=globalScope->next;
+                                                        }       
+                                                        struct ListOfEntries*insideList;
+                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                        {
+                                                                while(insideList)
+                                                                {
+                                                                        if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                        {
+                                                                                classFound=1;
+                                                                                break;
+                                                                        }
+                                                                        insideList=insideList->next;
+                                                                }
+                                                        }
+                                                        searchList=searchList->next;
+                                                }
+                                        }
+                                        allScope=allScope->next;
+                                }
+                                if(!classFound)
+                                {
+                                        printf("Identificatorul [%s] nu desemneaza un obiect\n",$3);
+                                        exit(EXIT_FAILURE);
+                                }
+
+                        }
+                ;
 
 object_access_var:ID'.'ID
                  ;
@@ -450,6 +483,10 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
            {
                    fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
            }
+           if(strcmp(var->value.whatIs,"main-declaration")==0)
+           {
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
+           }
            var=var->next;
         }
 }
@@ -579,6 +616,7 @@ void add_main_node()
         newEntry.scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry.scope,head->currentScope);
         struct ListOfEntries*val;
+        newEntry.lineOf=yylineno;
          if((val=g_hash_table_lookup(head->next->localScope,"main")))
         {  
                 while(val)
