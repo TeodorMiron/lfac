@@ -39,6 +39,7 @@ struct Checker
 
 };
 struct Checker*head=NULL;
+struct ListOfEntries*funcArgs=NULL;
 FILE*SymTabDump=NULL;
 int currLine;
 void init_prg();
@@ -71,7 +72,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 }
 
 %start start_program
-%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL BOOL_TRUE BOOL_FALSE GREATER_EQUAL STRING_TYPE CONST RETURN
+%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL BOOL_TRUE BOOL_FALSE GREATER_EQUAL STRING_TYPE CONST RETURN 
 %left ADD 
 %left MIN
 %left MUL
@@ -124,6 +125,8 @@ inside_object:function_declaration
                     
 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
                     | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
                     ;
 
 return_statement:RETURN expression
@@ -131,7 +134,11 @@ return_statement:RETURN expression
                 ;
 
 list_param:list_param ',' ID available_types
-           |ID available_types
+           |ID available_types 
+                {
+
+                }
+           | ID available_types CONST
            ;
 
 function_content: function_content statements
@@ -261,6 +268,7 @@ expression: ID
           | BOOL_TRUE
           | BOOL_FALSE
           | STRING_VAL
+          | CHAR_VAL
           | function_call
           | object_call_function
           | object_access_var
@@ -336,6 +344,7 @@ void init_prg()
                 perror("Eroare la deschiderea fisierului symbol_table.txt\n");
                 exit(EXIT_FAILURE);
         }
+        funcArgs=malloc(sizeof(struct ListOfEntries));
 }
 void free_entry(struct ListOfEntries*val)
 {

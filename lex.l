@@ -47,6 +47,7 @@
 [-]?[1-9][0-9]*|0 {yylval.intval=atoi(yytext);return INT_VAL;}
 [-]?([0-9]*[.])?[0-9]+ {yylval.floatval=atof(yytext);return FLOAT_VAL;}
 \"[^\"\n]*\" {yylval.strval=strdup(yytext);return STRING_VAL;}
+\'[^\"\n]*\' {yylval.strval=strdup(yytext);return CHAR_VAL;}
 [ \t] ;
 \n {yylineno++;}
 . {return yytext[0];}

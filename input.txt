@@ -3,13 +3,12 @@
 ;$incauna *rahc
 ;$3=constanta tni tsnoc
 ;$[5234324]unVector tni
+;$eurt=logica loob
+;$"un text plm"=propozitie*rahc
+;$'a'=caracter rahc
 (a tni,b tni)functieTest tni
 {
   ;$untestMic tni
-}
-(ac tni) unaltTest loob
-{
-
 }
 custom ssalc
 {
@@ -33,9 +32,9 @@ custom ssalc
           }
           esle
           {
-
+           ;$CevaNou loob
           }
-          ;$CevaNou loob
+          
         }
       }
       (2<3)elihw
