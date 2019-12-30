@@ -45,7 +45,7 @@ FILE*SymTabDump=NULL;
 int currLine;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
-void add_new_variable(const char*type,char*identifier);
+void add_new_variable(const char*type,char*identifier,int init);
 void add_func_node(char*identifier,const char*returntype,char*arg_list);
 void add_statement_node();
 void add_class_node(char*identifier);
@@ -54,6 +54,7 @@ const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
 int is_class_object(char*identifier);
+struct ListOfEntries*new_parameter_list(struct ListOfEntries*oldList);
 int is_object_variable(char*class,char*variable);
 void search_every_class(gpointer key,gpointer value,gpointer userdata);
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
@@ -107,7 +108,7 @@ declaration_section:declaration_section declaration_content;
 
 declaration_content: function_declaration 
                     | object_declaration  
-                    | create_variable 
+                    | ';'create_variable 
                     ;
 
 
@@ -117,11 +118,10 @@ object_declaration: ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}object_cont
 
 object_content:object_content inside_object 
               | inside_object
-              | expression 
               ; 
 
 inside_object:function_declaration
-             | create_variable 
+             | ';'create_variable 
              ; 
                     
 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
@@ -134,12 +134,8 @@ return_statement:RETURN expression
                 | 
                 ;
 
-list_param:list_param ',' ID available_types
-           |ID available_types 
-                {
-
-                }
-           | ID available_types CONST
+list_param:  list_param ',' create_single_variable 
+           | create_single_variable
            ;
 
 function_content: function_content statements
@@ -153,10 +149,10 @@ multiple_statements:multiple_statements statements
 statements: if_statement
             | while_statement
             | for_statement
-            | assign_statement
-            | create_variable 
+            | ';'assign_statement
+            | ';'create_variable 
             | ';'function_call
-            | ';' object_call_function
+            | ';'object_call_function
             ;
 
 function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
@@ -181,9 +177,9 @@ while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CU
             |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET{remove_node();}
             ;
 
-assign_statement: ';'expression ASSIGN ID 
-            | ';'expression ASSIGN object_access_var
-            | ';'expression ASSIGN access_vector
+assign_statement: expression ASSIGN ID 
+            | expression ASSIGN object_access_var
+            | expression ASSIGN access_vector
             ;
 
 
@@ -192,9 +188,9 @@ for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression
          | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}
          ;
 
-create_variable: ';'create_single_variable 
+create_variable: create_single_variable 
              //  | ';''#'create_multiple_variable available_types
-               | ';''$'create_array_variable
+               | '$'create_array_variable
               // | ';'create_const_variable
                ;
 
@@ -205,12 +201,12 @@ create_array_variable:'['expression']' ID available_types {
                                  strcat(customType,"[");
                                  strcat(customType,"50");
                                  strcat(customType,"]");
-                                 add_new_variable(customType,$4);
+                                 add_new_variable(customType,$4,0);
                         }
                      | '[' expression ']' ID ID
                      ;
 
-create_single_variable:  '$' ID available_types {add_new_variable(return_type($3),$2);}
+create_single_variable:  '$' ID available_types {add_new_variable(return_type($3),$2,0);}
                         |'$' ID ID {
                             struct Checker*iterator=head;
                             while(iterator->next!=NULL)
@@ -230,7 +226,7 @@ create_single_variable:  '$' ID available_types {add_new_variable(return_type($3
                             }
                             if(objFound)
                             {
-                               add_new_variable($3,$2);
+                               add_new_variable($3,$2,0);
                             }
                             else
                             {
@@ -239,14 +235,14 @@ create_single_variable:  '$' ID available_types {add_new_variable(return_type($3
                             }
 
                         }
-                        |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4);}
-                        |'$' expression ASSIGN ID ID {add_new_variable($5,$4);}
+                        |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4,1);}
+                        |'$' expression ASSIGN ID ID {add_new_variable($5,$4,1);}
                         |'$' expression ASSIGN ID available_types CONST {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type($5))+1);
                                 strcpy(newtype,"const-");
                                 strcat(newtype,return_type($5));
                                 newtype[strlen(newtype)]='\0';
-                                add_new_variable(newtype,$4);
+                                add_new_variable(newtype,$4,1);
                         }
                         ;
 /*
@@ -345,7 +341,6 @@ void init_prg()
                 perror("Eroare la deschiderea fisierului symbol_table.txt\n");
                 exit(EXIT_FAILURE);
         }
-        funcArgs=malloc(sizeof(struct ListOfEntries));
 }
 void free_entry(struct ListOfEntries*val)
 {
@@ -398,7 +393,7 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
                 g_hash_table_insert(head->localScope,identifier,newVal);
 
 }
-void add_new_variable(const char*type,char*identifier)
+void add_new_variable(const char*type,char*identifier,int init)
 {
         if(strcmp(type,"void")==0)
         {
@@ -419,6 +414,7 @@ void add_new_variable(const char*type,char*identifier)
         strcpy(newEntry->scope,head->currentScope);
         newEntry->scope[strlen(newEntry->scope)]='\0';
         newEntry->lineOf=yylineno;
+        newEntry->initialised=init;
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->localScope,identifier)))
         {
@@ -567,7 +563,7 @@ void add_class_node(char*identifier)
                 
 }
 void add_statement_node()
-{7
+{
         head->counter++;
         struct Checker*newNode=malloc(sizeof(struct Checker));
         newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);

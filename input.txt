@@ -5,22 +5,15 @@
 ;$[5234324]unVector tni
 ;$eurt=logica loob
 ;$"un text plm"=propozitie*rahc
-;$'a'=caracter rahc
-(a tni,b tni)functieTest tni
-{
-  ;$untestMic tni
-}
+
 custom ssalc
 {
   ;$incauna *rahc
   ;$motroi tni
   ;$ceva tni
   ;$variabila tni
-  (i2 taolf) altTest rahc
-  {
-    
-  }
-   (i2 tni,i3 taolf)functie tni
+
+   ($a tni,$cda tni)functie tni
    {
       (2<3)fi
       {
