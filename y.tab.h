@@ -145,7 +145,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 60 "experiment_hash.y"
+#line 62 "experiment_hash.y"
 
         int type;
         char*strname;

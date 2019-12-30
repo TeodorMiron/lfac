@@ -51,6 +51,8 @@ void add_main_node();
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
+int is_class_object(char*identifier);
+int is_object_variable(char*class,char*variable);
 void search_every_class(gpointer key,gpointer value,gpointer userdata);
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
 
@@ -279,48 +281,22 @@ expression: ID
 
 object_call_function:function_call '.' ID
                         {
-                                struct Checker *allScope=head;
-                                int classFound=0;
-                                while(allScope && !classFound)
+                                
+                                if(!is_class_object($3))
                                 {
-                                        struct ListOfEntries*searchList;
-                                        if(searchList=g_hash_table_lookup(allScope->localScope,$3))
-                                        {
-                                                while(searchList && !classFound)
-                                                {
-                                                        struct Checker*globalScope=head;
-                                                        while(globalScope->next!=NULL)
-                                                        {
-                                                                globalScope=globalScope->next;
-                                                        }       
-                                                        struct ListOfEntries*insideList;
-                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
-                                                        {
-                                                                while(insideList)
-                                                                {
-                                                                        if(strcmp(insideList->value.whatIs,"object-declaration"))
-                                                                        {
-                                                                                classFound=1;
-                                                                                break;
-                                                                        }
-                                                                        insideList=insideList->next;
-                                                                }
-                                                        }
-                                                        searchList=searchList->next;
-                                                }
-                                        }
-                                        allScope=allScope->next;
-                                }
-                                if(!classFound)
-                                {
-                                        printf("Identificatorul [%s] nu desemneaza un obiect\n",$3);
                                         exit(EXIT_FAILURE);
                                 }
-
                         }
                 ;
 
 object_access_var:ID'.'ID
+                {
+                        if(!is_object_variable($3,$1))
+                        {
+                                exit(EXIT_FAILURE);
+                        }
+
+                }
                  ;
 
 access_vector:'['expression']' ID
@@ -633,4 +609,124 @@ void add_main_node()
                 newVal->next=NULL;
                 newVal->value=newEntry;
                 g_hash_table_insert(head->localScope,"main",newVal);
+}
+int is_class_object(char*identifier)
+{
+                        struct Checker *allScope=head;
+                        int classFound=0;
+                        int exists=0;
+                                while(allScope && !classFound)
+                                {
+                                        struct ListOfEntries*searchList;
+                                        if(searchList=g_hash_table_lookup(allScope->localScope,identifier))
+                                        {
+                                                while(searchList && !classFound)
+                                                {
+                                                        struct Checker*globalScope=head;
+                                                        while(globalScope->next!=NULL)
+                                                        {
+                                                                globalScope=globalScope->next;
+                                                        }       
+                                                        struct ListOfEntries*insideList;
+                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                        {
+                                                                while(insideList)
+                                                                {
+                                                                        if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                        {
+                                                                                classFound=1;
+                                                                                break;
+                                                                        }
+                                                                        insideList=insideList->next;
+                                                                }
+                                                        }
+                                                        searchList=searchList->next;
+                                                }
+                                                exists=1;
+                                        }
+                                        allScope=allScope->next;
+                                }
+                                if(!exists)
+                                {
+                                        printf("Identificatorul [%s] nu este declarat!\n",identifier);
+                                        return 0;
+                                }
+                                if(!classFound)
+                                {
+                                        printf("Identificatorul [%s] este declarat insa nu desemneaza un obiect!\n",identifier);
+                                        return 0;
+                                }
+                                return 1;
+}
+int is_object_variable(char*object,char*variable)
+{
+        struct Checker *allScope=head;
+                        int classFound=0;
+                        int exists=0;
+                        char*classScope;
+                         struct Checker*globalScope=head;
+                        while(globalScope->next!=NULL)
+                        {
+                                globalScope=globalScope->next;
+                        }  
+                        while(allScope && !classFound)
+                        {
+                                struct ListOfEntries*searchList;
+                                if(searchList=g_hash_table_lookup(allScope->localScope,object))
+                                {
+                                        while(searchList && !classFound)
+                                        {
+                                                        
+                                                struct ListOfEntries*insideList;
+                                                if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                {
+                                                        while(insideList)
+                                                        {
+                                                                if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                {
+                                                                        classFound=1;
+                                                                        classScope=malloc(strlen(insideList->value.scope)+1);
+                                                                        strcpy(classScope,insideList->value.scope);
+                                                                        break;
+                                                                }
+                                                                insideList=insideList->next;
+                                                        }
+                                                }
+                                                searchList=searchList->next;
+                                        }
+                                        exists=1;
+                                }
+                                allScope=allScope->next;
+                        }
+                        if(!exists)
+                        {
+                                printf("Identificatorul [%s] nu este declarat!\n",object);
+                                return 0;
+                        }
+                        if(!classFound)
+                        {
+                                printf("Identificatorul [%s] este declarat insa nu desemneaza un obiect!\n",object);
+                                return 0;
+                        }
+                        int variableFound=0;
+                        struct ListOfEntries*listVar;
+                        if(listVar=g_hash_table_lookup(globalScope->localScope,variable))
+                        {
+                                while(listVar)
+                                {
+                                        if(strcmp(listVar->value.scope,classScope)==0)
+                                        {
+                                                variableFound=1;
+                                                break;
+                                        }
+                                        listVar=listVar->next;
+                                }
+                        }
+                        if(!variableFound)
+                        {
+                                printf("Identificatorul [%s] nu este declarat ca variabila membra a obiectului [%s]\n",variable,object);
+                                return 0;
+                        }
+                        return 1;
+                        
 }

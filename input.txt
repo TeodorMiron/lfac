@@ -15,6 +15,8 @@ custom ssalc
 {
   ;$incauna *rahc
   ;$motroi tni
+  ;$ceva tni
+  ;$variabila tni
   (i2 taolf) altTest rahc
   {
     
@@ -58,8 +60,8 @@ altaclasa ssalc
     ;[1000]ab=[10000]bc
     ;$eurt=ceva loob
     ;$[54]obiecte custom
-    ;#()functie=ceva.custom
-    ;$#(ceva.custom,20)ofunctie=ovariabila taolf
-    ;10=variabila.obiect
+    ;#()functie=ceva.unobiectrandom
+    ;$#(ceva.unobiectrandom,20)ofunctie=ovariabila taolf
+    ;10=variabila.unobiectrandom
     ;#(23,24)functie
 }
