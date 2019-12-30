@@ -24,23 +24,23 @@ custom ssalc
    {
       (2<3)fi
       {
-        (a<b)elihw
-        {
-          (ceva<altceva)fi
+          (a<b)elihw
           {
-             ;$2=ab tni
+              (ceva<altceva)fi
+              {
+                   ;$2=ab tni
+              }
+              esle
+              {
+                  ;$CevaNou loob
+              }
+            
           }
-          esle
-          {
-           ;$CevaNou loob
-          }
-          
-        }
       }
       (2<3)elihw
       {
-        ;$a tni
-        ;2+#(2+"aasdasd")f2=a
+          ;$a tni
+          ;2+#(2+"aasdasd")f2=a
       }
     }
 }

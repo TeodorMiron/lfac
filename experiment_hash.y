@@ -22,11 +22,12 @@ struct SymTabEntry
         char charvalue;
         float floatvalue;
         char*paramlist;
+        int initialised;
 
 } SymTabEntry;
 struct ListOfEntries
 {
-        struct SymTabEntry value;
+        struct SymTabEntry*value;
         struct ListOfEntries*next;
 } ListOfEntries;
 
@@ -220,7 +221,7 @@ create_single_variable:  '$' ID available_types {add_new_variable(return_type($3
                             int objFound=0;
                             while(list)
                             {
-                                    if(strcmp(list->value.whatIs,"object-declaration"))
+                                    if(strcmp(list->value->whatIs,"object-declaration"))
                                     {
                                             objFound=1;
                                             break;
@@ -364,28 +365,28 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
         strcat(newNode->currentScope,valuef);
         newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
         head=newNode;
-        struct SymTabEntry newEntry;
-        newEntry.name=malloc(strlen(identifier)+1);
-        strcpy(newEntry.name,identifier);
-        newEntry.name[strlen(newEntry.name)]='\0';
-        newEntry.dataType=malloc(strlen(returntype)+1);
-        strcpy(newEntry.dataType,returntype);
-        newEntry.dataType[strlen(newEntry.dataType)]='\0';
-        newEntry.whatIs=malloc(strlen("function-declaration")+1);
-        strcpy(newEntry.whatIs,"function-declaration");
-        newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
-        newEntry.scope=malloc(strlen(head->currentScope)+1);
-        strcpy(newEntry.scope,head->currentScope);
-        newEntry.scope[strlen(newEntry.scope)]='\0';
-        newEntry.lineOf=yylineno;
+        struct SymTabEntry*newEntry=malloc(sizeof(struct SymTabEntry));
+        newEntry->name=malloc(strlen(identifier)+1);
+        strcpy(newEntry->name,identifier);
+        newEntry->name[strlen(newEntry->name)]='\0';
+        newEntry->dataType=malloc(strlen(returntype)+1);
+        strcpy(newEntry->dataType,returntype);
+        newEntry->dataType[strlen(newEntry->dataType)]='\0';
+        newEntry->whatIs=malloc(strlen("function-declaration")+1);
+        strcpy(newEntry->whatIs,"function-declaration");
+        newEntry->whatIs[strlen(newEntry->whatIs)]='\0';
+        newEntry->scope=malloc(strlen(head->currentScope)+1);
+        strcpy(newEntry->scope,head->currentScope);
+        newEntry->scope[strlen(newEntry->scope)]='\0';
+        newEntry->lineOf=yylineno;
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {
                 while(val)
                 {
-                        if(strncmp(val->value.scope,newEntry.scope,strlen(newEntry.scope)-nLenght)==0 && strcmp(val->value.whatIs,"function-declaration")==0)
+                        if(strncmp(val->value->scope,newEntry->scope,strlen(newEntry->scope)-nLenght)==0 && strcmp(val->value->whatIs,"function-declaration")==0)
                         {
-                                printf("Functia [%s] de tipul de retur %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry.name,newEntry.dataType,val->value.scope);
+                                printf("Functia [%s] de tipul de retur %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry->name,newEntry->dataType,val->value->scope);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
@@ -404,28 +405,28 @@ void add_new_variable(const char*type,char*identifier)
                 printf("Variabila [%s] declarata de tipul void\n",identifier);
                 exit(EXIT_FAILURE);
         }
-        struct SymTabEntry newEntry;
-        newEntry.name=malloc(strlen(identifier)+1);
-        newEntry.name[strlen(newEntry.name)]='\0';
-        strcpy(newEntry.name,identifier);
-        newEntry.dataType=malloc(strlen(type)+1);
-        strcpy(newEntry.dataType,type);
-        newEntry.dataType[strlen(newEntry.dataType)]='\0';
-        newEntry.whatIs=malloc(strlen("variable")+1);
-        strcpy(newEntry.whatIs,"variable");
-        newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
-        newEntry.scope=malloc(strlen(head->currentScope)+1);
-        strcpy(newEntry.scope,head->currentScope);
-        newEntry.scope[strlen(newEntry.scope)]='\0';
-        newEntry.lineOf=yylineno;
+        struct SymTabEntry*newEntry=malloc(sizeof(struct SymTabEntry));
+        newEntry->name=malloc(strlen(identifier)+1);
+        newEntry->name[strlen(newEntry->name)]='\0';
+        strcpy(newEntry->name,identifier);
+        newEntry->dataType=malloc(strlen(type)+1);
+        strcpy(newEntry->dataType,type);
+        newEntry->dataType[strlen(newEntry->dataType)]='\0';
+        newEntry->whatIs=malloc(strlen("variable")+1);
+        strcpy(newEntry->whatIs,"variable");
+        newEntry->whatIs[strlen(newEntry->whatIs)]='\0';
+        newEntry->scope=malloc(strlen(head->currentScope)+1);
+        strcpy(newEntry->scope,head->currentScope);
+        newEntry->scope[strlen(newEntry->scope)]='\0';
+        newEntry->lineOf=yylineno;
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->localScope,identifier)))
         {
                 while(val)
                 {
-                        if(strcmp(val->value.scope,newEntry.scope)==0 && strcmp(val->value.whatIs,"variable")==0)
+                        if(strcmp(val->value->scope,newEntry->scope)==0 && strcmp(val->value->whatIs,"variable")==0)
                         {
-                                printf("Variabila [%s] de tipul %s a fost redeclarat in scope-ul %s\n",newEntry.name,newEntry.dataType,newEntry.scope);
+                                printf("Variabila [%s] de tipul %s a fost redeclarat in scope-ul %s\n",newEntry->name,newEntry->dataType,newEntry->scope);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
@@ -455,22 +456,22 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
         struct ListOfEntries*var=value;
         while(var)
         {
-           printf("%s \t%s\t %s\n",var->value.name,var->value.whatIs,var->value.scope);
-           if(strcmp(var->value.whatIs,"variable")==0)
+           printf("%s \t%s\t %s\n",var->value->name,var->value->whatIs,var->value->scope);
+           if(strcmp(var->value->whatIs,"variable")==0)
            {
-                   fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.dataType,var->value.intvalue,var->value.scope);
+                   fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->intvalue,var->value->scope);
            }
-           if(strcmp(var->value.whatIs,"function-declaration")==0)
+           if(strcmp(var->value->whatIs,"function-declaration")==0)
            {
-                   fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.dataType,var->value.paramlist,var->value.scope);
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->paramlist,var->value->scope);
            }
-           if(strcmp(var->value.whatIs,"class-declaration")==0)
+           if(strcmp(var->value->whatIs,"class-declaration")==0)
            {
-                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->scope);
            }
-           if(strcmp(var->value.whatIs,"main-declaration")==0)
+           if(strcmp(var->value->whatIs,"main-declaration")==0)
            {
-                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value.lineOf,var->value.name,var->value.whatIs,var->value.scope);
+                   fprintf(SymTabDump,"%i \t %s \t %s \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->scope);
            }
            var=var->next;
         }
@@ -534,25 +535,25 @@ void add_class_node(char*identifier)
         strcat(newNode->currentScope,valuef);
         newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
         head=newNode;
-        struct SymTabEntry newEntry;
-        newEntry.name=malloc(strlen(identifier)+1);
-        strcpy(newEntry.name,identifier);
-        newEntry.name[strlen(newEntry.name)]='\0';
-        newEntry.whatIs=malloc(strlen("class-declaration")+1);
-        strcpy(newEntry.whatIs,"class-declaration");
-        newEntry.whatIs[strlen(newEntry.whatIs)]='\0';
-        newEntry.scope=malloc(strlen(head->currentScope)+1);
-        strcpy(newEntry.scope,head->currentScope);
-        newEntry.scope[strlen(newEntry.scope)]='\0';
-        newEntry.lineOf=yylineno;
+        struct SymTabEntry*newEntry=malloc(sizeof(struct SymTabEntry));
+        newEntry->name=malloc(strlen(identifier)+1);
+        strcpy(newEntry->name,identifier);
+        newEntry->name[strlen(newEntry->name)]='\0';
+        newEntry->whatIs=malloc(strlen("class-declaration")+1);
+        strcpy(newEntry->whatIs,"class-declaration");
+        newEntry->whatIs[strlen(newEntry->whatIs)]='\0';
+        newEntry->scope=malloc(strlen(head->currentScope)+1);
+        strcpy(newEntry->scope,head->currentScope);
+        newEntry->scope[strlen(newEntry->scope)]='\0';
+        newEntry->lineOf=yylineno;
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {  
                 while(val)
                 {
-                        if(strcmp(val->value.whatIs,"class-declaration")==0)
+                        if(strcmp(val->value->whatIs,"class-declaration")==0)
                         {
-                                printf("Clasa [%s] a fost redeclarat\nProgramul a fost incheiat fortat!\n",newEntry.name);
+                                printf("Clasa [%s] a fost redeclarat\nProgramul a fost incheiat fortat!\n",newEntry->name);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
@@ -566,7 +567,7 @@ void add_class_node(char*identifier)
                 
 }
 void add_statement_node()
-{
+{7
         head->counter++;
         struct Checker*newNode=malloc(sizeof(struct Checker));
         newNode->localScope=g_hash_table_new_full(g_str_hash,g_str_equal,g_free,(void*)free_entry);
@@ -593,22 +594,22 @@ void add_main_node()
         strcat(newNode->currentScope,value);
         newNode->next=head;
         head=newNode;
-        struct SymTabEntry newEntry;
-        newEntry.name=malloc(strlen("main")+1);
-        strcpy(newEntry.name,"main");
-        newEntry.whatIs=malloc(strlen("main-declaration")+1);
-        strcpy(newEntry.whatIs,"main-declaration");
-        newEntry.scope=malloc(strlen(head->currentScope)+1);
-        strcpy(newEntry.scope,head->currentScope);
+        struct SymTabEntry*newEntry=malloc(sizeof(struct SymTabEntry));
+        newEntry->name=malloc(strlen("main")+1);
+        strcpy(newEntry->name,"main");
+        newEntry->whatIs=malloc(strlen("main-declaration")+1);
+        strcpy(newEntry->whatIs,"main-declaration");
+        newEntry->scope=malloc(strlen(head->currentScope)+1);
+        strcpy(newEntry->scope,head->currentScope);
         struct ListOfEntries*val;
-        newEntry.lineOf=yylineno;
+        newEntry->lineOf=yylineno;
          if((val=g_hash_table_lookup(head->next->localScope,"main")))
         {  
                 while(val)
                 {
-                        if(strcmp(val->value.whatIs,"class-declaration")==0)
+                        if(strcmp(val->value->whatIs,"class-declaration")==0)
                         {
-                                printf("Clasa [%s] a fost redeclarat\nProgramul a fost incheiat fortat!\n",newEntry.name);
+                                printf("Clasa [%s] a fost redeclarat\nProgramul a fost incheiat fortat!\n",newEntry->name);
                                 exit(EXIT_FAILURE);
                         }
                         val=val->next;
@@ -637,11 +638,11 @@ int is_class_object(char*identifier)
                                                                 globalScope=globalScope->next;
                                                         }       
                                                         struct ListOfEntries*insideList;
-                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                        if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value->dataType))
                                                         {
                                                                 while(insideList)
                                                                 {
-                                                                        if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                        if(strcmp(insideList->value->whatIs,"object-declaration"))
                                                                         {
                                                                                 classFound=1;
                                                                                 break;
@@ -687,15 +688,15 @@ int is_object_variable(char*object,char*variable)
                                         {
                                                         
                                                 struct ListOfEntries*insideList;
-                                                if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value.dataType))
+                                                if(insideList=g_hash_table_lookup(globalScope->localScope,searchList->value->dataType))
                                                 {
                                                         while(insideList)
                                                         {
-                                                                if(strcmp(insideList->value.whatIs,"object-declaration"))
+                                                                if(strcmp(insideList->value->whatIs,"object-declaration"))
                                                                 {
                                                                         classFound=1;
-                                                                        classScope=malloc(strlen(insideList->value.scope)+1);
-                                                                        strcpy(classScope,insideList->value.scope);
+                                                                        classScope=malloc(strlen(insideList->value->scope)+1);
+                                                                        strcpy(classScope,insideList->value->scope);
                                                                         break;
                                                                 }
                                                                 insideList=insideList->next;
@@ -723,7 +724,7 @@ int is_object_variable(char*object,char*variable)
                         {
                                 while(listVar)
                                 {
-                                        if(strcmp(listVar->value.scope,classScope)==0)
+                                        if(strcmp(listVar->value->scope,classScope)==0)
                                         {
                                                 variableFound=1;
                                                 break;

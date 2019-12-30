@@ -1,0 +1,30 @@
+18 	 variabila 	 variable	 int 	 0 	 0-2
+64 	 ovariabila 	 variable	 float 	 0 	 0-4
+58 	 vector 	 variable	 int[50] 	 0 	 0-4
+35 	 CevaNou 	 variable	 bool 	 0 	 0-2-2-1-1-2
+32 	 ab 	 variable	 int 	 0 	 0-2-2-1-1-1
+42 	 a 	 variable	 int 	 0 	 0-2-2-2
+58 	 ovariablila 	 variable	 int 	 0 	 0-4
+55 	 unobiectrandom 	 variable	 custom 	 0 	 0-4
+15 	 incauna 	 variable	 char* 	 0 	 0-2
+3 	 incauna 	 variable	 char* 	 0 	 0
+7 	 logica 	 variable	 bool 	 0 	 0
+49 	 altaclasa 	 class-declaration 	 0-3
+25 	 functie 	 function-declaration 	 int 	 (null) 	 0-2-2
+1 	 georgiana 	 variable	 int 	 0 	 0
+4 	 constanta 	 variable	 const-int 	 0 	 0
+22 	 altTest 	 function-declaration 	 char 	 (null) 	 0-2-1
+11 	 untestMic 	 variable	 int 	 0 	 0-1
+5 	 unVector 	 variable	 int[50] 	 0 	 0
+9 	 caracter 	 variable	 char 	 0 	 0
+8 	 propozitie 	 variable	 char* 	 0 	 0
+61 	 ceva 	 variable	 bool 	 0 	 0-4
+17 	 ceva 	 variable	 int 	 0 	 0-2
+55 	 main 	 main-declaration 	 0-4
+49 	 motroi 	 variable	 int 	 0 	 0-3
+16 	 motroi 	 variable	 int 	 0 	 0-2
+2 	 altvariabile 	 variable	 bool 	 0 	 0
+15 	 custom 	 class-declaration 	 0-2
+11 	 functieTest 	 function-declaration 	 int 	 ð&Aw7V 	 0-1
+52 	 test 	 variable	 custom 	 0 	 0
+51 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0
