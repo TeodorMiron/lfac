@@ -41,12 +41,13 @@ struct Checker
 };
 struct Checker*head=NULL;
 struct ListOfEntries*funcArgs=NULL;
+int inArgs=0;
 FILE*SymTabDump=NULL;
 int currLine;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier,int init);
-void add_func_node(char*identifier,const char*returntype,char*arg_list);
+void add_func_node(char*identifier,const char*returntype);
 void add_statement_node();
 void add_class_node(char*identifier);
 void add_main_node();
@@ -124,18 +125,18 @@ inside_object:function_declaration
              | ';'create_variable 
              ; 
                     
-function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4),NULL);} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4),NULL);} CLOSE_CURLY_BRACKET {remove_node();}
+function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5));} CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4));} CLOSE_CURLY_BRACKET {remove_node();}
                     ;
 
 return_statement:RETURN expression
                 | 
                 ;
 
-list_param:  list_param ',' create_single_variable 
-           | create_single_variable
+list_param:  list_param ',' create_single_variable {inArgs=0;} 
+           | {inArgs=1;} create_single_variable 
            ;
 
 function_content: function_content statements
@@ -146,7 +147,7 @@ multiple_statements:multiple_statements statements
                      | statements
                      ;
 
-statements: if_statement
+statements:   if_statement
             | while_statement
             | for_statement
             | ';'assign_statement
@@ -346,7 +347,7 @@ void free_entry(struct ListOfEntries*val)
 {
         g_free(val);
 }
-void add_func_node(char*identifier,const char*returntype,char*arg_list)
+void add_func_node(char*identifier,const char*returntype)
 {
         head->counter++;
         struct Checker*newNode=malloc(sizeof(struct Checker));
@@ -391,6 +392,17 @@ void add_func_node(char*identifier,const char*returntype,char*arg_list)
                 newVal->value=newEntry;
                 newVal->next=NULL;
                 g_hash_table_insert(head->localScope,identifier,newVal);
+                if(funcArgs)
+                {
+                        struct ListOfEntries*iterator=funcArgs;
+                        char*parList;
+                        while(iterator)
+                        {
+                                add_new_variable(iterator->value->dataType,iterator->value->name,1);
+                                iterator=iterator->next;
+                        }
+                }
+                funcArgs=NULL;
 
 }
 void add_new_variable(const char*type,char*identifier,int init)
@@ -415,6 +427,24 @@ void add_new_variable(const char*type,char*identifier,int init)
         newEntry->scope[strlen(newEntry->scope)]='\0';
         newEntry->lineOf=yylineno;
         newEntry->initialised=init;
+        if(inArgs)
+        {
+                if(funcArgs==NULL)
+                {
+                   funcArgs=malloc(sizeof(struct ListOfEntries));
+                   funcArgs->value=newEntry;
+                   funcArgs->next=NULL;
+                }
+                else
+                {
+                        struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                        newNode->next=funcArgs;
+                        newNode->value=newEntry;
+                        funcArgs=newNode;
+                }
+                return;
+                   
+        }
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->localScope,identifier)))
         {
