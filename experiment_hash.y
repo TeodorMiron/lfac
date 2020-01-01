@@ -375,6 +375,22 @@ void add_func_node(char*identifier,const char*returntype)
         strcpy(newEntry->scope,head->currentScope);
         newEntry->scope[strlen(newEntry->scope)]='\0';
         newEntry->lineOf=yylineno;
+        struct ListOfEntries*iterator=funcArgs;
+        int numChar=0;
+        while(iterator)
+        {
+                numChar+=strlen(iterator->value->dataType)+1;
+                iterator=iterator->next;
+        }
+        newEntry->paramlist=malloc(numChar+1);
+        iterator=funcArgs;
+        while(iterator)
+        {
+                strcat(newEntry->paramlist,iterator->value->dataType);
+                strcat(newEntry->paramlist,",");
+                iterator=iterator->next;
+        }
+        newEntry->paramlist[strlen(newEntry->paramlist)-1]='\0';
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {
