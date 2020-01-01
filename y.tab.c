@@ -2251,7 +2251,7 @@ void add_func_node(char*identifier,const char*returntype)
         {
                 while(val)
                 {
-                        if(strncmp(val->value->scope,newEntry->scope,strlen(newEntry->scope)-nLenght)==0 && strcmp(val->value->whatIs,"function-declaration")==0)
+                        if(strncmp(val->value->scope,newEntry->scope,strlen(newEntry->scope)-nLenght)==0 && strcmp(val->value->whatIs,"function-declaration")==0 && strcmp(val->value->paramlist,newEntry->paramlist)==0)
                         {
                                 printf("Functia [%s] de tipul de retur %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry->name,newEntry->dataType,val->value->scope);
                                 exit(EXIT_FAILURE);

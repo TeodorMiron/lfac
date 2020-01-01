@@ -41,6 +41,10 @@ custom ssalc
 {
 
 }
+($unAltParametru tni ,$secondParam tni) functieTestdoi diov
+{
+
+}
 altaclasa ssalc
 {
    ;$motroi tni
