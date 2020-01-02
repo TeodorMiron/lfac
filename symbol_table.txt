@@ -1,34 +1,30 @@
-14 	 variabila 	 variable	 int 	 0 	 0-1
-18 	 cda 	 variable	 int 	 0 	 0-1-1
-47 	 functieTestdoi 	 function-declaration 	 void 	 int,int 	 0-3
-43 	 functieTestdoi 	 function-declaration 	 void 	 int,float 	 0-2
-65 	 ovariabila 	 variable	 float 	 0 	 0-5
-28 	 CevaNou 	 variable	 bool 	 0 	 0-1-1-1-1-2
-25 	 ab 	 variable	 int 	 0 	 0-1-1-1-1-1
-35 	 a 	 variable	 int 	 0 	 0-1-1-2
-59 	 ovariablila 	 variable	 int 	 0 	 0-5
-47 	 unAltParametru 	 variable	 int 	 0 	 0-3
-43 	 unAltParametru 	 variable	 float 	 0 	 0-2
-11 	 incauna 	 variable	 char* 	 0 	 0-1
+13 	 variabila 	 variable	 int 	 0 	 0-1
+16 	 cda 	 variable	 int 	 0 	 0-1-1
+52 	 vector 	 variable	 int[50] 	 0 	 0-4
+56 	 ovariabila 	 variable	 float 	 0 	 0-4
+26 	 CevaNou 	 variable	 bool 	 0 	 0-1-1-1-1-2
+23 	 ab 	 variable	 int 	 0 	 0-1-1-1-1-1
+33 	 a 	 variable	 int 	 0 	 0-1-1-2
+52 	 ovariablila 	 variable	 int 	 0 	 0-4
+10 	 incauna 	 variable	 char* 	 0 	 0-1
 3 	 incauna 	 variable	 char* 	 0 	 0
 7 	 logica 	 variable	 bool 	 0 	 0
-50 	 altaclasa 	 class-declaration 	 0-4
-18 	 functie 	 function-declaration 	 int 	 int,int 	 0-1-1
+43 	 altaclasa 	 class-declaration 	 0-3
+16 	 functie 	 function-declaration 	 int 	 int,int 	 0-1-1
 1 	 georgiana 	 variable	 int 	 0 	 0
 4 	 constanta 	 variable	 const-int 	 0 	 0
-56 	 unobiectrandom 	 variable	 custom 	 0 	 0-5
 5 	 unVector 	 variable	 int[50] 	 0 	 0
-62 	 ceva 	 variable	 bool 	 0 	 0-5
-13 	 ceva 	 variable	 int 	 0 	 0-1
-47 	 secondParam 	 variable	 int 	 0 	 0-3
-43 	 secondParam 	 variable	 int 	 0 	 0-2
-9 	 propozitie 	 variable	 char* 	 0 	 0
-59 	 vector 	 variable	 int[50] 	 0 	 0-5
-56 	 main 	 main-declaration 	 0-5
-50 	 motroi 	 variable	 int 	 0 	 0-4
-12 	 motroi 	 variable	 int 	 0 	 0-1
+54 	 ceva 	 variable	 bool 	 0 	 0-4
+12 	 ceva 	 variable	 int 	 0 	 0-1
+8 	 propozitie 	 variable	 char* 	 0 	 0
+49 	 main 	 main-declaration 	 0-4
+49 	 unobiectrandom 	 variable	 custom 	 0 	 0-4
+50 	 motroi 	 variable	 char 	 0 	 0-4
+40 	 motroi 	 function-declaration 	 void 	  	 0-2
+11 	 motroi 	 variable	 int 	 0 	 0-1
+43 	 motroi 	 variable	 int 	 0 	 0-3
 2 	 altvariabile 	 variable	 bool 	 0 	 0
-11 	 custom 	 class-declaration 	 0-1
-18 	 cevaParametru 	 variable	 int 	 0 	 0-1-1
-53 	 test 	 variable	 custom 	 0 	 0
-52 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0
+10 	 custom 	 class-declaration 	 0-1
+16 	 cevaParametru 	 variable	 int 	 0 	 0-1-1
+46 	 test 	 variable	 custom 	 0 	 0
+45 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0

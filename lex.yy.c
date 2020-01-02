@@ -909,12 +909,12 @@ YY_RULE_SETUP
 case 21:
 YY_RULE_SETUP
 #line 29 "lex.l"
-{return BOOL_TRUE;}
+{yylval.boolVal=strdup(yytext);return BOOL_TRUE;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 30 "lex.l"
-{return BOOL_FALSE;}
+{yylval.boolVal=strdup(yytext);return BOOL_FALSE;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

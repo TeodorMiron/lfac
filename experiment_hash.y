@@ -29,6 +29,7 @@ struct ListOfEntries
 {
         struct SymTabEntry*value;
         struct ListOfEntries*next;
+        
 } ListOfEntries;
 
 struct Checker
@@ -39,11 +40,20 @@ struct Checker
         struct Checker*next;
 
 };
+
+struct expr_info
+{
+        char*type;
+        char*expString;
+
+} expr_info;
+
 struct Checker*head=NULL;
 struct ListOfEntries*funcArgs=NULL;
+char*typesOfCall=NULL;
+char*inObjectFunc=NULL;
 int inArgs=0;
 FILE*SymTabDump=NULL;
-int currLine;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
 void add_new_variable(const char*type,char*identifier,int init);
@@ -54,6 +64,14 @@ void add_main_node();
 const char*return_type(int type);
 void add_new_node(struct Checker*head);
 void remove_node();
+struct expr_info*create_int_expression(int intValue);
+struct expr_info*create_bool_expression(const char*boolValue);
+struct expr_info*create_float_expression(float floatValue);
+struct expr_info*create_string_expression(char*stringValue);
+struct expr_info*create_char_expression(const char charValue);
+struct expr_info*create_variable_expression(const char*identifier);
+struct expr_info*create_paranthesis_expression(struct expr_info*exp);
+struct expr_info*create_expression(char*type,char*eString);
 int is_class_object(char*identifier);
 struct ListOfEntries*new_parameter_list(struct ListOfEntries*oldList);
 int is_object_variable(char*class,char*variable);
@@ -68,14 +86,14 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
         char*strname;
         int intval;
         char* strval;
-        _Bool boolval;
+        char*boolVal;
         char charval;
         float floatval;
         struct expr_info* expr_ptr;
 }
 
 %start start_program
-%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL BOOL_TRUE BOOL_FALSE GREATER_EQUAL STRING_TYPE CONST RETURN 
+%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL GREATER_EQUAL STRING_TYPE CONST RETURN 
 %left ADD 
 %left MIN
 %left MUL
@@ -94,7 +112,9 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 %token<floatval> FLOAT_VAL
 %token<charval> CHAR_VAL
 %token<type> INT STRING FLOAT CHAR BOOL VOID
+%token<boolVal> BOOL_TRUE BOOL_FALSE
 %type<type> available_types 
+%type<expr_ptr> expression object_call_function function_call object_access_var access_vector
 
 %%
 
@@ -157,12 +177,43 @@ statements:   if_statement
             ;
 
 function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
-             |'#'OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET  ID
-             ;
+                {
+                        int exists=0;
+                        char*returnType;
+                        struct Checker*iterator=head;
+                         while(iterator->next!=NULL)
+                        {
+                                
+                                struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$5);
+                                while(list)
+                                {
+                                        if(strcmp(list->value->whatIs,"function-declaration")==0)
+                                        {
+                                                exists=1;
+                                                returnType=malloc(strlen(list->value->dataType));
+                                                strcpy(returnType,list->value->dataType);
+                                                break;
+                                        }
+                                        list=list->next;
+                                }
+                                iterator=iterator->next;
+                        }
+                        if(!exists)
+                        {
+                                printf("Functia [%s] pe care ati incercat sa o apelati nu exista!\n",$5);
+                                exit(EXIT_FAILURE);
+                        }
+                        char*eString=malloc(strlen($5)+strlen(typesOfCall)+4);
+                        strcat(eString,"#(");
+                        strcat(eString,typesOfCall);
+                        strcat(eString,")");
+                        strcat(eString,$5);
+                        $$=create_expression(returnType,eString);
+                }
 
-
-list_call: expression  ',' list_call
+list_call: expression {}',' list_call
          | expression
+         |
          ;
 
 if_statement:OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();} else_statement
@@ -179,9 +230,9 @@ while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CU
             ;
 
 assign_statement: expression ASSIGN ID 
-            | expression ASSIGN object_access_var
-            | expression ASSIGN access_vector
-            ;
+                | expression ASSIGN object_access_var
+                | expression ASSIGN access_vector
+                ;
 
 
 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();}
@@ -190,9 +241,8 @@ for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression
          ;
 
 create_variable: create_single_variable 
-             //  | ';''#'create_multiple_variable available_types
                | '$'create_array_variable
-              // | ';'create_const_variable
+
                ;
 
 create_array_variable:'['expression']' ID available_types {
@@ -260,18 +310,18 @@ available_types: INT {$$=$1;}
                | VOID {$$=$1;}
                ;
 
-expression: ID 
-          | INT_VAL 
-          | FLOAT_VAL
-          | BOOL_TRUE
-          | BOOL_FALSE
-          | STRING_VAL
-          | CHAR_VAL
-          | function_call
+expression: ID {$$=create_variable_expression($1);}
+          | INT_VAL {$$=create_int_expression($1);}
+          | FLOAT_VAL {$$=create_float_expression($1);}
+          | BOOL_TRUE {$$=create_bool_expression($1);}
+          | BOOL_FALSE {$$=create_bool_expression($1);}
+          | STRING_VAL {$$=create_string_expression($1);}
+          | CHAR_VAL {$$=create_char_expression($1);}
+          | function_call {$$=$1;}
           | object_call_function
-          | object_access_var
-          | access_vector
-          | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
+          | object_access_var 
+          | access_vector 
+          | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET {$$=create_paranthesis_expression($2);}
           | expression ADD expression 
           | expression MUL expression
           | expression DIV expression
@@ -285,10 +335,9 @@ expression: ID
           ;
 
 
-object_call_function:function_call '.' ID
+object_call_function:'#''(' list_call')'ID'.' ID
                         {
-                                
-                                if(!is_class_object($3))
+                                if(!is_class_object($7))
                                 {
                                         exit(EXIT_FAILURE);
                                 }
@@ -303,9 +352,41 @@ object_access_var:ID'.'ID
                         }
 
                 }
+                | ID '.' access_vector
                  ;
 
-access_vector:'['expression']' ID
+access_vector:'['expression']' ID {
+                int exists=0;
+                struct Checker*iterator=head;
+                while(iterator && !exists)
+                {
+                        struct ListOfEntries*searchList;
+                        if(searchList=g_hash_table_lookup(iterator->localScope,$4))
+                        {
+                                while(searchList)
+                                {
+                                        if(strstr(searchList->value->dataType,"[") && strstr(searchList->value->dataType,"]") && strcmp(searchList->value->name,$4)==0)
+                                        {
+                                                exists=1;
+                                                break;
+                                        } 
+                                        searchList=searchList->next;
+                                }
+                        }
+                        iterator=iterator->next;
+                }
+                if(!exists)
+                {
+                        printf("Identificatorul [%s] nu defineste un vector!",$4);
+                        exit(EXIT_FAILURE);
+
+                }
+                if(strcmp($2->type,"int")!=0)
+                {
+                        printf("Pozitia pe care ati incercat sa o accesati din vectorul [%s] nu exista!\n",$4);
+                        exit(EXIT_FAILURE);
+                }
+                }
              ;
 
 main_section:OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET {add_main_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();}
@@ -382,7 +463,7 @@ void add_func_node(char*identifier,const char*returntype)
                 numChar+=strlen(iterator->value->dataType)+1;
                 iterator=iterator->next;
         }
-        newEntry->paramlist=malloc(numChar+1);
+        newEntry->paramlist=malloc(numChar);
         iterator=funcArgs;
         while(iterator)
         {
@@ -781,4 +862,82 @@ int is_object_variable(char*object,char*variable)
                         }
                         return 1;
                         
+}
+struct expr_info*create_int_expression(int intValue)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+        newExp->type=malloc(strlen("int"))+1;
+        strcpy(newExp->type,"int");
+        char toString[20];
+        sprintf(toString,"%i",intValue);
+        newExp->expString=malloc(strlen(toString)+1);
+        strcpy(newExp->expString,toString);
+        return newExp;
+}
+struct expr_info*create_bool_expression(const char*boolValue)
+{
+       struct expr_info*newExp=malloc(sizeof(struct expr_info));
+       newExp->type=malloc(strlen("bool"));
+       strcpy(newExp->type,"bool");
+       newExp->expString=malloc(strlen(boolValue)+1);
+       strcpy(newExp->expString,boolValue);
+       return newExp;  
+}
+struct expr_info*create_float_expression(float floatValue)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+        newExp->type=malloc(strlen("float"))+1;
+        strcpy(newExp->type,"float");
+        char toString[20];
+        sprintf(toString,"%f",floatValue);
+        newExp->expString=malloc(strlen(toString)+1);
+        strcpy(newExp->expString,toString);
+        return newExp;
+}
+struct expr_info*create_string_expression(char*stringValue)
+{
+       struct expr_info*newExp=malloc(sizeof(struct expr_info));
+       newExp->type=malloc(strlen("char*"));
+       strcpy(newExp->type,"char*");
+       newExp->expString=malloc(strlen(stringValue)+1);
+       strcpy(newExp->expString,stringValue);
+       return newExp;  
+}
+struct expr_info*create_char_expression(const char charValue)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+        newExp->type=malloc(strlen("char"))+1;
+        strcpy(newExp->type,"char");
+        newExp->expString=malloc(2);
+        newExp->expString[0]=charValue;
+        
+        return newExp;
+}
+struct expr_info*create_variable_expression(const char*identifier)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+       newExp->type=malloc(strlen("variable"));
+       strcpy(newExp->type,"variable");
+       newExp->expString=malloc(strlen(identifier)+1);
+       strcpy(newExp->expString,identifier);
+       return newExp;
+}
+struct expr_info*create_paranthesis_expression(struct expr_info*exp)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+        newExp->type=exp->type;
+        newExp->expString=malloc(strlen(exp->expString)+3);
+        strcat(newExp->expString,"(");
+        strcat(newExp->expString,exp->expString);
+        strcat(newExp->expString,")");
+        return newExp;
+}
+struct expr_info*create_expression(char*type,char*eString)
+{
+        struct expr_info*newExp=malloc(sizeof(struct expr_info));
+        newExp->type=malloc(strlen(type)+1);
+        strcpy(newExp->type,type);
+        newExp->expString=malloc(strlen(eString)+1);
+        strcpy(newExp->expString,eString);
+        return newExp;
 }

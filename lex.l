@@ -26,8 +26,8 @@
 "pmcrts" {return STRCMP;}
 "tacrts" {return STRCAT;}
 "niam" {return MAIN;}
-"eurt" {return BOOL_TRUE;}
-"eslaf" {return BOOL_FALSE;}
+"eurt" {yylval.boolVal=strdup(yytext);return BOOL_TRUE;}
+"eslaf" {yylval.boolVal=strdup(yytext);return BOOL_FALSE;}
 "+" {return ADD;}
 "-" {return MIN;}
 "*" {return MUL;}

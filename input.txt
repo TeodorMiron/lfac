@@ -5,14 +5,12 @@
 ;$[5234324]unVector tni
 ;$eurt=logica loob
 ;$"un text plm"=propozitie*rahc
-
 custom ssalc
 {
   ;$incauna *rahc
   ;$motroi tni
   ;$ceva tni
   ;$variabila tni
-
    ($cevaParametru tni,$cda tni)functie tni
    {
       (2<3)fi
@@ -33,15 +31,10 @@ custom ssalc
       (2<3)elihw
       {
           ;$a tni
-          ;2+#(2+"aasdasd")f2=a
       }
     }
 }
-($unAltParametru taolf ,$secondParam tni) functieTestdoi diov
-{
-
-}
-($unAltParametru tni ,$secondParam tni) functieTestdoi diov
+() motroi diov
 {
 
 }
@@ -54,14 +47,11 @@ altaclasa ssalc
 ()niam tni
 {
     ;$unobiectrandom custom
-    ;#()functie.unobiectrandom
-    ;$2.0+3*2000+4+#(2.5665,5,#(6.215,ceva) altceva)completaltceva+(-256.242) =ovariablila tni
+    ;$motroi rahc 
+    ;$2.0+3*2000+4+(-256.242)=ovariablila tni
     ;$[20000]vector tni
-    ;[1000]ab=[10000]bc
     ;$eurt=ceva loob
     ;$[54]obiecte custom
-    ;#()functie=ceva.unobiectrandom
-    ;$#(ceva.unobiectrandom,20)ofunctie=ovariabila taolf
+    ;$24.2=ovariabila taolf
     ;10=variabila.unobiectrandom
-    ;#(23,24)functie
 }

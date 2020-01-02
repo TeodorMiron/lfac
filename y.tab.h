@@ -76,23 +76,23 @@ extern int yydebug;
     MAIN = 282,
     ELSE = 283,
     SMALLER_EQUAL = 284,
-    BOOL_TRUE = 285,
-    BOOL_FALSE = 286,
-    GREATER_EQUAL = 287,
-    STRING_TYPE = 288,
-    CONST = 289,
-    RETURN = 290,
-    ID = 291,
-    INT_VAL = 292,
-    STRING_VAL = 293,
-    FLOAT_VAL = 294,
-    CHAR_VAL = 295,
-    INT = 296,
-    STRING = 297,
-    FLOAT = 298,
-    CHAR = 299,
-    BOOL = 300,
-    VOID = 301
+    GREATER_EQUAL = 285,
+    STRING_TYPE = 286,
+    CONST = 287,
+    RETURN = 288,
+    ID = 289,
+    INT_VAL = 290,
+    STRING_VAL = 291,
+    FLOAT_VAL = 292,
+    CHAR_VAL = 293,
+    INT = 294,
+    STRING = 295,
+    FLOAT = 296,
+    CHAR = 297,
+    BOOL = 298,
+    VOID = 299,
+    BOOL_TRUE = 300,
+    BOOL_FALSE = 301
   };
 #endif
 /* Tokens.  */
@@ -123,35 +123,35 @@ extern int yydebug;
 #define MAIN 282
 #define ELSE 283
 #define SMALLER_EQUAL 284
-#define BOOL_TRUE 285
-#define BOOL_FALSE 286
-#define GREATER_EQUAL 287
-#define STRING_TYPE 288
-#define CONST 289
-#define RETURN 290
-#define ID 291
-#define INT_VAL 292
-#define STRING_VAL 293
-#define FLOAT_VAL 294
-#define CHAR_VAL 295
-#define INT 296
-#define STRING 297
-#define FLOAT 298
-#define CHAR 299
-#define BOOL 300
-#define VOID 301
+#define GREATER_EQUAL 285
+#define STRING_TYPE 286
+#define CONST 287
+#define RETURN 288
+#define ID 289
+#define INT_VAL 290
+#define STRING_VAL 291
+#define FLOAT_VAL 292
+#define CHAR_VAL 293
+#define INT 294
+#define STRING 295
+#define FLOAT 296
+#define CHAR 297
+#define BOOL 298
+#define VOID 299
+#define BOOL_TRUE 300
+#define BOOL_FALSE 301
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 66 "experiment_hash.y"
+#line 84 "experiment_hash.y"
 
         int type;
         char*strname;
         int intval;
         char* strval;
-        _Bool boolval;
+        char*boolVal;
         char charval;
         float floatval;
         struct expr_info* expr_ptr;
