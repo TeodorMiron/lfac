@@ -77,6 +77,10 @@ struct ListOfEntries*new_parameter_list(struct ListOfEntries*oldList);
 int is_object_variable(char*class,char*variable);
 void search_every_class(gpointer key,gpointer value,gpointer userdata);
 void print_key_value(gpointer key,gpointer value,gpointer userdata);
+int countChars( char* s, char c )
+{
+    return *s == '\0'? 0: countChars( s + 1, c ) + (*s == c);
+}
 
 %}
 
@@ -114,7 +118,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata);
 %token<type> INT STRING FLOAT CHAR BOOL VOID
 %token<boolVal> BOOL_TRUE BOOL_FALSE
 %type<type> available_types 
-%type<expr_ptr> expression object_call_function function_call object_access_var access_vector
+%type<expr_ptr> expression object_call_function function_call object_access_var access_vector string_functions
 
 %%
 
@@ -145,17 +149,17 @@ inside_object:function_declaration
              | ';'create_variable 
              ; 
                     
-function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {add_func_node($4,return_type($5));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($4,return_type($5));} CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {add_func_node($3,return_type($4));} CLOSE_CURLY_BRACKET {remove_node();}
+function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($3,return_type($4));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($3,return_type($4));} CLOSE_CURLY_BRACKET {remove_node();}
                     ;
 
 return_statement:RETURN expression
                 | 
                 ;
 
-list_param:  list_param ',' create_single_variable {inArgs=0;} 
+list_param:  list_param ',' create_single_variable
            | {inArgs=1;} create_single_variable 
            ;
 
@@ -174,33 +178,53 @@ statements:   if_statement
             | ';'create_variable 
             | ';'function_call
             | ';'object_call_function
+            | ';' string_functions
             ;
 
-function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
+string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
+          | STRLEN OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
+          | STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
+          ;
+
+function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID 
                 {
                         int exists=0;
                         char*returnType;
+                        char*listParam;
                         struct Checker*iterator=head;
-                         while(iterator->next!=NULL)
+                         while(iterator!=NULL)
                         {
-                                
                                 struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$5);
                                 while(list)
                                 {
-                                        if(strcmp(list->value->whatIs,"function-declaration")==0)
+                                        if(strcmp(list->value->whatIs,"function-declaration")==0 && strcmp(list->value->name,$5)==0)
                                         {
-                                                exists=1;
-                                                returnType=malloc(strlen(list->value->dataType));
-                                                strcpy(returnType,list->value->dataType);
-                                                break;
+                                                char*existence=strstr(list->value->scope,iterator->currentScope);
+                                                int noOcc=countChars(existence+strlen(iterator->currentScope),'-');
+                                                if(existence && noOcc==1)
+                                                {
+
+                                                        if(strcmp(list->value->paramlist,typesOfCall)==0)
+                                                        {
+                                                                exists=1;
+                                                                returnType=malloc(strlen(list->value->dataType)+1);
+                                                                listParam=malloc(strlen(list->value->paramlist)+1);
+                                                                strcpy(listParam,list->value->paramlist);
+                                                                strcpy(returnType,list->value->dataType);
+                                                                break;
+                                                        }
+                                                }
+                                        
                                         }
                                         list=list->next;
+                
                                 }
                                 iterator=iterator->next;
                         }
+                        
                         if(!exists)
                         {
-                                printf("Functia [%s] pe care ati incercat sa o apelati nu exista!\n",$5);
+                                printf("Functia [%s](%s) pe care ati incercat sa o apelati nu exista!\n",$5,listParam);
                                 exit(EXIT_FAILURE);
                         }
                         char*eString=malloc(strlen($5)+strlen(typesOfCall)+4);
@@ -209,12 +233,32 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                         strcat(eString,")");
                         strcat(eString,$5);
                         $$=create_expression(returnType,eString);
+                        typesOfCall=NULL;
                 }
 
-list_call: expression {}',' list_call
+list_call:list_call ',' expression      
+        {
+         if(typesOfCall==NULL)
+                {
+                        typesOfCall=malloc(strlen($3->type)+1);
+                        strcpy(typesOfCall,$3->type);
+                }
+                else
+                {
+                        char*temp_var=realloc(typesOfCall,strlen(typesOfCall)+strlen($3->type)+2);
+                        strcat(temp_var,",");
+                        strcat(temp_var,$3->type);
+                        typesOfCall=temp_var;
+                }
+        }
          | expression
-         |
+         {
+               typesOfCall=malloc(strlen($1->type)+1);
+               strcpy(typesOfCall,$1->type);
+         }
+         | {typesOfCall=malloc(0);}
          ;
+
 
 if_statement:OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();} else_statement
         |OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}else_statement 
@@ -284,6 +328,7 @@ create_single_variable:  '$' ID available_types {add_new_variable(return_type($3
                                     printf("Ati incercat sa instantiati clasa [%s] care nu existat\nProgramul a fost incheiat fortat!\n",$2);
                                     exit(EXIT_FAILURE);
                             }
+                            
 
                         }
                         |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4,1);}
@@ -329,9 +374,6 @@ expression: ID {$$=create_variable_expression($1);}
           | expression BIGGER expression
           | expression SMALLER expression
           | expression EQUAL expression
-          | STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
-          | STRLEN OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
-          | STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
           ;
 
 
@@ -458,11 +500,6 @@ void add_func_node(char*identifier,const char*returntype)
         newEntry->lineOf=yylineno;
         struct ListOfEntries*iterator=funcArgs;
         int numChar=0;
-        while(iterator)
-        {
-                numChar+=strlen(iterator->value->dataType)+1;
-                iterator=iterator->next;
-        }
         newEntry->paramlist=malloc(numChar);
         iterator=funcArgs;
         while(iterator)
@@ -471,6 +508,7 @@ void add_func_node(char*identifier,const char*returntype)
                 strcat(newEntry->paramlist,",");
                 iterator=iterator->next;
         }
+
         newEntry->paramlist[strlen(newEntry->paramlist)-1]='\0';
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->next->localScope,identifier)))
@@ -534,10 +572,14 @@ void add_new_variable(const char*type,char*identifier,int init)
                 }
                 else
                 {
-                        struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
-                        newNode->next=funcArgs;
-                        newNode->value=newEntry;
-                        funcArgs=newNode;
+                       struct ListOfEntries*iterator=funcArgs;
+                       struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                       newNode->value=newEntry;
+                       while(iterator->next!=NULL)
+                       {
+                               iterator=iterator->next;
+                       }
+                       iterator->next=newNode;
                 }
                 return;
                    
@@ -582,7 +624,7 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
            printf("%s \t%s\t %s\n",var->value->name,var->value->whatIs,var->value->scope);
            if(strcmp(var->value->whatIs,"variable")==0)
            {
-                   fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->intvalue,var->value->scope);
+                   fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s \t %i \n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->intvalue,var->value->scope,var->value->initialised);
            }
            if(strcmp(var->value->whatIs,"function-declaration")==0)
            {

@@ -1,30 +1,47 @@
-13 	 variabila 	 variable	 int 	 0 	 0-1
-16 	 cda 	 variable	 int 	 0 	 0-1-1
-52 	 vector 	 variable	 int[50] 	 0 	 0-4
-56 	 ovariabila 	 variable	 float 	 0 	 0-4
-26 	 CevaNou 	 variable	 bool 	 0 	 0-1-1-1-1-2
-23 	 ab 	 variable	 int 	 0 	 0-1-1-1-1-1
-33 	 a 	 variable	 int 	 0 	 0-1-1-2
-52 	 ovariablila 	 variable	 int 	 0 	 0-4
-10 	 incauna 	 variable	 char* 	 0 	 0-1
-3 	 incauna 	 variable	 char* 	 0 	 0
-7 	 logica 	 variable	 bool 	 0 	 0
-43 	 altaclasa 	 class-declaration 	 0-3
-16 	 functie 	 function-declaration 	 int 	 int,int 	 0-1-1
-1 	 georgiana 	 variable	 int 	 0 	 0
-4 	 constanta 	 variable	 const-int 	 0 	 0
-5 	 unVector 	 variable	 int[50] 	 0 	 0
-54 	 ceva 	 variable	 bool 	 0 	 0-4
-12 	 ceva 	 variable	 int 	 0 	 0-1
-8 	 propozitie 	 variable	 char* 	 0 	 0
-49 	 main 	 main-declaration 	 0-4
-49 	 unobiectrandom 	 variable	 custom 	 0 	 0-4
-50 	 motroi 	 variable	 char 	 0 	 0-4
-40 	 motroi 	 function-declaration 	 void 	  	 0-2
-11 	 motroi 	 variable	 int 	 0 	 0-1
-43 	 motroi 	 variable	 int 	 0 	 0-3
-2 	 altvariabile 	 variable	 bool 	 0 	 0
-10 	 custom 	 class-declaration 	 0-1
-16 	 cevaParametru 	 variable	 int 	 0 	 0-1-1
-46 	 test 	 variable	 custom 	 0 	 0
-45 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0
+26 	 incaunArgdouamii 	 variable	 int 	 0 	 0-5 	 1 
+4 	 constanta 	 variable	 const-int 	 0 	 0 	 1 
+1 	 georgiana 	 variable	 int 	 0 	 0 	 0 
+35 	 bahlui 	 variable	 int 	 0 	 0-6-1 	 0 
+22 	 bahlui 	 variable	 int 	 0 	 0-4 	 0 
+76 	 unobiectrandom 	 variable	 custom 	 0 	 0-9 	 0 
+2 	 altvariabile 	 variable	 bool 	 0 	 0 	 0 
+29 	 custom 	 class-declaration 	 0-6
+70 	 altaclasa 	 class-declaration 	 0-8
+62 	 panarama 	 function-declaration 	 void 	  	 0-6-3
+87 	 ovariabila 	 variable	 float 	 0 	 0-9 	 1 
+22 	 text 	 variable	 char* 	 0 	 0-4 	 1 
+32 	 variabila 	 variable	 int 	 0 	 0-6 	 0 
+26 	 incaUnText 	 function-declaration 	 void 	 int,int 	 0-5
+76 	 main 	 main-declaration 	 0-9
+35 	 functieTest 	 function-declaration 	 int 	 int 	 0-6-1
+22 	 functieTest 	 function-declaration 	 int 	 int,float,char* 	 0-4
+5 	 unVector 	 variable	 int[50] 	 0 	 0 	 0 
+85 	 ceva 	 variable	 bool 	 0 	 0-9 	 1 
+31 	 ceva 	 variable	 int 	 0 	 0-6 	 0 
+73 	 test 	 variable	 custom 	 0 	 0 	 0 
+22 	 dubios 	 variable	 float 	 0 	 0-4 	 1 
+39 	 cda 	 variable	 int 	 0 	 0-6-2 	 1 
+72 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0 	 0 
+35 	 unArg 	 variable	 int 	 0 	 0-6-1 	 1 
+22 	 unArg 	 variable	 int 	 0 	 0-4 	 1 
+26 	 unArg 	 variable	 int 	 0 	 0-5 	 1 
+19 	 oana 	 variable	 float 	 0 	 0-3 	 1 
+11 	 oana 	 variable	 int 	 0 	 0-1 	 1 
+7 	 logica 	 variable	 bool 	 0 	 0 	 1 
+77 	 motroi 	 variable	 char 	 0 	 0-9 	 0 
+67 	 motroi 	 function-declaration 	 void 	  	 0-7
+30 	 motroi 	 variable	 int 	 0 	 0-6 	 0 
+70 	 motroi 	 variable	 int 	 0 	 0-8 	 0 
+29 	 incauna 	 variable	 char* 	 0 	 0-6 	 0 
+3 	 incauna 	 variable	 char* 	 0 	 0 	 0 
+81 	 ab 	 variable	 int 	 0 	 0-9 	 0 
+46 	 ab 	 variable	 int 	 0 	 0-6-2-1-1-1 	 1 
+39 	 functie 	 function-declaration 	 int 	 int,int 	 0-6-2
+15 	 functie 	 function-declaration 	 int 	  	 0-2
+11 	 functie 	 function-declaration 	 int 	 int 	 0-1
+19 	 functie 	 function-declaration 	 int 	 float 	 0-3
+83 	 ovariablila 	 variable	 int 	 0 	 0-9 	 1 
+55 	 a 	 variable	 int 	 0 	 0-6-2-2 	 0 
+39 	 cevaParametru 	 variable	 int 	 0 	 0-6-2 	 1 
+83 	 vector 	 variable	 int[50] 	 0 	 0-9 	 0 
+8 	 propozitie 	 variable	 char* 	 0 	 0 	 1 
