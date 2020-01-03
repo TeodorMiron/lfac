@@ -5,35 +5,18 @@
 ;$[5234324]unVector tni
 ;$eurt=logica loob
 ;$"un text plm"=propozitie*rahc
-($oana tni)functie tni
-{
-    
-}
-()functie tni
-{
-    
-}
-($oana taolf)functie tni
-{
-    
-}
-($unArg tni,$dubios taolf,$text *rahc)functieTest tni
-{
-    ;$bahlui tni
-}
-($unArg tni,$incaunArgdouamii tni) incaUnText diov
-{
-}
-custom ssalc
-{
-  ;$incauna *rahc
-  ;$motroi tni
-  ;$ceva tni
-  ;$variabila tni
-    ($unArg tni)functieTest tni
+($a tni)specifica tni
     {
         ;$bahlui tni
     }
+
+custom ssalc
+{
+  ;$26=incauna *rahc
+  ;$12312312=motroi tni
+  ;$ceva tni
+  ;$variabila tni
+    
    ($cevaParametru tni,$cda tni)functie tni
    {
       (2<3)fi
@@ -56,14 +39,21 @@ custom ssalc
       }
 
     }
+    ($a tni)specifica tni
+    {
+        ;$bahlui tni
+    }
     () panarama diov
     {
-
+        ;#(24,25)functie
     }
 }
-() motroi diov
+($diferit custom,$a tni) motroi diov
 {
-
+  ;$unobiectrandom custom
+}($diferit custom) motroidoi diov
+{
+  ;$unobiectrandom custom
 }
 altaclasa ssalc
 {
@@ -75,11 +65,9 @@ altaclasa ssalc
 {
     ;$unobiectrandom custom
     ;$motroi rahc 
-    ;#(44,2.5,"muieDragnea")functieTest
-    ;#(123123)functie
-    ;#()functie
+    ;#(24)specifica.unobiectrandom
     ;$ab tni
-    ;$2.0+3*2000+4+(-256.242)=ovariablila tni
+    ;$2.0+3*2000+variabila.unobiectrandom+(-256.242)=ovariablila tni
     ;$[20000]vector tni
     ;$eurt=ceva loob
     ;$[54]obiecte custom

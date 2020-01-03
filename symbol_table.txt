@@ -1,47 +1,68 @@
-26 	 incaunArgdouamii 	 variable	 int 	 0 	 0-5 	 1 
+56 	 diferit 	 variable	 custom 	 0 	 0-4 	 1 
+53 	 diferit 	 variable	 custom 	 0 	 0-3 	 1 
+56 	 diferit.incauna 	 variable	 char* 	 0 	 0-4 	 1 
+53 	 diferit.incauna 	 variable	 char* 	 0 	 0-3 	 1 
 4 	 constanta 	 variable	 const-int 	 0 	 0 	 1 
 1 	 georgiana 	 variable	 int 	 0 	 0 	 0 
-35 	 bahlui 	 variable	 int 	 0 	 0-6-1 	 0 
-22 	 bahlui 	 variable	 int 	 0 	 0-4 	 0 
-76 	 unobiectrandom 	 variable	 custom 	 0 	 0-9 	 0 
+66 	 unobiectrandom.incauna 	 variable	 char* 	 0 	 0-6 	 1 
+53 	 unobiectrandom.incauna 	 variable	 char* 	 0 	 0-3 	 1 
+56 	 unobiectrandom.incauna 	 variable	 char* 	 1013625648 	 0-4 	 1 
+56 	 diferit.ceva 	 variable	 int 	 0 	 0-4 	 1 
+53 	 diferit.ceva 	 variable	 int 	 0 	 0-3 	 1 
+44 	 bahlui 	 variable	 int 	 0 	 0-2-2 	 0 
+10 	 bahlui 	 variable	 int 	 0 	 0-1 	 0 
+15 	 custom 	 class-declaration 	 0-2
+66 	 unobiectrandom 	 variable	 custom 	 0 	 0-6 	 0 
+53 	 unobiectrandom 	 variable	 custom 	 0 	 0-3 	 0 
+56 	 unobiectrandom 	 variable	 custom 	 0 	 0-4 	 0 
+63 	 test.variabila 	 variable	 int 	 0 	 0 	 0 
 2 	 altvariabile 	 variable	 bool 	 0 	 0 	 0 
-29 	 custom 	 class-declaration 	 0-6
-70 	 altaclasa 	 class-declaration 	 0-8
-62 	 panarama 	 function-declaration 	 void 	  	 0-6-3
-87 	 ovariabila 	 variable	 float 	 0 	 0-9 	 1 
-22 	 text 	 variable	 char* 	 0 	 0-4 	 1 
-32 	 variabila 	 variable	 int 	 0 	 0-6 	 0 
-26 	 incaUnText 	 function-declaration 	 void 	 int,int 	 0-5
-76 	 main 	 main-declaration 	 0-9
-35 	 functieTest 	 function-declaration 	 int 	 int 	 0-6-1
-22 	 functieTest 	 function-declaration 	 int 	 int,float,char* 	 0-4
+60 	 altaclasa 	 class-declaration 	 0-5
+48 	 panarama 	 function-declaration 	 void 	  	 0-2-3
+63 	 test.ceva 	 variable	 int 	 0 	 0 	 0 
+56 	 motroidoi 	 function-declaration 	 void 	 custom,int,int,char*,int 	 0-4
+63 	 test.motroi 	 variable	 int 	 0 	 0 	 1 
+75 	 ovariabila 	 variable	 float 	 0 	 0-6 	 1 
+18 	 variabila 	 variable	 int 	 0 	 0-2 	 0 
+63 	 test.incauna 	 variable	 char* 	 0 	 0 	 1 
+66 	 main 	 main-declaration 	 0-6
 5 	 unVector 	 variable	 int[50] 	 0 	 0 	 0 
-85 	 ceva 	 variable	 bool 	 0 	 0-9 	 1 
-31 	 ceva 	 variable	 int 	 0 	 0-6 	 0 
-73 	 test 	 variable	 custom 	 0 	 0 	 0 
-22 	 dubios 	 variable	 float 	 0 	 0-4 	 1 
-39 	 cda 	 variable	 int 	 0 	 0-6-2 	 1 
-72 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0 	 0 
-35 	 unArg 	 variable	 int 	 0 	 0-6-1 	 1 
-22 	 unArg 	 variable	 int 	 0 	 0-4 	 1 
-26 	 unArg 	 variable	 int 	 0 	 0-5 	 1 
-19 	 oana 	 variable	 float 	 0 	 0-3 	 1 
-11 	 oana 	 variable	 int 	 0 	 0-1 	 1 
+73 	 ceva 	 variable	 bool 	 0 	 0-6 	 1 
+17 	 ceva 	 variable	 int 	 0 	 0-2 	 0 
+63 	 test 	 variable	 custom 	 0 	 0 	 0 
+22 	 cda 	 variable	 int 	 0 	 0-2-1 	 1 
+44 	 specifica 	 function-declaration 	 int 	 int 	 0-2-2
+10 	 specifica 	 function-declaration 	 int 	 int 	 0-1
+62 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0 	 0 
+71 	 ovariablila 	 variable	 int 	 1013639744 	 0-6 	 1 
 7 	 logica 	 variable	 bool 	 0 	 0 	 1 
-77 	 motroi 	 variable	 char 	 0 	 0-9 	 0 
-67 	 motroi 	 function-declaration 	 void 	  	 0-7
-30 	 motroi 	 variable	 int 	 0 	 0-6 	 0 
-70 	 motroi 	 variable	 int 	 0 	 0-8 	 0 
-29 	 incauna 	 variable	 char* 	 0 	 0-6 	 0 
+67 	 motroi 	 variable	 char 	 0 	 0-6 	 0 
+53 	 motroi 	 function-declaration 	 void 	 custom,int,int,char*,int,int 	 0-3
+17 	 motroi 	 variable	 int 	 0 	 0-2 	 1 
+60 	 motroi 	 variable	 int 	 0 	 0-5 	 0 
+16 	 incauna 	 variable	 char* 	 0 	 0-2 	 1 
 3 	 incauna 	 variable	 char* 	 0 	 0 	 0 
-81 	 ab 	 variable	 int 	 0 	 0-9 	 0 
-46 	 ab 	 variable	 int 	 0 	 0-6-2-1-1-1 	 1 
-39 	 functie 	 function-declaration 	 int 	 int,int 	 0-6-2
-15 	 functie 	 function-declaration 	 int 	  	 0-2
-11 	 functie 	 function-declaration 	 int 	 int 	 0-1
-19 	 functie 	 function-declaration 	 int 	 float 	 0-3
-83 	 ovariablila 	 variable	 int 	 0 	 0-9 	 1 
-55 	 a 	 variable	 int 	 0 	 0-6-2-2 	 0 
-39 	 cevaParametru 	 variable	 int 	 0 	 0-6-2 	 1 
-83 	 vector 	 variable	 int[50] 	 0 	 0-9 	 0 
+56 	 diferit.variabila 	 variable	 int 	 0 	 0-4 	 1 
+53 	 diferit.variabila 	 variable	 int 	 0 	 0-3 	 1 
+69 	 ab 	 variable	 int 	 0 	 0-6 	 0 
+29 	 ab 	 variable	 int 	 0 	 0-2-1-1-1-1 	 1 
+22 	 functie 	 function-declaration 	 int 	 int,int 	 0-2-1
+66 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-6 	 1 
+53 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-3 	 1 
+56 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-4 	 1 
+53 	 a 	 variable	 int 	 0 	 0-3 	 1 
+10 	 a 	 variable	 int 	 0 	 0-1 	 1 
+44 	 a 	 variable	 int 	 0 	 0-2-2 	 1 
+38 	 a 	 variable	 int 	 0 	 0-2-1-2 	 0 
+66 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-6 	 0 
+53 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-3 	 0 
+56 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-4 	 0 
+22 	 cevaParametru 	 variable	 int 	 0 	 0-2-1 	 1 
+66 	 unobiectrandom.ceva 	 variable	 int 	 0 	 0-6 	 0 
+53 	 unobiectrandom.ceva 	 variable	 int 	 0 	 0-3 	 0 
+56 	 unobiectrandom.ceva 	 variable	 int 	 1013628576 	 0-4 	 0 
 8 	 propozitie 	 variable	 char* 	 0 	 0 	 1 
+62 	 altaclasainstant.motroi 	 variable	 int 	 0 	 0 	 0 
+56 	 diferit.motroi 	 variable	 int 	 0 	 0-4 	 1 
+53 	 diferit.motroi 	 variable	 int 	 0 	 0-3 	 1 
+71 	 vector 	 variable	 int[50] 	 1013638960 	 0-6 	 0 
