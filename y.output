@@ -126,123 +126,112 @@ Grammar
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
 
-   69 $@17: %empty
+   69 create_variable: create_single_variable
+   70                | '$' create_array_variable
 
-   70 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
+   71 create_array_variable: '[' expression ']' ID available_types
 
-   71 $@18: %empty
+   72 create_single_variable: '$' ID available_types
+   73                       | '$' ID ID
+   74                       | '$' expression ASSIGN ID available_types CONST
 
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
+   75 available_types: INT
+   76                | CHAR
+   77                | FLOAT
+   78                | BOOL
+   79                | STRING
+   80                | VOID
 
-   73 create_variable: create_single_variable
-   74                | '$' create_array_variable
+   81 expression: ID
+   82           | INT_VAL
+   83           | FLOAT_VAL
+   84           | BOOL_TRUE
+   85           | BOOL_FALSE
+   86           | STRING_VAL
+   87           | CHAR_VAL
+   88           | function_call
+   89           | object_call_function
+   90           | object_access_var
+   91           | access_vector
+   92           | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
+   93           | expression ADD expression
+   94           | expression MUL expression
+   95           | expression DIV expression
+   96           | expression MIN expression
+   97           | expression BIGGER expression
+   98           | expression SMALLER expression
+   99           | expression EQUAL expression
 
-   75 create_array_variable: '[' expression ']' ID available_types
-   76                      | '[' expression ']' ID ID
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
 
-   77 create_single_variable: '$' ID available_types
-   78                       | '$' ID ID
-   79                       | '$' expression ASSIGN ID available_types
-   80                       | '$' expression ASSIGN ID ID
-   81                       | '$' expression ASSIGN ID available_types CONST
+  101 object_access_var: ID '.' ID
 
-   82 available_types: INT
-   83                | CHAR
-   84                | FLOAT
-   85                | BOOL
-   86                | STRING
-   87                | VOID
+  102 access_vector: '[' expression ']' ID
 
-   88 expression: ID
-   89           | INT_VAL
-   90           | FLOAT_VAL
-   91           | BOOL_TRUE
-   92           | BOOL_FALSE
-   93           | STRING_VAL
-   94           | CHAR_VAL
-   95           | function_call
-   96           | object_call_function
-   97           | object_access_var
-   98           | access_vector
-   99           | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
-  100           | expression ADD expression
-  101           | expression MUL expression
-  102           | expression DIV expression
-  103           | expression MIN expression
-  104           | expression BIGGER expression
-  105           | expression SMALLER expression
-  106           | expression EQUAL expression
+  103 $@17: %empty
 
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET
 
-  108 object_access_var: ID '.' ID
+  105 $@18: %empty
 
-  109 access_vector: '[' expression ']' ID
-
-  110 $@19: %empty
-
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET
-
-  112 $@20: %empty
-
-  113 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET
+  106 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
 
 Terminals, with rules where they appear
 
     $end (0) 0
-    '#' (35) 45 107
-    '$' (36) 74 77 78 79 80 81
+    '#' (35) 45 100
+    '$' (36) 70 72 73 74
     ',' (44) 27 46
-    '.' (46) 107 108
-    ';' (59) 8 16 37 38 39 40 41 68 70
-    '[' (91) 75 76 109
-    ']' (93) 75 76 109
+    '.' (46) 100 101
+    ';' (59) 8 16 37 38 39 40 41 68
+    '[' (91) 71 102
+    ']' (93) 71 102
     error (256)
     START (258)
     END (259)
-    ASSIGN (260) 64 65 66 79 80 81
+    ASSIGN (260) 64 65 66 74
     IF (261) 51 54
     ELSEIF (262)
     WHILE (263) 61 63
-    FOR (264) 68 70 72
+    FOR (264) 68
     STRCPY (265) 42
     STRLEN (266) 43
     STRCMP (267)
     STRCAT (268) 44
-    ADD (269) 100
-    DIV (270) 102
-    BIGGER (271) 104
-    SMALLER (272) 105
-    MIN (273) 103
-    MUL (274) 101
-    EQUAL (275) 106
-    OPEN_ROUND_BRACKET (276) 18 20 22 24 42 43 44 45 51 54 61 63 68 70 72 99 107 111 113
-    CLOSE_ROUND_BRACKET (277) 18 20 22 24 42 43 44 45 51 54 61 63 68 70 72 99 107 111 113
-    CLOSE_CURLY_BRACKET (278) 10 12 18 20 22 24 51 54 56 58 61 63 68 70 72 111 113
-    OPEN_CURLY_BRACKET (279) 10 12 18 20 22 24 51 54 56 58 61 63 68 70 72 111 113
+    ADD (269) 93
+    DIV (270) 95
+    BIGGER (271) 97
+    SMALLER (272) 98
+    MIN (273) 96
+    MUL (274) 94
+    EQUAL (275) 99
+    OPEN_ROUND_BRACKET (276) 18 20 22 24 42 43 44 45 51 54 61 63 68 92 100 104 106
+    CLOSE_ROUND_BRACKET (277) 18 20 22 24 42 43 44 45 51 54 61 63 68 92 100 104 106
+    CLOSE_CURLY_BRACKET (278) 10 12 18 20 22 24 51 54 56 58 61 63 68 104 106
+    OPEN_CURLY_BRACKET (279) 10 12 18 20 22 24 51 54 56 58 61 63 68 104 106
     INCR (280)
     CLASS (281) 10 12
-    MAIN (282) 111 113
+    MAIN (282) 104 106
     ELSE (283) 56 58
     SMALLER_EQUAL (284)
     GREATER_EQUAL (285)
     STRING_TYPE (286)
-    CONST (287) 81
+    CONST (287) 74
     RETURN (288) 25
-    ID <strname> (289) 10 12 18 20 22 24 45 64 75 76 77 78 79 80 81 88 107 108 109
-    INT_VAL <intval> (290) 89
-    STRING_VAL <strval> (291) 93
-    FLOAT_VAL <floatval> (292) 90
-    CHAR_VAL <charval> (293) 94
-    INT <type> (294) 82 111 113
-    STRING <type> (295) 86
-    FLOAT <type> (296) 84
-    CHAR <type> (297) 83
-    BOOL <type> (298) 85
-    VOID <type> (299) 87
-    BOOL_TRUE <boolVal> (300) 91
-    BOOL_FALSE <boolVal> (301) 92
+    ID <strname> (289) 10 12 18 20 22 24 45 64 71 72 73 74 81 100 101 102
+    INT_VAL <intval> (290) 82
+    STRING_VAL <strval> (291) 86
+    FLOAT_VAL <floatval> (292) 83
+    CHAR_VAL <charval> (293) 87
+    INT <type> (294) 75 104 106
+    STRING <type> (295) 79
+    FLOAT <type> (296) 77
+    CHAR <type> (297) 76
+    BOOL <type> (298) 78
+    VOID <type> (299) 80
+    BOOL_TRUE <boolVal> (300) 84
+    BOOL_FALSE <boolVal> (301) 85
 
 
 Nonterminals, with rules where they appear
@@ -302,7 +291,7 @@ Nonterminals, with rules where they appear
         on right: 18 22 30
     multiple_statements (72)
         on left: 32 33
-        on right: 32 51 56 61 68 111
+        on right: 32 51 56 61 68 104
     statements (73)
         on left: 34 35 36 37 38 39 40 41
         on right: 30 31 32 33
@@ -311,10 +300,10 @@ Nonterminals, with rules where they appear
         on right: 41
     function_call <expr_ptr> (75)
         on left: 45
-        on right: 39 95
+        on right: 39 88
     list_call (76)
         on left: 46 47 48
-        on right: 45 46 107
+        on right: 45 46 100
     if_statement (77)
         on left: 51 54
         on right: 34
@@ -350,52 +339,46 @@ Nonterminals, with rules where they appear
         on right: 63
     assign_statement (88)
         on left: 64 65 66
-        on right: 37 68 70
+        on right: 37 68
     for_statement (89)
-        on left: 68 70 72
+        on left: 68
         on right: 36
     $@16 (90)
         on left: 67
         on right: 68
-    $@17 (91)
-        on left: 69
-        on right: 70
-    $@18 (92)
-        on left: 71
-        on right: 72
-    create_variable (93)
-        on left: 73 74
+    create_variable (91)
+        on left: 69 70
         on right: 8 16 38
-    create_array_variable (94)
-        on left: 75 76
-        on right: 74
-    create_single_variable (95)
-        on left: 77 78 79 80 81
-        on right: 27 29 73
-    available_types <type> (96)
-        on left: 82 83 84 85 86 87
-        on right: 18 20 22 24 75 77 79 81
-    expression <expr_ptr> (97)
-        on left: 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106
-        on right: 25 42 43 44 46 47 51 54 61 63 64 65 66 68 70 75 76 79 80 81 99 100 101 102 103 104 105 106 109
-    object_call_function <expr_ptr> (98)
-        on left: 107
-        on right: 40 96
-    object_access_var <expr_ptr> (99)
-        on left: 108
-        on right: 65 97
-    access_vector <expr_ptr> (100)
-        on left: 109
-        on right: 66 98
-    main_section (101)
-        on left: 111 113
+    create_array_variable (92)
+        on left: 71
+        on right: 70
+    create_single_variable (93)
+        on left: 72 73 74
+        on right: 27 29 69
+    available_types <type> (94)
+        on left: 75 76 77 78 79 80
+        on right: 18 20 22 24 71 72 74
+    expression <expr_ptr> (95)
+        on left: 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99
+        on right: 25 42 43 44 46 47 51 54 61 63 64 65 66 68 71 74 92 93 94 95 96 97 98 99 102
+    object_call_function <expr_ptr> (96)
+        on left: 100
+        on right: 40 89
+    object_access_var <expr_ptr> (97)
+        on left: 101
+        on right: 65 90
+    access_vector <expr_ptr> (98)
+        on left: 102
+        on right: 66 91
+    main_section (99)
+        on left: 104 106
         on right: 1 2
-    $@19 (102)
-        on left: 110
-        on right: 111
-    $@20 (103)
-        on left: 112
-        on right: 113
+    $@17 (100)
+        on left: 103
+        on right: 104
+    $@18 (101)
+        on left: 105
+        on right: 106
 
 
 State 0
@@ -422,8 +405,8 @@ State 1
    20                     | OPEN_ROUND_BRACKET . list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@4 CLOSE_CURLY_BRACKET
    22                     | OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement CLOSE_CURLY_BRACKET
    24                     | OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@6 CLOSE_CURLY_BRACKET
-  111 main_section: OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET
-  113             | OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET
+  106             | OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
     CLOSE_ROUND_BRACKET  shift, and go to state 10
 
@@ -505,8 +488,8 @@ State 10
 
    22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement CLOSE_CURLY_BRACKET
    24                     | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . ID available_types OPEN_CURLY_BRACKET $@6 CLOSE_CURLY_BRACKET
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . MAIN INT OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET
-  113             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . MAIN INT OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . MAIN INT OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET
+  106             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . MAIN INT OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
     MAIN  shift, and go to state 20
     ID    shift, and go to state 21
@@ -541,12 +524,10 @@ State 13
 
 State 14
 
-   74 create_variable: '$' . create_array_variable
-   77 create_single_variable: '$' . ID available_types
-   78                       | '$' . ID ID
-   79                       | '$' . expression ASSIGN ID available_types
-   80                       | '$' . expression ASSIGN ID ID
-   81                       | '$' . expression ASSIGN ID available_types CONST
+   70 create_variable: '$' . create_array_variable
+   72 create_single_variable: '$' . ID available_types
+   73                       | '$' . ID ID
+   74                       | '$' . expression ASSIGN ID available_types CONST
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 28
@@ -576,9 +557,9 @@ State 15
 
 State 16
 
-   73 create_variable: create_single_variable .
+   69 create_variable: create_single_variable .
 
-    $default  reduce using rule 73 (create_variable)
+    $default  reduce using rule 69 (create_variable)
 
 
 State 17
@@ -604,8 +585,8 @@ State 19
 
 State 20
 
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN . INT OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET
-  113             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN . INT OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN . INT OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET
+  106             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN . INT OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
     INT  shift, and go to state 43
 
@@ -644,11 +625,9 @@ State 23
 
 State 24
 
-   77 create_single_variable: '$' . ID available_types
-   78                       | '$' . ID ID
-   79                       | '$' . expression ASSIGN ID available_types
-   80                       | '$' . expression ASSIGN ID ID
-   81                       | '$' . expression ASSIGN ID available_types CONST
+   72 create_single_variable: '$' . ID available_types
+   73                       | '$' . ID ID
+   74                       | '$' . expression ASSIGN ID available_types CONST
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 28
@@ -689,7 +668,7 @@ State 26
 
 State 27
 
-   99 expression: OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET
+   92 expression: OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -711,10 +690,10 @@ State 27
 
 State 28
 
-   77 create_single_variable: '$' ID . available_types
-   78                       | '$' ID . ID
-   88 expression: ID .
-  108 object_access_var: ID . '.' ID
+   72 create_single_variable: '$' ID . available_types
+   73                       | '$' ID . ID
+   81 expression: ID .
+  101 object_access_var: ID . '.' ID
 
     ID      shift, and go to state 58
     INT     shift, and go to state 44
@@ -725,66 +704,65 @@ State 28
     VOID    shift, and go to state 49
     '.'     shift, and go to state 59
 
-    $default  reduce using rule 88 (expression)
+    $default  reduce using rule 81 (expression)
 
     available_types  go to state 60
 
 
 State 29
 
-   89 expression: INT_VAL .
+   82 expression: INT_VAL .
 
-    $default  reduce using rule 89 (expression)
+    $default  reduce using rule 82 (expression)
 
 
 State 30
 
-   93 expression: STRING_VAL .
+   86 expression: STRING_VAL .
 
-    $default  reduce using rule 93 (expression)
+    $default  reduce using rule 86 (expression)
 
 
 State 31
 
-   90 expression: FLOAT_VAL .
+   83 expression: FLOAT_VAL .
 
-    $default  reduce using rule 90 (expression)
+    $default  reduce using rule 83 (expression)
 
 
 State 32
 
-   94 expression: CHAR_VAL .
+   87 expression: CHAR_VAL .
 
-    $default  reduce using rule 94 (expression)
+    $default  reduce using rule 87 (expression)
 
 
 State 33
 
-   91 expression: BOOL_TRUE .
+   84 expression: BOOL_TRUE .
 
-    $default  reduce using rule 91 (expression)
+    $default  reduce using rule 84 (expression)
 
 
 State 34
 
-   92 expression: BOOL_FALSE .
+   85 expression: BOOL_FALSE .
 
-    $default  reduce using rule 92 (expression)
+    $default  reduce using rule 85 (expression)
 
 
 State 35
 
    45 function_call: '#' . OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID
-  107 object_call_function: '#' . OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
+  100 object_call_function: '#' . OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
 
     OPEN_ROUND_BRACKET  shift, and go to state 61
 
 
 State 36
 
-   75 create_array_variable: '[' . expression ']' ID available_types
-   76                      | '[' . expression ']' ID ID
-  109 access_vector: '[' . expression ']' ID
+   71 create_array_variable: '[' . expression ']' ID available_types
+  102 access_vector: '[' . expression ']' ID
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -806,30 +784,28 @@ State 36
 
 State 37
 
-   95 expression: function_call .
+   88 expression: function_call .
 
-    $default  reduce using rule 95 (expression)
+    $default  reduce using rule 88 (expression)
 
 
 State 38
 
-   74 create_variable: '$' create_array_variable .
+   70 create_variable: '$' create_array_variable .
 
-    $default  reduce using rule 74 (create_variable)
+    $default  reduce using rule 70 (create_variable)
 
 
 State 39
 
-   79 create_single_variable: '$' expression . ASSIGN ID available_types
-   80                       | '$' expression . ASSIGN ID ID
-   81                       | '$' expression . ASSIGN ID available_types CONST
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   74 create_single_variable: '$' expression . ASSIGN ID available_types CONST
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ASSIGN   shift, and go to state 63
     ADD      shift, and go to state 64
@@ -843,73 +819,73 @@ State 39
 
 State 40
 
-   96 expression: object_call_function .
+   89 expression: object_call_function .
 
-    $default  reduce using rule 96 (expression)
+    $default  reduce using rule 89 (expression)
 
 
 State 41
 
-   97 expression: object_access_var .
+   90 expression: object_access_var .
 
-    $default  reduce using rule 97 (expression)
+    $default  reduce using rule 90 (expression)
 
 
 State 42
 
-   98 expression: access_vector .
+   91 expression: access_vector .
 
-    $default  reduce using rule 98 (expression)
+    $default  reduce using rule 91 (expression)
 
 
 State 43
 
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT . OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET
-  113             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT . OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT . OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET
+  106             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT . OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
     OPEN_CURLY_BRACKET  shift, and go to state 71
 
 
 State 44
 
-   82 available_types: INT .
+   75 available_types: INT .
 
-    $default  reduce using rule 82 (available_types)
+    $default  reduce using rule 75 (available_types)
 
 
 State 45
 
-   86 available_types: STRING .
+   79 available_types: STRING .
 
-    $default  reduce using rule 86 (available_types)
+    $default  reduce using rule 79 (available_types)
 
 
 State 46
 
-   84 available_types: FLOAT .
+   77 available_types: FLOAT .
 
-    $default  reduce using rule 84 (available_types)
+    $default  reduce using rule 77 (available_types)
 
 
 State 47
 
-   83 available_types: CHAR .
+   76 available_types: CHAR .
 
-    $default  reduce using rule 83 (available_types)
+    $default  reduce using rule 76 (available_types)
 
 
 State 48
 
-   85 available_types: BOOL .
+   78 available_types: BOOL .
 
-    $default  reduce using rule 85 (available_types)
+    $default  reduce using rule 78 (available_types)
 
 
 State 49
 
-   87 available_types: VOID .
+   80 available_types: VOID .
 
-    $default  reduce using rule 87 (available_types)
+    $default  reduce using rule 80 (available_types)
 
 
 State 50
@@ -944,7 +920,7 @@ State 52
 
 State 53
 
-  109 access_vector: '[' . expression ']' ID
+  102 access_vector: '[' . expression ']' ID
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -985,24 +961,24 @@ State 55
 
 State 56
 
-   88 expression: ID .
-  108 object_access_var: ID . '.' ID
+   81 expression: ID .
+  101 object_access_var: ID . '.' ID
 
     '.'  shift, and go to state 59
 
-    $default  reduce using rule 88 (expression)
+    $default  reduce using rule 81 (expression)
 
 
 State 57
 
-   99 expression: OPEN_ROUND_BRACKET expression . CLOSE_ROUND_BRACKET
-  100           | expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   92 expression: OPEN_ROUND_BRACKET expression . CLOSE_ROUND_BRACKET
+   93           | expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
@@ -1016,29 +992,29 @@ State 57
 
 State 58
 
-   78 create_single_variable: '$' ID ID .
+   73 create_single_variable: '$' ID ID .
 
-    $default  reduce using rule 78 (create_single_variable)
+    $default  reduce using rule 73 (create_single_variable)
 
 
 State 59
 
-  108 object_access_var: ID '.' . ID
+  101 object_access_var: ID '.' . ID
 
     ID  shift, and go to state 82
 
 
 State 60
 
-   77 create_single_variable: '$' ID available_types .
+   72 create_single_variable: '$' ID available_types .
 
-    $default  reduce using rule 77 (create_single_variable)
+    $default  reduce using rule 72 (create_single_variable)
 
 
 State 61
 
    45 function_call: '#' OPEN_ROUND_BRACKET . list_call CLOSE_ROUND_BRACKET ID
-  107 object_call_function: '#' OPEN_ROUND_BRACKET . list_call CLOSE_ROUND_BRACKET ID '.' ID
+  100 object_call_function: '#' OPEN_ROUND_BRACKET . list_call CLOSE_ROUND_BRACKET ID '.' ID
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1063,16 +1039,15 @@ State 61
 
 State 62
 
-   75 create_array_variable: '[' expression . ']' ID available_types
-   76                      | '[' expression . ']' ID ID
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-  109 access_vector: '[' expression . ']' ID
+   71 create_array_variable: '[' expression . ']' ID available_types
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+  102 access_vector: '[' expression . ']' ID
 
     ADD      shift, and go to state 64
     DIV      shift, and go to state 65
@@ -1086,16 +1061,14 @@ State 62
 
 State 63
 
-   79 create_single_variable: '$' expression ASSIGN . ID available_types
-   80                       | '$' expression ASSIGN . ID ID
-   81                       | '$' expression ASSIGN . ID available_types CONST
+   74 create_single_variable: '$' expression ASSIGN . ID available_types CONST
 
     ID  shift, and go to state 86
 
 
 State 64
 
-  100 expression: expression ADD . expression
+   93 expression: expression ADD . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1117,7 +1090,7 @@ State 64
 
 State 65
 
-  102 expression: expression DIV . expression
+   95 expression: expression DIV . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1139,7 +1112,7 @@ State 65
 
 State 66
 
-  104 expression: expression BIGGER . expression
+   97 expression: expression BIGGER . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1161,7 +1134,7 @@ State 66
 
 State 67
 
-  105 expression: expression SMALLER . expression
+   98 expression: expression SMALLER . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1183,7 +1156,7 @@ State 67
 
 State 68
 
-  103 expression: expression MIN . expression
+   96 expression: expression MIN . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1205,7 +1178,7 @@ State 68
 
 State 69
 
-  101 expression: expression MUL . expression
+   94 expression: expression MUL . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1227,7 +1200,7 @@ State 69
 
 State 70
 
-  106 expression: expression EQUAL . expression
+   99 expression: expression EQUAL . expression
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -1249,14 +1222,14 @@ State 70
 
 State 71
 
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET . $@19 multiple_statements CLOSE_CURLY_BRACKET
-  113             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET . $@20 CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET . $@17 multiple_statements CLOSE_CURLY_BRACKET
+  106             | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET . $@18 CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  reduce using rule 112 ($@20)
-    $default             reduce using rule 110 ($@19)
+    CLOSE_CURLY_BRACKET  reduce using rule 105 ($@18)
+    $default             reduce using rule 103 ($@17)
 
-    $@19  go to state 94
-    $@20  go to state 95
+    $@17  go to state 94
+    $@18  go to state 95
 
 
 State 72
@@ -1281,14 +1254,14 @@ State 73
 
 State 74
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-  109 access_vector: '[' expression . ']' ID
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+  102 access_vector: '[' expression . ']' ID
 
     ADD      shift, and go to state 64
     DIV      shift, and go to state 65
@@ -1361,23 +1334,23 @@ State 80
 
 State 81
 
-   99 expression: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET .
+   92 expression: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET .
 
-    $default  reduce using rule 99 (expression)
+    $default  reduce using rule 92 (expression)
 
 
 State 82
 
-  108 object_access_var: ID '.' ID .
+  101 object_access_var: ID '.' ID .
 
-    $default  reduce using rule 108 (object_access_var)
+    $default  reduce using rule 101 (object_access_var)
 
 
 State 83
 
    45 function_call: '#' OPEN_ROUND_BRACKET list_call . CLOSE_ROUND_BRACKET ID
    46 list_call: list_call . ',' expression
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call . CLOSE_ROUND_BRACKET ID '.' ID
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call . CLOSE_ROUND_BRACKET ID '.' ID
 
     CLOSE_ROUND_BRACKET  shift, and go to state 104
     ','                  shift, and go to state 105
@@ -1386,13 +1359,13 @@ State 83
 State 84
 
    47 list_call: expression .
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD      shift, and go to state 64
     DIV      shift, and go to state 65
@@ -1407,20 +1380,16 @@ State 84
 
 State 85
 
-   75 create_array_variable: '[' expression ']' . ID available_types
-   76                      | '[' expression ']' . ID ID
-  109 access_vector: '[' expression ']' . ID
+   71 create_array_variable: '[' expression ']' . ID available_types
+  102 access_vector: '[' expression ']' . ID
 
     ID  shift, and go to state 106
 
 
 State 86
 
-   79 create_single_variable: '$' expression ASSIGN ID . available_types
-   80                       | '$' expression ASSIGN ID . ID
-   81                       | '$' expression ASSIGN ID . available_types CONST
+   74 create_single_variable: '$' expression ASSIGN ID . available_types CONST
 
-    ID      shift, and go to state 107
     INT     shift, and go to state 44
     STRING  shift, and go to state 45
     FLOAT   shift, and go to state 46
@@ -1428,19 +1397,19 @@ State 86
     BOOL    shift, and go to state 48
     VOID    shift, and go to state 49
 
-    available_types  go to state 108
+    available_types  go to state 107
 
 
 State 87
 
-  100 expression: expression . ADD expression
-  100           | expression ADD expression .
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   93           | expression ADD expression .
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     DIV      shift, and go to state 65
     BIGGER   shift, and go to state 66
@@ -1449,70 +1418,70 @@ State 87
     MUL      shift, and go to state 69
     EQUAL    shift, and go to state 70
 
-    $default  reduce using rule 100 (expression)
+    $default  reduce using rule 93 (expression)
 
 
 State 88
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  102           | expression DIV expression .
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   95           | expression DIV expression .
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     BIGGER   shift, and go to state 66
     SMALLER  shift, and go to state 67
     EQUAL    shift, and go to state 70
 
-    $default  reduce using rule 102 (expression)
+    $default  reduce using rule 95 (expression)
 
 
 State 89
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  104           | expression BIGGER expression .
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   97           | expression BIGGER expression .
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     EQUAL  shift, and go to state 70
 
-    $default  reduce using rule 104 (expression)
+    $default  reduce using rule 97 (expression)
 
 
 State 90
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  105           | expression SMALLER expression .
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   98           | expression SMALLER expression .
+   99           | expression . EQUAL expression
 
     BIGGER  shift, and go to state 66
     EQUAL   shift, and go to state 70
 
-    $default  reduce using rule 105 (expression)
+    $default  reduce using rule 98 (expression)
 
 
 State 91
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  103           | expression MIN expression .
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   96           | expression MIN expression .
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     DIV      shift, and go to state 65
     BIGGER   shift, and go to state 66
@@ -1520,82 +1489,82 @@ State 91
     MUL      shift, and go to state 69
     EQUAL    shift, and go to state 70
 
-    $default  reduce using rule 103 (expression)
+    $default  reduce using rule 96 (expression)
 
 
 State 92
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  101           | expression MUL expression .
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   94           | expression MUL expression .
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     DIV      shift, and go to state 65
     BIGGER   shift, and go to state 66
     SMALLER  shift, and go to state 67
     EQUAL    shift, and go to state 70
 
-    $default  reduce using rule 101 (expression)
+    $default  reduce using rule 94 (expression)
 
 
 State 93
 
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-  106           | expression EQUAL expression .
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+   99           | expression EQUAL expression .
 
-    $default  reduce using rule 106 (expression)
+    $default  reduce using rule 99 (expression)
 
 
 State 94
 
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@19 . multiple_statements CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@17 . multiple_statements CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    multiple_statements  go to state 111
-    statements           go to state 112
-    if_statement         go to state 113
-    while_statement      go to state 114
-    for_statement        go to state 115
+    multiple_statements  go to state 110
+    statements           go to state 111
+    if_statement         go to state 112
+    while_statement      go to state 113
+    for_statement        go to state 114
 
 
 State 95
 
-  113 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@20 . CLOSE_CURLY_BRACKET
+  106 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@18 . CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 116
+    CLOSE_CURLY_BRACKET  shift, and go to state 115
 
 
 State 96
 
    22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 . function_content return_statement CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    function_content  go to state 117
-    statements        go to state 118
-    if_statement      go to state 113
-    while_statement   go to state 114
-    for_statement     go to state 115
+    function_content  go to state 116
+    statements        go to state 117
+    if_statement      go to state 112
+    while_statement   go to state 113
+    for_statement     go to state 114
 
 
 State 97
 
    24 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@6 . CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 119
+    CLOSE_CURLY_BRACKET  shift, and go to state 118
 
 
 State 98
@@ -1606,15 +1575,15 @@ State 98
     CLOSE_CURLY_BRACKET  reduce using rule 19 ($@4)
     $default             reduce using rule 17 ($@3)
 
-    $@3  go to state 120
-    $@4  go to state 121
+    $@3  go to state 119
+    $@4  go to state 120
 
 
 State 99
 
-  109 access_vector: '[' expression ']' . ID
+  102 access_vector: '[' expression ']' . ID
 
-    ID  shift, and go to state 122
+    ID  shift, and go to state 121
 
 
 State 100
@@ -1649,9 +1618,9 @@ State 103
 State 104
 
    45 function_call: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET . ID
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET . ID '.' ID
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET . ID '.' ID
 
-    ID  shift, and go to state 123
+    ID  shift, and go to state 122
 
 
 State 105
@@ -1670,7 +1639,7 @@ State 105
     '['                 shift, and go to state 53
 
     function_call         go to state 37
-    expression            go to state 124
+    expression            go to state 123
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
@@ -1678,11 +1647,9 @@ State 105
 
 State 106
 
-   75 create_array_variable: '[' expression ']' ID . available_types
-   76                      | '[' expression ']' ID . ID
-  109 access_vector: '[' expression ']' ID .
+   71 create_array_variable: '[' expression ']' ID . available_types
+  102 access_vector: '[' expression ']' ID .
 
-    ID      shift, and go to state 125
     INT     shift, and go to state 44
     STRING  shift, and go to state 45
     FLOAT   shift, and go to state 46
@@ -1690,59 +1657,46 @@ State 106
     BOOL    shift, and go to state 48
     VOID    shift, and go to state 49
 
-    $default  reduce using rule 109 (access_vector)
+    $default  reduce using rule 102 (access_vector)
 
-    available_types  go to state 126
+    available_types  go to state 124
 
 
 State 107
 
-   80 create_single_variable: '$' expression ASSIGN ID ID .
+   74 create_single_variable: '$' expression ASSIGN ID available_types . CONST
 
-    $default  reduce using rule 80 (create_single_variable)
+    CONST  shift, and go to state 125
 
 
 State 108
-
-   79 create_single_variable: '$' expression ASSIGN ID available_types .
-   81                       | '$' expression ASSIGN ID available_types . CONST
-
-    CONST  shift, and go to state 127
-
-    $default  reduce using rule 79 (create_single_variable)
-
-
-State 109
 
    51 if_statement: OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
    54             | OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement
    61 while_statement: OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@14 multiple_statements CLOSE_CURLY_BRACKET
    63                | OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@15 CLOSE_CURLY_BRACKET
    68 for_statement: OPEN_ROUND_BRACKET . assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET . assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
-   72              | OPEN_ROUND_BRACKET . CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET   shift, and go to state 27
-    CLOSE_ROUND_BRACKET  shift, and go to state 128
-    ID                   shift, and go to state 56
-    INT_VAL              shift, and go to state 29
-    STRING_VAL           shift, and go to state 30
-    FLOAT_VAL            shift, and go to state 31
-    CHAR_VAL             shift, and go to state 32
-    BOOL_TRUE            shift, and go to state 33
-    BOOL_FALSE           shift, and go to state 34
-    '#'                  shift, and go to state 35
-    '['                  shift, and go to state 53
+    OPEN_ROUND_BRACKET  shift, and go to state 27
+    ID                  shift, and go to state 56
+    INT_VAL             shift, and go to state 29
+    STRING_VAL          shift, and go to state 30
+    FLOAT_VAL           shift, and go to state 31
+    CHAR_VAL            shift, and go to state 32
+    BOOL_TRUE           shift, and go to state 33
+    BOOL_FALSE          shift, and go to state 34
+    '#'                 shift, and go to state 35
+    '['                 shift, and go to state 53
 
     function_call         go to state 37
-    assign_statement      go to state 129
-    expression            go to state 130
+    assign_statement      go to state 126
+    expression            go to state 127
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
 
 
-State 110
+State 109
 
    37 statements: ';' . assign_statement
    38           | ';' . create_variable
@@ -1750,9 +1704,9 @@ State 110
    40           | ';' . object_call_function
    41           | ';' . string_functions
 
-    STRCPY              shift, and go to state 131
-    STRLEN              shift, and go to state 132
-    STRCAT              shift, and go to state 133
+    STRCPY              shift, and go to state 128
+    STRLEN              shift, and go to state 129
+    STRCAT              shift, and go to state 130
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
     INT_VAL             shift, and go to state 29
@@ -1765,147 +1719,147 @@ State 110
     '$'                 shift, and go to state 14
     '['                 shift, and go to state 53
 
-    string_functions        go to state 134
-    function_call           go to state 135
-    assign_statement        go to state 136
-    create_variable         go to state 137
+    string_functions        go to state 131
+    function_call           go to state 132
+    assign_statement        go to state 133
+    create_variable         go to state 134
     create_single_variable  go to state 16
-    expression              go to state 138
-    object_call_function    go to state 139
+    expression              go to state 135
+    object_call_function    go to state 136
     object_access_var       go to state 41
     access_vector           go to state 42
 
 
-State 111
+State 110
 
    32 multiple_statements: multiple_statements . statements
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@19 multiple_statements . CLOSE_CURLY_BRACKET
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@17 multiple_statements . CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET   shift, and go to state 109
-    CLOSE_CURLY_BRACKET  shift, and go to state 140
-    ';'                  shift, and go to state 110
+    OPEN_ROUND_BRACKET   shift, and go to state 108
+    CLOSE_CURLY_BRACKET  shift, and go to state 137
+    ';'                  shift, and go to state 109
 
-    statements       go to state 141
-    if_statement     go to state 113
-    while_statement  go to state 114
-    for_statement    go to state 115
+    statements       go to state 138
+    if_statement     go to state 112
+    while_statement  go to state 113
+    for_statement    go to state 114
 
 
-State 112
+State 111
 
    33 multiple_statements: statements .
 
     $default  reduce using rule 33 (multiple_statements)
 
 
-State 113
+State 112
 
    34 statements: if_statement .
 
     $default  reduce using rule 34 (statements)
 
 
-State 114
+State 113
 
    35 statements: while_statement .
 
     $default  reduce using rule 35 (statements)
 
 
-State 115
+State 114
 
    36 statements: for_statement .
 
     $default  reduce using rule 36 (statements)
 
 
+State 115
+
+  106 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET .
+
+    $default  reduce using rule 106 (main_section)
+
+
 State 116
-
-  113 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@20 CLOSE_CURLY_BRACKET .
-
-    $default  reduce using rule 113 (main_section)
-
-
-State 117
 
    22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content . return_statement CLOSE_CURLY_BRACKET
    30 function_content: function_content . statements
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    RETURN              shift, and go to state 142
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    RETURN              shift, and go to state 139
+    ';'                 shift, and go to state 109
 
     $default  reduce using rule 26 (return_statement)
 
-    return_statement  go to state 143
-    statements        go to state 144
-    if_statement      go to state 113
-    while_statement   go to state 114
-    for_statement     go to state 115
+    return_statement  go to state 140
+    statements        go to state 141
+    if_statement      go to state 112
+    while_statement   go to state 113
+    for_statement     go to state 114
 
 
-State 118
+State 117
 
    31 function_content: statements .
 
     $default  reduce using rule 31 (function_content)
 
 
-State 119
+State 118
 
    24 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@6 CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 24 (function_declaration)
 
 
-State 120
+State 119
 
    18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 . function_content return_statement CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    function_content  go to state 145
-    statements        go to state 118
-    if_statement      go to state 113
-    while_statement   go to state 114
-    for_statement     go to state 115
+    function_content  go to state 142
+    statements        go to state 117
+    if_statement      go to state 112
+    while_statement   go to state 113
+    for_statement     go to state 114
+
+
+State 120
+
+   20 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@4 . CLOSE_CURLY_BRACKET
+
+    CLOSE_CURLY_BRACKET  shift, and go to state 143
 
 
 State 121
 
-   20 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@4 . CLOSE_CURLY_BRACKET
+  102 access_vector: '[' expression ']' ID .
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 146
+    $default  reduce using rule 102 (access_vector)
 
 
 State 122
 
-  109 access_vector: '[' expression ']' ID .
-
-    $default  reduce using rule 109 (access_vector)
-
-
-State 123
-
    45 function_call: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID .
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID . '.' ID
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID . '.' ID
 
-    '.'  shift, and go to state 147
+    '.'  shift, and go to state 144
 
     $default  reduce using rule 45 (function_call)
 
 
-State 124
+State 123
 
    46 list_call: list_call ',' expression .
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD      shift, and go to state 64
     DIV      shift, and go to state 65
@@ -1918,43 +1872,28 @@ State 124
     $default  reduce using rule 46 (list_call)
 
 
+State 124
+
+   71 create_array_variable: '[' expression ']' ID available_types .
+
+    $default  reduce using rule 71 (create_array_variable)
+
+
 State 125
 
-   76 create_array_variable: '[' expression ']' ID ID .
+   74 create_single_variable: '$' expression ASSIGN ID available_types CONST .
 
-    $default  reduce using rule 76 (create_array_variable)
+    $default  reduce using rule 74 (create_single_variable)
 
 
 State 126
 
-   75 create_array_variable: '[' expression ']' ID available_types .
+   68 for_statement: OPEN_ROUND_BRACKET assign_statement . ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
 
-    $default  reduce using rule 75 (create_array_variable)
+    ';'  shift, and go to state 145
 
 
 State 127
-
-   81 create_single_variable: '$' expression ASSIGN ID available_types CONST .
-
-    $default  reduce using rule 81 (create_single_variable)
-
-
-State 128
-
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET . FOR OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
-
-    FOR  shift, and go to state 148
-
-
-State 129
-
-   68 for_statement: OPEN_ROUND_BRACKET assign_statement . ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement . ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
-
-    ';'  shift, and go to state 149
-
-
-State 130
 
    51 if_statement: OPEN_ROUND_BRACKET expression . CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
    54             | OPEN_ROUND_BRACKET expression . CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement
@@ -1963,15 +1902,15 @@ State 130
    64 assign_statement: expression . ASSIGN ID
    65                 | expression . ASSIGN object_access_var
    66                 | expression . ASSIGN access_vector
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
-    ASSIGN               shift, and go to state 150
+    ASSIGN               shift, and go to state 146
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
     BIGGER               shift, and go to state 66
@@ -1979,77 +1918,77 @@ State 130
     MIN                  shift, and go to state 68
     MUL                  shift, and go to state 69
     EQUAL                shift, and go to state 70
-    CLOSE_ROUND_BRACKET  shift, and go to state 151
+    CLOSE_ROUND_BRACKET  shift, and go to state 147
 
 
-State 131
+State 128
 
    42 string_functions: STRCPY . OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 152
+    OPEN_ROUND_BRACKET  shift, and go to state 148
 
 
-State 132
+State 129
 
    43 string_functions: STRLEN . OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 153
+    OPEN_ROUND_BRACKET  shift, and go to state 149
 
 
-State 133
+State 130
 
    44 string_functions: STRCAT . OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 154
+    OPEN_ROUND_BRACKET  shift, and go to state 150
 
 
-State 134
+State 131
 
    41 statements: ';' string_functions .
 
     $default  reduce using rule 41 (statements)
 
 
-State 135
+State 132
 
    39 statements: ';' function_call .
-   95 expression: function_call .
+   88 expression: function_call .
 
     OPEN_ROUND_BRACKET   reduce using rule 39 (statements)
     CLOSE_CURLY_BRACKET  reduce using rule 39 (statements)
     RETURN               reduce using rule 39 (statements)
     ';'                  reduce using rule 39 (statements)
-    $default             reduce using rule 95 (expression)
+    $default             reduce using rule 88 (expression)
 
 
-State 136
+State 133
 
    37 statements: ';' assign_statement .
 
     $default  reduce using rule 37 (statements)
 
 
-State 137
+State 134
 
    38 statements: ';' create_variable .
 
     $default  reduce using rule 38 (statements)
 
 
-State 138
+State 135
 
    64 assign_statement: expression . ASSIGN ID
    65                 | expression . ASSIGN object_access_var
    66                 | expression . ASSIGN access_vector
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
-    ASSIGN   shift, and go to state 150
+    ASSIGN   shift, and go to state 146
     ADD      shift, and go to state 64
     DIV      shift, and go to state 65
     BIGGER   shift, and go to state 66
@@ -2059,35 +1998,103 @@ State 138
     EQUAL    shift, and go to state 70
 
 
-State 139
+State 136
 
    40 statements: ';' object_call_function .
-   96 expression: object_call_function .
+   89 expression: object_call_function .
 
     OPEN_ROUND_BRACKET   reduce using rule 40 (statements)
     CLOSE_CURLY_BRACKET  reduce using rule 40 (statements)
     RETURN               reduce using rule 40 (statements)
     ';'                  reduce using rule 40 (statements)
-    $default             reduce using rule 96 (expression)
+    $default             reduce using rule 89 (expression)
 
 
-State 140
+State 137
 
-  111 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@19 multiple_statements CLOSE_CURLY_BRACKET .
+  104 main_section: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET MAIN INT OPEN_CURLY_BRACKET $@17 multiple_statements CLOSE_CURLY_BRACKET .
 
-    $default  reduce using rule 111 (main_section)
+    $default  reduce using rule 104 (main_section)
 
 
-State 141
+State 138
 
    32 multiple_statements: multiple_statements statements .
 
     $default  reduce using rule 32 (multiple_statements)
 
 
-State 142
+State 139
 
    25 return_statement: RETURN . expression
+
+    OPEN_ROUND_BRACKET  shift, and go to state 27
+    ID                  shift, and go to state 56
+    INT_VAL             shift, and go to state 29
+    STRING_VAL          shift, and go to state 30
+    FLOAT_VAL           shift, and go to state 31
+    CHAR_VAL            shift, and go to state 32
+    BOOL_TRUE           shift, and go to state 33
+    BOOL_FALSE          shift, and go to state 34
+    '#'                 shift, and go to state 35
+    '['                 shift, and go to state 53
+
+    function_call         go to state 37
+    expression            go to state 151
+    object_call_function  go to state 40
+    object_access_var     go to state 41
+    access_vector         go to state 42
+
+
+State 140
+
+   22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement . CLOSE_CURLY_BRACKET
+
+    CLOSE_CURLY_BRACKET  shift, and go to state 152
+
+
+State 141
+
+   30 function_content: function_content statements .
+
+    $default  reduce using rule 30 (function_content)
+
+
+State 142
+
+   18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 function_content . return_statement CLOSE_CURLY_BRACKET
+   30 function_content: function_content . statements
+
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    RETURN              shift, and go to state 139
+    ';'                 shift, and go to state 109
+
+    $default  reduce using rule 26 (return_statement)
+
+    return_statement  go to state 153
+    statements        go to state 141
+    if_statement      go to state 112
+    while_statement   go to state 113
+    for_statement     go to state 114
+
+
+State 143
+
+   20 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@4 CLOSE_CURLY_BRACKET .
+
+    $default  reduce using rule 20 (function_declaration)
+
+
+State 144
+
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' . ID
+
+    ID  shift, and go to state 154
+
+
+State 145
+
+   68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' . expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -2107,107 +2114,31 @@ State 142
     access_vector         go to state 42
 
 
-State 143
-
-   22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement . CLOSE_CURLY_BRACKET
-
-    CLOSE_CURLY_BRACKET  shift, and go to state 156
-
-
-State 144
-
-   30 function_content: function_content statements .
-
-    $default  reduce using rule 30 (function_content)
-
-
-State 145
-
-   18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 function_content . return_statement CLOSE_CURLY_BRACKET
-   30 function_content: function_content . statements
-
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    RETURN              shift, and go to state 142
-    ';'                 shift, and go to state 110
-
-    $default  reduce using rule 26 (return_statement)
-
-    return_statement  go to state 157
-    statements        go to state 144
-    if_statement      go to state 113
-    while_statement   go to state 114
-    for_statement     go to state 115
-
-
 State 146
-
-   20 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@4 CLOSE_CURLY_BRACKET .
-
-    $default  reduce using rule 20 (function_declaration)
-
-
-State 147
-
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' . ID
-
-    ID  shift, and go to state 158
-
-
-State 148
-
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR . OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET
-
-    OPEN_CURLY_BRACKET  shift, and go to state 159
-
-
-State 149
-
-   68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' . expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' . expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
-
-    OPEN_ROUND_BRACKET  shift, and go to state 27
-    ID                  shift, and go to state 56
-    INT_VAL             shift, and go to state 29
-    STRING_VAL          shift, and go to state 30
-    FLOAT_VAL           shift, and go to state 31
-    CHAR_VAL            shift, and go to state 32
-    BOOL_TRUE           shift, and go to state 33
-    BOOL_FALSE          shift, and go to state 34
-    '#'                 shift, and go to state 35
-    '['                 shift, and go to state 53
-
-    function_call         go to state 37
-    expression            go to state 160
-    object_call_function  go to state 40
-    object_access_var     go to state 41
-    access_vector         go to state 42
-
-
-State 150
 
    64 assign_statement: expression ASSIGN . ID
    65                 | expression ASSIGN . object_access_var
    66                 | expression ASSIGN . access_vector
 
-    ID   shift, and go to state 161
+    ID   shift, and go to state 156
     '['  shift, and go to state 53
 
-    object_access_var  go to state 162
-    access_vector      go to state 163
+    object_access_var  go to state 157
+    access_vector      go to state 158
 
 
-State 151
+State 147
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET . IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
    54             | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET . IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement
    61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET . WHILE OPEN_CURLY_BRACKET $@14 multiple_statements CLOSE_CURLY_BRACKET
    63                | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET . WHILE OPEN_CURLY_BRACKET $@15 CLOSE_CURLY_BRACKET
 
-    IF     shift, and go to state 164
-    WHILE  shift, and go to state 165
+    IF     shift, and go to state 159
+    WHILE  shift, and go to state 160
 
 
-State 152
+State 148
 
    42 string_functions: STRCPY OPEN_ROUND_BRACKET . expression expression CLOSE_ROUND_BRACKET
 
@@ -2223,13 +2154,13 @@ State 152
     '['                 shift, and go to state 53
 
     function_call         go to state 37
-    expression            go to state 166
+    expression            go to state 161
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
 
 
-State 153
+State 149
 
    43 string_functions: STRLEN OPEN_ROUND_BRACKET . expression CLOSE_ROUND_BRACKET
 
@@ -2245,16 +2176,156 @@ State 153
     '['                 shift, and go to state 53
 
     function_call         go to state 37
-    expression            go to state 167
+    expression            go to state 162
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
 
 
-State 154
+State 150
 
    44 string_functions: STRCAT OPEN_ROUND_BRACKET . expression expression CLOSE_ROUND_BRACKET
 
+    OPEN_ROUND_BRACKET  shift, and go to state 27
+    ID                  shift, and go to state 56
+    INT_VAL             shift, and go to state 29
+    STRING_VAL          shift, and go to state 30
+    FLOAT_VAL           shift, and go to state 31
+    CHAR_VAL            shift, and go to state 32
+    BOOL_TRUE           shift, and go to state 33
+    BOOL_FALSE          shift, and go to state 34
+    '#'                 shift, and go to state 35
+    '['                 shift, and go to state 53
+
+    function_call         go to state 37
+    expression            go to state 163
+    object_call_function  go to state 40
+    object_access_var     go to state 41
+    access_vector         go to state 42
+
+
+State 151
+
+   25 return_statement: RETURN expression .
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+
+    ADD      shift, and go to state 64
+    DIV      shift, and go to state 65
+    BIGGER   shift, and go to state 66
+    SMALLER  shift, and go to state 67
+    MIN      shift, and go to state 68
+    MUL      shift, and go to state 69
+    EQUAL    shift, and go to state 70
+
+    $default  reduce using rule 25 (return_statement)
+
+
+State 152
+
+   22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement CLOSE_CURLY_BRACKET .
+
+    $default  reduce using rule 22 (function_declaration)
+
+
+State 153
+
+   18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 function_content return_statement . CLOSE_CURLY_BRACKET
+
+    CLOSE_CURLY_BRACKET  shift, and go to state 164
+
+
+State 154
+
+  100 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID .
+
+    $default  reduce using rule 100 (object_call_function)
+
+
+State 155
+
+   68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression . ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+
+    ADD      shift, and go to state 64
+    DIV      shift, and go to state 65
+    BIGGER   shift, and go to state 66
+    SMALLER  shift, and go to state 67
+    MIN      shift, and go to state 68
+    MUL      shift, and go to state 69
+    EQUAL    shift, and go to state 70
+    ';'      shift, and go to state 165
+
+
+State 156
+
+   64 assign_statement: expression ASSIGN ID .
+  101 object_access_var: ID . '.' ID
+
+    '.'  shift, and go to state 59
+
+    $default  reduce using rule 64 (assign_statement)
+
+
+State 157
+
+   65 assign_statement: expression ASSIGN object_access_var .
+
+    $default  reduce using rule 65 (assign_statement)
+
+
+State 158
+
+   66 assign_statement: expression ASSIGN access_vector .
+
+    $default  reduce using rule 66 (assign_statement)
+
+
+State 159
+
+   51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF . OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
+   54             | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF . OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement
+
+    OPEN_CURLY_BRACKET  shift, and go to state 166
+
+
+State 160
+
+   61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE . OPEN_CURLY_BRACKET $@14 multiple_statements CLOSE_CURLY_BRACKET
+   63                | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE . OPEN_CURLY_BRACKET $@15 CLOSE_CURLY_BRACKET
+
+    OPEN_CURLY_BRACKET  shift, and go to state 167
+
+
+State 161
+
+   42 string_functions: STRCPY OPEN_ROUND_BRACKET expression . expression CLOSE_ROUND_BRACKET
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
+
+    ADD                 shift, and go to state 64
+    DIV                 shift, and go to state 65
+    BIGGER              shift, and go to state 66
+    SMALLER             shift, and go to state 67
+    MIN                 shift, and go to state 68
+    MUL                 shift, and go to state 69
+    EQUAL               shift, and go to state 70
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
     INT_VAL             shift, and go to state 29
@@ -2273,166 +2344,16 @@ State 154
     access_vector         go to state 42
 
 
-State 155
-
-   25 return_statement: RETURN expression .
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-
-    ADD      shift, and go to state 64
-    DIV      shift, and go to state 65
-    BIGGER   shift, and go to state 66
-    SMALLER  shift, and go to state 67
-    MIN      shift, and go to state 68
-    MUL      shift, and go to state 69
-    EQUAL    shift, and go to state 70
-
-    $default  reduce using rule 25 (return_statement)
-
-
-State 156
-
-   22 function_declaration: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@5 function_content return_statement CLOSE_CURLY_BRACKET .
-
-    $default  reduce using rule 22 (function_declaration)
-
-
-State 157
-
-   18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 function_content return_statement . CLOSE_CURLY_BRACKET
-
-    CLOSE_CURLY_BRACKET  shift, and go to state 169
-
-
-State 158
-
-  107 object_call_function: '#' OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID .
-
-    $default  reduce using rule 107 (object_call_function)
-
-
-State 159
-
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET . $@18 CLOSE_CURLY_BRACKET
-
-    $default  reduce using rule 71 ($@18)
-
-    $@18  go to state 170
-
-
-State 160
-
-   68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression . ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression . ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-
-    ADD      shift, and go to state 64
-    DIV      shift, and go to state 65
-    BIGGER   shift, and go to state 66
-    SMALLER  shift, and go to state 67
-    MIN      shift, and go to state 68
-    MUL      shift, and go to state 69
-    EQUAL    shift, and go to state 70
-    ';'      shift, and go to state 171
-
-
-State 161
-
-   64 assign_statement: expression ASSIGN ID .
-  108 object_access_var: ID . '.' ID
-
-    '.'  shift, and go to state 59
-
-    $default  reduce using rule 64 (assign_statement)
-
-
 State 162
 
-   65 assign_statement: expression ASSIGN object_access_var .
-
-    $default  reduce using rule 65 (assign_statement)
-
-
-State 163
-
-   66 assign_statement: expression ASSIGN access_vector .
-
-    $default  reduce using rule 66 (assign_statement)
-
-
-State 164
-
-   51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF . OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
-   54             | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF . OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement
-
-    OPEN_CURLY_BRACKET  shift, and go to state 172
-
-
-State 165
-
-   61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE . OPEN_CURLY_BRACKET $@14 multiple_statements CLOSE_CURLY_BRACKET
-   63                | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE . OPEN_CURLY_BRACKET $@15 CLOSE_CURLY_BRACKET
-
-    OPEN_CURLY_BRACKET  shift, and go to state 173
-
-
-State 166
-
-   42 string_functions: STRCPY OPEN_ROUND_BRACKET expression . expression CLOSE_ROUND_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
-
-    ADD                 shift, and go to state 64
-    DIV                 shift, and go to state 65
-    BIGGER              shift, and go to state 66
-    SMALLER             shift, and go to state 67
-    MIN                 shift, and go to state 68
-    MUL                 shift, and go to state 69
-    EQUAL               shift, and go to state 70
-    OPEN_ROUND_BRACKET  shift, and go to state 27
-    ID                  shift, and go to state 56
-    INT_VAL             shift, and go to state 29
-    STRING_VAL          shift, and go to state 30
-    FLOAT_VAL           shift, and go to state 31
-    CHAR_VAL            shift, and go to state 32
-    BOOL_TRUE           shift, and go to state 33
-    BOOL_FALSE          shift, and go to state 34
-    '#'                 shift, and go to state 35
-    '['                 shift, and go to state 53
-
-    function_call         go to state 37
-    expression            go to state 174
-    object_call_function  go to state 40
-    object_access_var     go to state 41
-    access_vector         go to state 42
-
-
-State 167
-
    43 string_functions: STRLEN OPEN_ROUND_BRACKET expression . CLOSE_ROUND_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
@@ -2441,19 +2362,19 @@ State 167
     MIN                  shift, and go to state 68
     MUL                  shift, and go to state 69
     EQUAL                shift, and go to state 70
-    CLOSE_ROUND_BRACKET  shift, and go to state 175
+    CLOSE_ROUND_BRACKET  shift, and go to state 169
 
 
-State 168
+State 163
 
    44 string_functions: STRCAT OPEN_ROUND_BRACKET expression . expression CLOSE_ROUND_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                 shift, and go to state 64
     DIV                 shift, and go to state 65
@@ -2474,30 +2395,22 @@ State 168
     '['                 shift, and go to state 53
 
     function_call         go to state 37
-    expression            go to state 176
+    expression            go to state 170
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
 
 
-State 169
+State 164
 
    18 function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET $@3 function_content return_statement CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 18 (function_declaration)
 
 
-State 170
-
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@18 . CLOSE_CURLY_BRACKET
-
-    CLOSE_CURLY_BRACKET  shift, and go to state 177
-
-
-State 171
+State 165
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' . expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression ';' . expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
 
     OPEN_ROUND_BRACKET  shift, and go to state 27
     ID                  shift, and go to state 56
@@ -2511,13 +2424,13 @@ State 171
     '['                 shift, and go to state 53
 
     function_call         go to state 37
-    expression            go to state 178
+    expression            go to state 171
     object_call_function  go to state 40
     object_access_var     go to state 41
     access_vector         go to state 42
 
 
-State 172
+State 166
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET . $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
    54             | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET . $@10 CLOSE_CURLY_BRACKET $@11 else_statement
@@ -2525,11 +2438,11 @@ State 172
     CLOSE_CURLY_BRACKET  reduce using rule 52 ($@10)
     $default             reduce using rule 49 ($@8)
 
-    $@8   go to state 179
-    $@10  go to state 180
+    $@8   go to state 172
+    $@10  go to state 173
 
 
-State 173
+State 167
 
    61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET . $@14 multiple_statements CLOSE_CURLY_BRACKET
    63                | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET . $@15 CLOSE_CURLY_BRACKET
@@ -2537,20 +2450,20 @@ State 173
     CLOSE_CURLY_BRACKET  reduce using rule 62 ($@15)
     $default             reduce using rule 60 ($@14)
 
-    $@14  go to state 181
-    $@15  go to state 182
+    $@14  go to state 174
+    $@15  go to state 175
 
 
-State 174
+State 168
 
    42 string_functions: STRCPY OPEN_ROUND_BRACKET expression expression . CLOSE_ROUND_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
@@ -2559,26 +2472,26 @@ State 174
     MIN                  shift, and go to state 68
     MUL                  shift, and go to state 69
     EQUAL                shift, and go to state 70
-    CLOSE_ROUND_BRACKET  shift, and go to state 183
+    CLOSE_ROUND_BRACKET  shift, and go to state 176
 
 
-State 175
+State 169
 
    43 string_functions: STRLEN OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET .
 
     $default  reduce using rule 43 (string_functions)
 
 
-State 176
+State 170
 
    44 string_functions: STRCAT OPEN_ROUND_BRACKET expression expression . CLOSE_ROUND_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
@@ -2587,27 +2500,19 @@ State 176
     MIN                  shift, and go to state 68
     MUL                  shift, and go to state 69
     EQUAL                shift, and go to state 70
-    CLOSE_ROUND_BRACKET  shift, and go to state 184
+    CLOSE_ROUND_BRACKET  shift, and go to state 177
 
 
-State 177
-
-   72 for_statement: OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@18 CLOSE_CURLY_BRACKET .
-
-    $default  reduce using rule 72 (for_statement)
-
-
-State 178
+State 171
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression . CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression . CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
-  100 expression: expression . ADD expression
-  101           | expression . MUL expression
-  102           | expression . DIV expression
-  103           | expression . MIN expression
-  104           | expression . BIGGER expression
-  105           | expression . SMALLER expression
-  106           | expression . EQUAL expression
+   93 expression: expression . ADD expression
+   94           | expression . MUL expression
+   95           | expression . DIV expression
+   96           | expression . MIN expression
+   97           | expression . BIGGER expression
+   98           | expression . SMALLER expression
+   99           | expression . EQUAL expression
 
     ADD                  shift, and go to state 64
     DIV                  shift, and go to state 65
@@ -2616,221 +2521,209 @@ State 178
     MIN                  shift, and go to state 68
     MUL                  shift, and go to state 69
     EQUAL                shift, and go to state 70
-    CLOSE_ROUND_BRACKET  shift, and go to state 185
+    CLOSE_ROUND_BRACKET  shift, and go to state 178
 
 
-State 179
+State 172
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 . multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    multiple_statements  go to state 186
-    statements           go to state 112
-    if_statement         go to state 113
-    while_statement      go to state 114
-    for_statement        go to state 115
+    multiple_statements  go to state 179
+    statements           go to state 111
+    if_statement         go to state 112
+    while_statement      go to state 113
+    for_statement        go to state 114
 
 
-State 180
+State 173
 
    54 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 . CLOSE_CURLY_BRACKET $@11 else_statement
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 187
+    CLOSE_CURLY_BRACKET  shift, and go to state 180
 
 
-State 181
+State 174
 
    61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@14 . multiple_statements CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    multiple_statements  go to state 188
-    statements           go to state 112
-    if_statement         go to state 113
-    while_statement      go to state 114
-    for_statement        go to state 115
+    multiple_statements  go to state 181
+    statements           go to state 111
+    if_statement         go to state 112
+    while_statement      go to state 113
+    for_statement        go to state 114
 
 
-State 182
+State 175
 
    63 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@15 . CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 189
+    CLOSE_CURLY_BRACKET  shift, and go to state 182
 
 
-State 183
+State 176
 
    42 string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET .
 
     $default  reduce using rule 42 (string_functions)
 
 
-State 184
+State 177
 
    44 string_functions: STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET .
 
     $default  reduce using rule 44 (string_functions)
 
 
-State 185
+State 178
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET . FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET . FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
 
-    FOR  shift, and go to state 190
+    FOR  shift, and go to state 183
 
 
-State 186
+State 179
 
    32 multiple_statements: multiple_statements . statements
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements . CLOSE_CURLY_BRACKET $@9 else_statement
 
-    OPEN_ROUND_BRACKET   shift, and go to state 109
-    CLOSE_CURLY_BRACKET  shift, and go to state 191
-    ';'                  shift, and go to state 110
+    OPEN_ROUND_BRACKET   shift, and go to state 108
+    CLOSE_CURLY_BRACKET  shift, and go to state 184
+    ';'                  shift, and go to state 109
 
-    statements       go to state 141
-    if_statement     go to state 113
-    while_statement  go to state 114
-    for_statement    go to state 115
+    statements       go to state 138
+    if_statement     go to state 112
+    while_statement  go to state 113
+    for_statement    go to state 114
 
 
-State 187
+State 180
 
    54 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET . $@11 else_statement
 
     $default  reduce using rule 53 ($@11)
 
-    $@11  go to state 192
+    $@11  go to state 185
 
 
-State 188
+State 181
 
    32 multiple_statements: multiple_statements . statements
    61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@14 multiple_statements . CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET   shift, and go to state 109
-    CLOSE_CURLY_BRACKET  shift, and go to state 193
-    ';'                  shift, and go to state 110
+    OPEN_ROUND_BRACKET   shift, and go to state 108
+    CLOSE_CURLY_BRACKET  shift, and go to state 186
+    ';'                  shift, and go to state 109
 
-    statements       go to state 141
-    if_statement     go to state 113
-    while_statement  go to state 114
-    for_statement    go to state 115
+    statements       go to state 138
+    if_statement     go to state 112
+    while_statement  go to state 113
+    for_statement    go to state 114
 
 
-State 189
+State 182
 
    63 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@15 CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 63 (while_statement)
 
 
-State 190
+State 183
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR . OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR . OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET
 
-    OPEN_CURLY_BRACKET  shift, and go to state 194
+    OPEN_CURLY_BRACKET  shift, and go to state 187
 
 
-State 191
+State 184
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET . $@9 else_statement
 
     $default  reduce using rule 50 ($@9)
 
-    $@9  go to state 195
+    $@9  go to state 188
 
 
-State 192
+State 185
 
    54 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 . else_statement
 
-    ELSE  shift, and go to state 196
+    ELSE  shift, and go to state 189
 
     $default  reduce using rule 59 (else_statement)
 
-    else_statement  go to state 197
+    else_statement  go to state 190
 
 
-State 193
+State 186
 
    61 while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CURLY_BRACKET $@14 multiple_statements CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 61 (while_statement)
 
 
-State 194
+State 187
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET . $@16 multiple_statements CLOSE_CURLY_BRACKET
-   70              | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET . $@17 CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  reduce using rule 69 ($@17)
-    $default             reduce using rule 67 ($@16)
+    $default  reduce using rule 67 ($@16)
 
-    $@16  go to state 198
-    $@17  go to state 199
+    $@16  go to state 191
 
 
-State 195
+State 188
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 . else_statement
 
-    ELSE  shift, and go to state 196
+    ELSE  shift, and go to state 189
 
     $default  reduce using rule 59 (else_statement)
 
-    else_statement  go to state 200
+    else_statement  go to state 192
 
 
-State 196
+State 189
 
    56 else_statement: ELSE . OPEN_CURLY_BRACKET $@12 multiple_statements CLOSE_CURLY_BRACKET
    58               | ELSE . OPEN_CURLY_BRACKET $@13 CLOSE_CURLY_BRACKET
 
-    OPEN_CURLY_BRACKET  shift, and go to state 201
+    OPEN_CURLY_BRACKET  shift, and go to state 193
 
 
-State 197
+State 190
 
    54 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@10 CLOSE_CURLY_BRACKET $@11 else_statement .
 
     $default  reduce using rule 54 (if_statement)
 
 
-State 198
+State 191
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 . multiple_statements CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    multiple_statements  go to state 202
-    statements           go to state 112
-    if_statement         go to state 113
-    while_statement      go to state 114
-    for_statement        go to state 115
-
-
-State 199
-
-   70 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 . CLOSE_CURLY_BRACKET
-
-    CLOSE_CURLY_BRACKET  shift, and go to state 203
+    multiple_statements  go to state 194
+    statements           go to state 111
+    if_statement         go to state 112
+    while_statement      go to state 113
+    for_statement        go to state 114
 
 
-State 200
+State 192
 
    51 if_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET IF OPEN_CURLY_BRACKET $@8 multiple_statements CLOSE_CURLY_BRACKET $@9 else_statement .
 
     $default  reduce using rule 51 (if_statement)
 
 
-State 201
+State 193
 
    56 else_statement: ELSE OPEN_CURLY_BRACKET . $@12 multiple_statements CLOSE_CURLY_BRACKET
    58               | ELSE OPEN_CURLY_BRACKET . $@13 CLOSE_CURLY_BRACKET
@@ -2838,83 +2731,76 @@ State 201
     CLOSE_CURLY_BRACKET  reduce using rule 57 ($@13)
     $default             reduce using rule 55 ($@12)
 
-    $@12  go to state 204
-    $@13  go to state 205
+    $@12  go to state 195
+    $@13  go to state 196
 
 
-State 202
+State 194
 
    32 multiple_statements: multiple_statements . statements
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements . CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET   shift, and go to state 109
-    CLOSE_CURLY_BRACKET  shift, and go to state 206
-    ';'                  shift, and go to state 110
+    OPEN_ROUND_BRACKET   shift, and go to state 108
+    CLOSE_CURLY_BRACKET  shift, and go to state 197
+    ';'                  shift, and go to state 109
 
-    statements       go to state 141
-    if_statement     go to state 113
-    while_statement  go to state 114
-    for_statement    go to state 115
-
-
-State 203
-
-   70 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@17 CLOSE_CURLY_BRACKET .
-
-    $default  reduce using rule 70 (for_statement)
+    statements       go to state 138
+    if_statement     go to state 112
+    while_statement  go to state 113
+    for_statement    go to state 114
 
 
-State 204
+State 195
 
    56 else_statement: ELSE OPEN_CURLY_BRACKET $@12 . multiple_statements CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET  shift, and go to state 109
-    ';'                 shift, and go to state 110
+    OPEN_ROUND_BRACKET  shift, and go to state 108
+    ';'                 shift, and go to state 109
 
-    multiple_statements  go to state 207
-    statements           go to state 112
-    if_statement         go to state 113
-    while_statement      go to state 114
-    for_statement        go to state 115
+    multiple_statements  go to state 198
+    statements           go to state 111
+    if_statement         go to state 112
+    while_statement      go to state 113
+    for_statement        go to state 114
 
 
-State 205
+State 196
 
    58 else_statement: ELSE OPEN_CURLY_BRACKET $@13 . CLOSE_CURLY_BRACKET
 
-    CLOSE_CURLY_BRACKET  shift, and go to state 208
+    CLOSE_CURLY_BRACKET  shift, and go to state 199
 
 
-State 206
+State 197
 
    68 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET $@16 multiple_statements CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 68 (for_statement)
 
 
-State 207
+State 198
 
    32 multiple_statements: multiple_statements . statements
    56 else_statement: ELSE OPEN_CURLY_BRACKET $@12 multiple_statements . CLOSE_CURLY_BRACKET
 
-    OPEN_ROUND_BRACKET   shift, and go to state 109
-    CLOSE_CURLY_BRACKET  shift, and go to state 209
-    ';'                  shift, and go to state 110
+    OPEN_ROUND_BRACKET   shift, and go to state 108
+    CLOSE_CURLY_BRACKET  shift, and go to state 200
+    ';'                  shift, and go to state 109
 
-    statements       go to state 141
-    if_statement     go to state 113
-    while_statement  go to state 114
-    for_statement    go to state 115
+    statements       go to state 138
+    if_statement     go to state 112
+    while_statement  go to state 113
+    for_statement    go to state 114
 
 
-State 208
+State 199
 
    58 else_statement: ELSE OPEN_CURLY_BRACKET $@13 CLOSE_CURLY_BRACKET .
 
     $default  reduce using rule 58 (else_statement)
 
 
-State 209
+State 200
 
    56 else_statement: ELSE OPEN_CURLY_BRACKET $@12 multiple_statements CLOSE_CURLY_BRACKET .
 

@@ -1,75 +1,62 @@
-;$georgiana tni
-;$altvariabile loob
-;$incauna *rahc
-;$3=constanta tni tsnoc
-;$[5234324]unVector tni
-;$eurt=logica loob
-;$"un text plm"=propozitie*rahc
-($a tni)specifica tni
-    {
-        ;$bahlui tni
-    }
+;$variabilaGlobalaInt tni
+;$variabilaGlobalChar rahc 
+;$variabilaGlobalaString *rahc
+;$variabilaGlobalaBool loob
+;$variabileGlobalaChar rahc
+;$2020=variabilaGlobalaConstInt tni tsnoc
+;$"un text"=variabilaGlobalaConstString *rahc tsnoc
+;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
 
-custom ssalc
+($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
-  ;$26=incauna *rahc
-  ;$12312312=motroi tni
-  ;$ceva tni
-  ;$variabila tni
+    ;$counter tni
+    ;$returnValue tni
+    (parametruSec==parametruF) fi
+    {
+        ;-1=returnValue
+    }
+    esle
+    {
+        ;1=returnValue
+    }
+    (parametruF<parametruSec) elihw
+    {
+        ;20-parametruSec=parametruF
+        ;1=counter
+    }
+    ;#(24,25.0) functieGlobala
     
-   ($cevaParametru tni,$cda tni)functie tni
-   {
-      (2<3)fi
-      {
-          (a<b)elihw
-          {
-              (ceva<altceva)fi
-              {
-                   ;$2=ab tni
-              }
-              esle
-              {
-              }
-            
-          }
-      }
-      (2<3)elihw
-      {
-          ;$a tni
-      }
-
-    }
-    ($a tni)specifica tni
+}
+($parametruF taolf,$parametruSec taolf) functieGlobala diov
+{
+    ;$20=variabilaInutila tni tsnoc
+}
+clasaGlobala ssalc
+{
+    ;$variabilaClasa tni
+    ;$variabilaClasaString *rahc
+    ($argument tni) functieClasa tni
     {
-        ;$bahlui tni
+        ;#(24.5,2020.2020)functieGlobala
+       
     }
-    () panarama diov
+    ($argument taolf,$cuvinte *rahc) functieClasa tni
     {
-        ;#(24,25)functie
+        ;#(24)functieClasa
+        ;#(24.0,"vant")functieClasa
     }
 }
-($diferit custom,$a tni) motroi diov
+($unParametru tni) declarareInFunctie tni
 {
-  ;$unobiectrandom custom
-}($diferit custom) motroidoi diov
-{
-  ;$unobiectrandom custom
+    ;$instantaClasa clasaGlobala
 }
-altaclasa ssalc
-{
-   ;$motroi tni
-}
-;$altaclasainstant altaclasa
-;$test custom
 ()niam tni
 {
-    ;$unobiectrandom custom
-    ;$motroi rahc 
-    ;#(24)specifica.unobiectrandom
-    ;$ab tni
-    ;$2.0+3*2000+variabila.unobiectrandom+(-256.242)=ovariablila tni
-    ;$[20000]vector tni
-    ;$eurt=ceva loob
-    ;$[54]obiecte custom
-    ;$24.2=ovariabila taolf
+    ;#(24.0,267.0)functieGlobala
+    ;$variabilaInMain *rahc
+    ;$intInMain tni
+    ;$[2020]anulNou taolf 
+    ;$instantaClasa clasaGlobala
+    ;variabilaClasa.clasaGlobala=intInMain
+    ;#(24.5)ofunctie.clasaGlobala
 }

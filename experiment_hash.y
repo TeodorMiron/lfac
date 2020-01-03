@@ -56,6 +56,8 @@ char*inObjectFunc=NULL;
 char*classScope=NULL;
 char*objName=NULL;
 int inArgs=0;
+int inClass=0;
+int objInstance=0;
 FILE*SymTabDump=NULL;
 void init_prg();
 void free_entry(struct ListOfEntries*val);
@@ -89,7 +91,7 @@ void add_every_variable(gpointer key,gpointer value,gpointer userdata)
         struct ListOfEntries*iterator=value;
         while(iterator)
         {
-                if(strcmp(iterator->value->scope,classScope)==0 && strcmp(iterator->value->whatIs,"variable")==0)
+                if(strcmp(iterator->value->scope,classScope)==0 && strcmp(iterator->value->whatIs,"class-variable")==0)
                 {
                         char*customName=malloc(strlen(objName)+strlen(iterator->value->name)+2);
                         strcpy(customName,objName);
@@ -191,8 +193,8 @@ declaration_content: function_declaration
                     ;
 
 
-object_declaration: ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}object_content CLOSE_CURLY_BRACKET  {remove_node();}
-                   | ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);}CLOSE_CURLY_BRACKET
+object_declaration: ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);inClass=1;}object_content CLOSE_CURLY_BRACKET  {remove_node();inClass=0;}
+                   | ID CLASS OPEN_CURLY_BRACKET {add_class_node($1);inClass=1;}CLOSE_CURLY_BRACKET {remove_node();inClass=0;}
                    ;
 
 object_content:object_content inside_object 
@@ -242,52 +244,44 @@ string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BR
 
 function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID 
                 {
-                        int exists=0;
-                        char*returnType;
-                        char*listParam;
-                        struct Checker*iterator=head;
-                         while(iterator!=NULL)
-                        {
-                                struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$5);
-                                while(list)
-                                {
-                                        if(strcmp(list->value->whatIs,"function-declaration")==0 && strcmp(list->value->name,$5)==0)
+                      struct Checker*iterator=head;
+                      int funcFound=0;
+                      while(iterator)
+                      {
+                              struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$5);
+                              struct ListOfEntries*iteratorList=searchList;
+                              while(iteratorList)
+                              {
+                                      if(!inClass)
+                                      {
+                                        if((strcmp(iteratorList->value->whatIs,"function-declaration")==0) && (strcmp(iteratorList->value->name,$5)==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
                                         {
-                                                char*existence=strstr(list->value->scope,iterator->currentScope);
-                                                int noOcc=countChars(existence+strlen(iterator->currentScope),'-');
-                                                if(existence && noOcc==1)
-                                                {
-
-                                                        if(strcmp(list->value->paramlist,typesOfCall)==0)
-                                                        {
-                                                                exists=1;
-                                                                returnType=malloc(strlen(list->value->dataType)+1);
-                                                                listParam=malloc(strlen(list->value->paramlist)+1);
-                                                                strcpy(listParam,list->value->paramlist);
-                                                                strcpy(returnType,list->value->dataType);
-                                                                break;
-                                                        }
-                                                }
-                                        
+                                                funcFound=1;
+                                                break;
                                         }
-                                        list=list->next;
-                
-                                }
-                                iterator=iterator->next;
-                        }
+                                      }
+                                      else
+                                      {
+                                        if((strcmp(iteratorList->value->whatIs,"function-declaration")==0 || (strcmp(iteratorList->value->whatIs,"class-function-declaration")==0)) && (strcmp(iteratorList->value->name,$5)==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
+                                        {
+                                                funcFound=1;
+                                                break;
+                                        }
+                                      }
+                                     
+                                      iteratorList=iteratorList->next;
+                              }
+
+                              iterator=iterator->next;
+                      }
                         
-                        if(!exists)
+                        free(typesOfCall);
+                        typesOfCall=NULL;
+                        if(!funcFound)
                         {
-                                printf("Functia [%s] pe care ati incercat sa o apelati nu exista!\n",$5);
+                                printf("Functia [%s] pe care ati apelat-o nu este definita!\n",$5);
                                 exit(EXIT_FAILURE);
                         }
-                        char*eString=malloc(strlen($5)+strlen(typesOfCall)+4);
-                        strcat(eString,"#(");
-                        strcat(eString,typesOfCall);
-                        strcat(eString,")");
-                        strcat(eString,$5);
-                        $$=create_expression(returnType,eString);
-                        typesOfCall=NULL;
                 }
 
 list_call:list_call ',' expression      
@@ -296,6 +290,7 @@ list_call:list_call ',' expression
                 {
                         typesOfCall=malloc(strlen($3->type)+1);
                         strcpy(typesOfCall,$3->type);
+                        typesOfCall[strlen(typesOfCall)]='\0';
                 }
                 else
                 {
@@ -303,6 +298,7 @@ list_call:list_call ',' expression
                         strcat(temp_var,",");
                         strcat(temp_var,$3->type);
                         typesOfCall=temp_var;
+                        typesOfCall[strlen(typesOfCall)]='\0';
                 }
         }
          | expression
@@ -329,20 +325,23 @@ while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CU
 
 assign_statement: expression ASSIGN ID 
                 {
-                        int isDeclared=0;
-                        struct Checker*iterator=head;
+                
+                }
 
+                | expression ASSIGN object_access_var
+                {
+                      
 
                 }
-                | expression ASSIGN object_access_var
                 | expression ASSIGN access_vector
+                {
+
+                }
                 ;
 
 
 for_statement: OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}multiple_statements CLOSE_CURLY_BRACKET {remove_node();}
-         | OPEN_ROUND_BRACKET assign_statement ';' expression ';' expression CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}
-         | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET FOR OPEN_CURLY_BRACKET {add_statement_node();}CLOSE_CURLY_BRACKET {remove_node();}
-         ;
+             ;
 
 create_variable: create_single_variable 
                | '$'create_array_variable
@@ -357,78 +356,75 @@ create_array_variable:'['expression']' ID available_types {
                                  strcat(customType,"[");
                                  strcat(customType,"50");
                                  strcat(customType,"]");
-                                 add_new_variable(customType,$4,0);
+                                 add_new_variable(customType,$4,1 );
                         }
-                     | '[' expression ']' ID ID
+                    // | '[' expression ']' ID ID
+                     //{
+                         
+                     //}
                      ;
 create_single_variable:  '$' ID available_types {add_new_variable(return_type($3),$2,0);}
                         |'$' ID ID {
-                            struct Checker*iterator=head;
-                            char*theString;
-                            while(iterator->next!=NULL)
-                            {
-                                    iterator=iterator->next;
-                            }
-                            struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$3);
-                            int objFound=0;
-                            while(list)
-                            {
-                                    if(strcmp(list->value->whatIs,"object-declaration"))
-                                    {
-                                            theString=malloc(strlen(list->value->scope)+1);
-                                            strcpy(theString,list->value->scope);
-                                            objFound=1;
-                                            break;
-                                    }
-                                    list=list->next;
-                            }
-                            if(objFound)
-                            {
-                              add_new_variable($3,$2,0);
-                              iterator=head;
-                              while(iterator->next!=NULL)
-                              {
-                                      iterator=iterator->next;
-                              }
-                                objName=malloc(strlen($2)+1);
-                                strcpy(objName,$2);
-                                classScope=malloc(strlen(theString)+1);
-                                strcpy(classScope,theString);
-                                g_hash_table_foreach(iterator->localScope,add_every_variable,NULL);
-                                classScope=NULL;
-                                objName=NULL;
-                                struct ListOfEntries*iteratorSec=objVars;
-                                while(iteratorSec)
-                                {
-                                        add_new_variable(iteratorSec->value->dataType,iteratorSec->value->name,iteratorSec->value->initialised);
-                                        iteratorSec=iteratorSec->next;
-                                }
-                                struct ListOfEntries*temp;
-                                iteratorSec=objVars;
-                                while(iteratorSec)
-                                {
-                                        temp=iteratorSec;
-                                        iteratorSec=iteratorSec->next;
-                                        free(temp);
-                                }
-                                objVars=NULL;
-                            }
-                            else
-                            {
-                                    printf("Ati incercat sa instantiati clasa [%s] care nu exista\n",$3);
-                                    exit(EXIT_FAILURE);
-                            }
                             
-
+                             struct Checker*iterator=head;
+                             int clsFound=0;
+                             while(iterator->next!=NULL)
+                             {
+                                     iterator=iterator->next;
+                             }
+                             struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$3);
+                             while(searchList)
+                             {
+                                     if(strcmp(searchList->value->whatIs,"class-declaration")==0)
+                                     {
+                                        classScope=malloc(strlen(searchList->value->scope)+1);
+                                        strcpy(classScope,searchList->value->scope);
+                                        classScope[strlen(classScope)]='\0';
+                                        objName=malloc(strlen($2)+1);
+                                        strcpy(objName,$2);
+                                        objName[strlen(objName)]='\0';
+                                        clsFound=1;
+                                        break;
+                                     }
+                                     searchList=searchList->next;
+                             }
+                             if(!clsFound)
+                             {
+                                     printf("Clasa [%s] pe care doriti sa o instantiati nu este declarata!\n",$3);
+                                     exit(EXIT_FAILURE);
+                             }
+                             objInstance=1;
+                             add_new_variable($3,$2,0);
+                             objInstance=0;
+                             g_hash_table_foreach(iterator->localScope,add_every_variable,NULL);
+                             free(classScope);
+                             classScope=NULL;
+                             struct ListOfEntries *iteratorVars=objVars;
+                             while(iteratorVars)
+                             {
+                                     add_new_variable(iteratorVars->value->dataType,iteratorVars->value->name,iteratorVars->value->initialised);
+                                     iteratorVars=iteratorVars->next;
+                             }
+                             free_entry(objVars);
+                             free(objName);
+                             free(classScope);
+                             classScope=NULL;
+                             objName=NULL;
+                             objVars=NULL;
                         }
-                        |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4,1);}
-                        |'$' expression ASSIGN ID ID {add_new_variable($5,$4,1);}
+                        //|'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4,1);}
+                        //|'$' expression ASSIGN ID ID {add_new_variable($5,$4,1);}
                         |'$' expression ASSIGN ID available_types CONST {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type($5))+1);
                                 strcpy(newtype,"const-");
                                 strcat(newtype,return_type($5));
                                 newtype[strlen(newtype)]='\0';
                                 add_new_variable(newtype,$4,1);
+                                if(strcmp($2->type,return_type($5))!=0)
+                                {
+                                        printf("Variabila [%s]-tip[const-%s] nu poate fi initializata cu o expresie[%s]-tip[%s]",$4,return_type($5),$2->expString,$2->type);
+                                        exit(EXIT_FAILURE);
+                                }
                         }
                         ;
 /*
@@ -445,7 +441,41 @@ available_types: INT {$$=$1;}
                | VOID {$$=$1;}
                ;
 
-expression: ID {$$=create_variable_expression($1);}
+expression: ID {
+            $$=create_variable_expression($1); 
+            int initialised=0;
+            int exists=0;
+            int line;
+                struct Checker*iterator=head;
+                while(iterator)
+                {
+                        struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$1);
+                        while(searchList)
+                        {
+                                if(strcmp(searchList->value->name,$1)==0 && strcmp(searchList->value->whatIs,"variable")==0 && strcmp(searchList->value->scope,iterator->currentScope)==0)
+                                {
+                                        exists=1;
+                                        if(searchList->value->initialised)
+                                           initialised=1;
+                                        if(exists || initialised)
+                                         break;
+                                }
+                                searchList=searchList->next;
+                        }
+                        iterator=iterator->next;
+                }
+            
+            if(!exists)
+            {
+                printf("Variabila [%s] din expresia [%s] nu este definita!\n",$1,$$->expString);
+                exit(EXIT_FAILURE);
+            }   
+            if(!initialised)
+            {
+                    printf("Variabila [%s] este definita insa nu si initializata in expresia[%s]!\n",$1,$$->expString);
+                    exit(EXIT_FAILURE);
+            }
+        }       
           | INT_VAL {$$=create_int_expression($1);}
           | FLOAT_VAL {$$=create_float_expression($1);}
           | BOOL_TRUE {$$=create_bool_expression($1);}
@@ -469,90 +499,26 @@ expression: ID {$$=create_variable_expression($1);}
 
 object_call_function:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
                         {
-                                char*classScope;
-                                if((classScope=is_class_object($7))==NULL)
-                                {
-                                        printf("Clasa [%s] nu este declarata!\n",$7);
-                                        exit(EXIT_FAILURE);
-                                }
-                        int exists=0;
-                        char*returnType;
-                        struct Checker*iterator=head;
-                         while(iterator->next!=NULL)
-                        {
-                                iterator=iterator->next;
+                                
+                                
                         }
-                                struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,$5);
-                                while(list)
-                                {
-                                        if(strcmp(list->value->whatIs,"function-declaration")==0 && strcmp(list->value->name,$5)==0 && strstr(list->value->scope,classScope))
-                                        {
-                                                if(strcmp(list->value->paramlist,typesOfCall)==0)
-                                                {
-                                                        exists=1;
-                                                        returnType=malloc(strlen(list->value->dataType));
-                                                        strcpy(returnType,list->value->dataType);
-                                                        break;
-                                                }
-                                        
-                                        }
-                                        list=list->next;
-                
-                                }
-                        
-                        if(!exists)
-                        {
-                                printf("Functia [%s] pe care ati incercat sa o apelati nu este declarata  in contextul obiectului [%s]!\n",$5,$7);
-                                exit(EXIT_FAILURE);
-                        }
-                        char*eString=malloc(strlen($5)+strlen(typesOfCall)+4);
-                        strcat(eString,"#(");
-                        strcat(eString,typesOfCall);
-                        strcat(eString,")");
-                        strcat(eString,$5);
-                        $$=create_expression(returnType,eString);
-                        typesOfCall=NULL;
-                        }
+                       
                 ;
 
 object_access_var:ID'.'ID
                 {
-                        if(!is_object_variable($3,$1))
-                        {
-                                printf("Obiectul [%s] nu este definit!\n ",$3);
-                                exit(EXIT_FAILURE);
-                        }
                         char*searchInstance=malloc(strlen($1)+strlen($3)+2);
-                        strcat(searchInstance,$3);
+                        strcpy(searchInstance,$1);
                         strcat(searchInstance,".");
-                        strcat(searchInstance,$1);
-                        int exists=0;
-                        struct Checker*iterator=head;
-                        while(iterator!=NULL)
-                        {
-                                struct ListOfEntries*list=g_hash_table_lookup(iterator->localScope,searchInstance);
-                                while(list)
-                                {
-                                        if(strcmp(list->value->whatIs,"variable")==0 && strcmp(list->value->name,searchInstance)==0 && strcmp(list->value->scope,iterator->currentScope)==0)
-                                        {
-                                                exists=1;
-                                        
-                                        }
-                                        list=list->next;
-                
-                                }
-                                iterator=iterator->next;
-                        }
-                        if(!exists)
-                        {
-                                printf("Nu exista variabila [%s] ca si variabila membra a obiectului [%s]\n",$1,$3);
-                                exit(EXIT_FAILURE);
-                        }
+                        strcat(searchInstance,$3);
+                        searchInstance[strlen(searchInstance)]='\0';
+
                 }
 
 access_vector:'['expression']' ID {
                 int exists=0;
                 struct Checker*iterator=head;
+                char*retType;
                 while(iterator && !exists)
                 {
                         struct ListOfEntries*searchList;
@@ -562,7 +528,12 @@ access_vector:'['expression']' ID {
                                 {
                                         if(strstr(searchList->value->dataType,"[") && strstr(searchList->value->dataType,"]") && strcmp(searchList->value->name,$4)==0)
                                         {
-
+                                                char*extChar;
+                                                int noChr=strcspn(searchList->value->dataType,"[");
+                                                extChar=malloc(noChr+1);
+                                                strncpy(extChar,searchList->value->dataType,noChr);
+                                                retType=malloc(strlen(extChar)+1);
+                                                strcpy(retType,extChar);
                                                 exists=1;
                                                 break;
                                         } 
@@ -582,8 +553,13 @@ access_vector:'['expression']' ID {
                         printf("Pozitia pe care ati incercat sa o accesati din vectorul [%s] nu exista!\n",$4);
                         exit(EXIT_FAILURE);
                 }
-                //
-                
+
+                  char*eString=malloc(3+strlen($2->expString)+strlen($4));
+                  strcpy(eString,"[");
+                  strcat(eString,$2->expString);
+                  strcat(eString,"]");
+                  strcat(eString,$4);
+                $$=create_expression(retType,eString);
                 }
              ;
 
@@ -624,7 +600,13 @@ void init_prg()
 }
 void free_entry(struct ListOfEntries*val)
 {
-        g_free(val);
+        struct ListOfEntries*temp;
+        while(val)
+        {
+                temp=val;
+                val=val->next;
+                g_free(temp);
+        }
 }
 void add_func_node(char*identifier,const char*returntype)
 {
@@ -648,8 +630,16 @@ void add_func_node(char*identifier,const char*returntype)
         newEntry->dataType=malloc(strlen(returntype)+1);
         strcpy(newEntry->dataType,returntype);
         newEntry->dataType[strlen(newEntry->dataType)]='\0';
-        newEntry->whatIs=malloc(strlen("function-declaration")+1);
-        strcpy(newEntry->whatIs,"function-declaration");
+        if(inClass==1)
+        {
+              newEntry->whatIs=malloc(strlen("class-function-declaration")+1);
+                strcpy(newEntry->whatIs,"class-function-declaration");  
+        }
+        else
+        {
+                newEntry->whatIs=malloc(strlen("function-declaration")+1);
+                strcpy(newEntry->whatIs,"function-declaration");
+        }
         newEntry->whatIs[strlen(newEntry->whatIs)]='\0';
         newEntry->scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry->scope,head->currentScope);
@@ -671,12 +661,14 @@ void add_func_node(char*identifier,const char*returntype)
                 iterator=iterator->next;
         }
         newEntry->paramlist[strlen(newEntry->paramlist)-1]='\0';
+        newEntry->paramlist[strlen(newEntry->paramlist)]='\0';
+        
         struct ListOfEntries*val;
         if((val=g_hash_table_lookup(head->next->localScope,identifier)))
         {
                 while(val)
                 {
-                        if(strncmp(val->value->scope,newEntry->scope,strlen(newEntry->scope)-nLenght)==0 && strcmp(val->value->whatIs,"function-declaration")==0 && strcmp(val->value->paramlist,newEntry->paramlist)==0)
+                        if(strncmp(val->value->scope,newEntry->scope,strlen(newEntry->scope)-nLenght)==0 && ((strcmp(val->value->whatIs,"function-declaration")==0) || (strcmp(val->value->whatIs,"class-function-declaration")==0)) && strcmp(val->value->paramlist,newEntry->paramlist)==0)
                         {
                                 printf("Functia [%s] de tipul de retur %s a fost redeclarata in scope-ul %s\nProgramul a fost incheiat fortat!\n",newEntry->name,newEntry->dataType,val->value->scope);
                                 exit(EXIT_FAILURE);
@@ -722,8 +714,28 @@ void add_new_variable(const char*type,char*identifier,int init)
         newEntry->dataType=malloc(strlen(type)+1);
         strcpy(newEntry->dataType,type);
         newEntry->dataType[strlen(newEntry->dataType)]='\0';
-        newEntry->whatIs=malloc(strlen("variable")+1);
-        strcpy(newEntry->whatIs,"variable");
+         if(objInstance)
+        {
+                newEntry->whatIs=malloc(strlen("object-variable")+1);
+                strcpy(newEntry->whatIs,"object-variable");
+        }
+        else
+        {
+                 newEntry->whatIs=malloc(strlen("variable")+1);
+                strcpy(newEntry->whatIs,"variable");
+        }
+        if(inClass)
+        {
+                newEntry->whatIs=malloc(strlen("class-variable")+1);
+                strcpy(newEntry->whatIs,"class-variable");
+        }
+        else
+        {
+                newEntry->whatIs=malloc(strlen("variable")+1);
+                strcpy(newEntry->whatIs,"variable");
+        }
+       
+        
         newEntry->whatIs[strlen(newEntry->whatIs)]='\0';
         newEntry->scope=malloc(strlen(head->currentScope)+1);
         strcpy(newEntry->scope,head->currentScope);
@@ -757,7 +769,7 @@ void add_new_variable(const char*type,char*identifier,int init)
         {
                 while(val)
                 {
-                        if(strcmp(val->value->scope,newEntry->scope)==0 && strcmp(val->value->whatIs,"variable")==0)
+                        if(strcmp(val->value->scope,newEntry->scope)==0 && ((strcmp(val->value->whatIs,"variable")==0) || (strcmp(val->value->whatIs,"class-variable")==0)))
                         {
                                 printf("Variabila [%s] de tipul %s a fost redeclarat in scope-ul %s\n",newEntry->name,newEntry->dataType,newEntry->scope);
                                 exit(EXIT_FAILURE);
@@ -790,11 +802,11 @@ void print_key_value(gpointer key,gpointer value,gpointer userdata)
         while(var)
         {
            printf("%s \t%s\t %s\n",var->value->name,var->value->whatIs,var->value->scope);
-           if(strcmp(var->value->whatIs,"variable")==0)
+           if((strcmp(var->value->whatIs,"variable")==0) || (strcmp(var->value->whatIs,"class-variable")==0) || (strcmp(var->value->whatIs,"object-variable")==0))
            {
                    fprintf(SymTabDump,"%i \t %s \t %s\t %s \t %i \t %s \t %i \n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->intvalue,var->value->scope,var->value->initialised);
            }
-           if(strcmp(var->value->whatIs,"function-declaration")==0)
+           if((strcmp(var->value->whatIs,"function-declaration")==0) || (strcmp(var->value->whatIs,"class-function-declaration")==0))
            {
                    fprintf(SymTabDump,"%i \t %s \t %s \t %s \t %s \t %s\n",var->value->lineOf,var->value->name,var->value->whatIs,var->value->dataType,var->value->paramlist,var->value->scope);
            }

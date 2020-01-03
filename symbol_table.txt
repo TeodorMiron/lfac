@@ -1,68 +1,37 @@
-56 	 diferit 	 variable	 custom 	 0 	 0-4 	 1 
-53 	 diferit 	 variable	 custom 	 0 	 0-3 	 1 
-56 	 diferit.incauna 	 variable	 char* 	 0 	 0-4 	 1 
-53 	 diferit.incauna 	 variable	 char* 	 0 	 0-3 	 1 
-4 	 constanta 	 variable	 const-int 	 0 	 0 	 1 
-1 	 georgiana 	 variable	 int 	 0 	 0 	 0 
-66 	 unobiectrandom.incauna 	 variable	 char* 	 0 	 0-6 	 1 
-53 	 unobiectrandom.incauna 	 variable	 char* 	 0 	 0-3 	 1 
-56 	 unobiectrandom.incauna 	 variable	 char* 	 1013625648 	 0-4 	 1 
-56 	 diferit.ceva 	 variable	 int 	 0 	 0-4 	 1 
-53 	 diferit.ceva 	 variable	 int 	 0 	 0-3 	 1 
-44 	 bahlui 	 variable	 int 	 0 	 0-2-2 	 0 
-10 	 bahlui 	 variable	 int 	 0 	 0-1 	 0 
-15 	 custom 	 class-declaration 	 0-2
-66 	 unobiectrandom 	 variable	 custom 	 0 	 0-6 	 0 
-53 	 unobiectrandom 	 variable	 custom 	 0 	 0-3 	 0 
-56 	 unobiectrandom 	 variable	 custom 	 0 	 0-4 	 0 
-63 	 test.variabila 	 variable	 int 	 0 	 0 	 0 
-2 	 altvariabile 	 variable	 bool 	 0 	 0 	 0 
-60 	 altaclasa 	 class-declaration 	 0-5
-48 	 panarama 	 function-declaration 	 void 	  	 0-2-3
-63 	 test.ceva 	 variable	 int 	 0 	 0 	 0 
-56 	 motroidoi 	 function-declaration 	 void 	 custom,int,int,char*,int 	 0-4
-63 	 test.motroi 	 variable	 int 	 0 	 0 	 1 
-75 	 ovariabila 	 variable	 float 	 0 	 0-6 	 1 
-18 	 variabila 	 variable	 int 	 0 	 0-2 	 0 
-63 	 test.incauna 	 variable	 char* 	 0 	 0 	 1 
-66 	 main 	 main-declaration 	 0-6
-5 	 unVector 	 variable	 int[50] 	 0 	 0 	 0 
-73 	 ceva 	 variable	 bool 	 0 	 0-6 	 1 
-17 	 ceva 	 variable	 int 	 0 	 0-2 	 0 
-63 	 test 	 variable	 custom 	 0 	 0 	 0 
-22 	 cda 	 variable	 int 	 0 	 0-2-1 	 1 
-44 	 specifica 	 function-declaration 	 int 	 int 	 0-2-2
-10 	 specifica 	 function-declaration 	 int 	 int 	 0-1
-62 	 altaclasainstant 	 variable	 altaclasa 	 0 	 0 	 0 
-71 	 ovariablila 	 variable	 int 	 1013639744 	 0-6 	 1 
-7 	 logica 	 variable	 bool 	 0 	 0 	 1 
-67 	 motroi 	 variable	 char 	 0 	 0-6 	 0 
-53 	 motroi 	 function-declaration 	 void 	 custom,int,int,char*,int,int 	 0-3
-17 	 motroi 	 variable	 int 	 0 	 0-2 	 1 
-60 	 motroi 	 variable	 int 	 0 	 0-5 	 0 
-16 	 incauna 	 variable	 char* 	 0 	 0-2 	 1 
-3 	 incauna 	 variable	 char* 	 0 	 0 	 0 
-56 	 diferit.variabila 	 variable	 int 	 0 	 0-4 	 1 
-53 	 diferit.variabila 	 variable	 int 	 0 	 0-3 	 1 
-69 	 ab 	 variable	 int 	 0 	 0-6 	 0 
-29 	 ab 	 variable	 int 	 0 	 0-2-1-1-1-1 	 1 
-22 	 functie 	 function-declaration 	 int 	 int,int 	 0-2-1
-66 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-6 	 1 
-53 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-3 	 1 
-56 	 unobiectrandom.motroi 	 variable	 int 	 0 	 0-4 	 1 
-53 	 a 	 variable	 int 	 0 	 0-3 	 1 
-10 	 a 	 variable	 int 	 0 	 0-1 	 1 
-44 	 a 	 variable	 int 	 0 	 0-2-2 	 1 
-38 	 a 	 variable	 int 	 0 	 0-2-1-2 	 0 
-66 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-6 	 0 
-53 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-3 	 0 
-56 	 unobiectrandom.variabila 	 variable	 int 	 0 	 0-4 	 0 
-22 	 cevaParametru 	 variable	 int 	 0 	 0-2-1 	 1 
-66 	 unobiectrandom.ceva 	 variable	 int 	 0 	 0-6 	 0 
-53 	 unobiectrandom.ceva 	 variable	 int 	 0 	 0-3 	 0 
-56 	 unobiectrandom.ceva 	 variable	 int 	 1013628576 	 0-4 	 0 
-8 	 propozitie 	 variable	 char* 	 0 	 0 	 1 
-62 	 altaclasainstant.motroi 	 variable	 int 	 0 	 0 	 0 
-56 	 diferit.motroi 	 variable	 int 	 0 	 0-4 	 1 
-53 	 diferit.motroi 	 variable	 int 	 0 	 0-3 	 1 
-71 	 vector 	 variable	 int[50] 	 1013638960 	 0-6 	 0 
+32 	 parametruSec 	 variable	 float 	 0 	 0-2 	 1 
+12 	 parametruSec 	 variable	 float 	 0 	 0-1 	 1 
+8 	 variabilaGlobalaConstFloat 	 variable	 const-float 	 0 	 0 	 1 
+36 	 variabilaClasa 	 class-variable	 int 	 0 	 0-3 	 0 
+3 	 variabilaGlobalaString 	 variable	 char* 	 0 	 0 	 0 
+45 	 functieClasa 	 class-function-declaration 	 int 	 float,char* 	 0-3-2
+40 	 functieClasa 	 class-function-declaration 	 int 	 int 	 0-3-1
+5 	 variabileGlobalaChar 	 variable	 char 	 0 	 0 	 0 
+55 	 main 	 main-declaration 	 0-5
+12 	 counter 	 variable	 int 	 0 	 0-1 	 0 
+6 	 variabilaGlobalaConstInt 	 variable	 const-int 	 0 	 0 	 1 
+4 	 variabilaGlobalaBool 	 variable	 bool 	 0 	 0 	 0 
+32 	 parametruF 	 variable	 float 	 0 	 0-2 	 1 
+12 	 parametruF 	 variable	 int 	 0 	 0-1 	 1 
+36 	 clasaGlobala 	 class-declaration 	 0-3
+59 	 instantaClasa 	 variable	 clasaGlobala 	 0 	 0-5 	 0 
+51 	 instantaClasa 	 variable	 clasaGlobala 	 0 	 0-4 	 0 
+45 	 cuvinte 	 class-variable	 char* 	 0 	 0-3-2 	 1 
+32 	 variabilaInutila 	 variable	 const-int 	 0 	 0-2 	 1 
+2 	 variabilaGlobalChar 	 variable	 char 	 0 	 0 	 0 
+57 	 intInMain 	 variable	 int 	 0 	 0-5 	 0 
+1 	 variabilaGlobalaInt 	 variable	 int 	 0 	 0 	 0 
+7 	 variabilaGlobalaConstString 	 variable	 const-char* 	 0 	 0 	 1 
+37 	 variabilaClasaString 	 class-variable	 char* 	 0 	 0-3 	 0 
+51 	 unParametru 	 variable	 int 	 0 	 0-4 	 1 
+13 	 returnValue 	 variable	 int 	 0 	 0-1 	 0 
+32 	 functieGlobala 	 function-declaration 	 void 	 float,float 	 0-2
+12 	 functieGlobala 	 function-declaration 	 void 	 int,float 	 0-1
+45 	 argument 	 class-variable	 float 	 0 	 0-3-2 	 1 
+40 	 argument 	 class-variable	 int 	 0 	 0-3-1 	 1 
+59 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-5 	 0 
+51 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-4 	 0 
+51 	 declarareInFunctie 	 function-declaration 	 int 	 int 	 0-4
+59 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-5 	 0 
+51 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-4 	 0 
+58 	 anulNou 	 variable	 float[50] 	 0 	 0-5 	 1 
+56 	 variabilaInMain 	 variable	 char* 	 0 	 0-5 	 0 
