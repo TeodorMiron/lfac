@@ -14,6 +14,7 @@
 "loob" {yylval.type=3;return BOOL;}
 "*rahc" {yylval.type=4;return STRING;}
 "diov" {yylval.type=5;return VOID;}
+"eval" {return EVAL;}
 "nruter" {return RETURN;}
 "fi" {return IF;}
 "esle" {return ELSE;}

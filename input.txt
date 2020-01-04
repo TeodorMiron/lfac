@@ -6,7 +6,10 @@
 ;$2020=variabilaGlobalaConstInt tni tsnoc
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
+()functieFaraParam taolf
+{
 
+}
 ($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
     ;$2=counter tni
@@ -30,13 +33,20 @@
 ($parametruF taolf,$parametruSec taolf) functieGlobala diov
 {
     ;$20=variabilaInutila tni tsnoc
+    ;@eval(2+3)
 }
 clasaGlobala ssalc
 {
     ;$variabilaClasa tni
     ;$variabilaClasaString *rahc
     ;$[2020]anulNou tni
+    ;$'a'=unCharacter rahc
     ($argument tni) functieClasa tni
+    {
+        ;#(24.5,2020.2020)functieGlobala
+       
+    }
+     () functieClasa tni
     {
         ;#(24.5,2020.2020)functieGlobala
        
@@ -45,6 +55,7 @@ clasaGlobala ssalc
     {
         ;#(24)functieClasa
         ;#(24.0,"vant")functieClasa
+        ;#()functieClasa
     }
 }
 ;$instantaDoi clasaGlobala
@@ -57,7 +68,14 @@ clasaTest ssalc
 ($unParametru tni)declarareInFunctie tni
 {
     ;$instantaClasa clasaGlobala
+    ;$variabilaClasa.instantaClasa=oVariabila tni
     ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
+    ;#(#(12321.2020,"in vant")functieClasa.instantaClasa)declarareInFunctie
+
+}
+($obiect clasaGlobala)functieCuObiect tni
+{
+
 }
 ()niam tni
 {
@@ -65,17 +83,18 @@ clasaTest ssalc
     ;$variabilaInMain *rahc
     ;$intInMain tni
     ;2=intInMain
-    ;$24.3=argumentFunctie taolf
+
+    ;$241232.2020=argumentFunctie taolf
     ;20+intInMain=intInMain
-    ;2021=variabilaGlobalaInt
+    ;2=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
     ;23=variabilaClasa.instantaClasa
     ;23=variabilaClasa.instantaClasa
-    ;#(#(intInMain)declarareInFunctie) declarareInFunctie
-    ;#(#(intInMain)declarareInFunctie) declarareInFunctie
+    ;#(#(argumentFunctie,"in vant")functieClasa.instantaClasa) declarareInFunctie
+    ;#(#(intInMain)declarareInFunctie+2020) declarareInFunctie
     ;#(#(intInMain)declarareInFunctie) declarareInFunctie
     
     ;#(argumentFunctie,"in vant")functieClasa.instantaClasa

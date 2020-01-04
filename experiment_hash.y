@@ -47,6 +47,12 @@ struct expr_info
         char*expString;
 
 } expr_info;
+struct eval_expr
+{
+        int intvalue;
+        char*name;
+
+} eval_expr;
 
 struct Checker*head=NULL;
 struct ListOfEntries*funcArgs=NULL;
@@ -57,6 +63,7 @@ char*classScope=NULL;
 char*objName=NULL;
 int inArgs=0;
 int inClass=0;
+int noArgs=0;
 int objInstance=0;
 FILE*SymTabDump=NULL;
 void init_prg();
@@ -78,6 +85,7 @@ struct expr_info*create_char_expression(const char charValue);
 struct expr_info*create_variable_expression(const char*identifier,char*type);
 struct expr_info*create_paranthesis_expression(struct expr_info*exp);
 struct expr_info*create_expression(char*type,char*eString);
+struct eval_expr*create_eval_expression(char*name,int value);
 char* is_class_object(char*identifier);
 struct ListOfEntries*new_parameter_list(struct ListOfEntries*oldList);
 int is_object_variable(char*class,char*variable);
@@ -151,10 +159,11 @@ void add_every_variable(gpointer key,gpointer value,gpointer userdata)
         char charval;
         float floatval;
         struct expr_info* expr_ptr;
+        struct eval_expr*eval_info;
 }
 
 %start start_program
-%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL GREATER_EQUAL STRING_TYPE CONST RETURN AND OR NOT 
+%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL GREATER_EQUAL STRING_TYPE CONST RETURN AND OR NOT EVAL
 %left ADD 
 %left MIN
 %left MUL
@@ -180,7 +189,8 @@ void add_every_variable(gpointer key,gpointer value,gpointer userdata)
 %token<type> INT STRING FLOAT CHAR BOOL VOID
 %token<boolVal> BOOL_TRUE BOOL_FALSE
 %type<type> available_types 
-%type<expr_ptr> expression object_call_function function_call object_access_var access_vector string_functions
+%type<expr_ptr> expression object_call_function function_call object_access_var access_vector string_functions return_statement
+%type<eval_info> int_arithmetic eval_supported_value
 
 %%
 
@@ -211,14 +221,56 @@ inside_object:function_declaration
              | ';'create_variable 
              ; 
                     
-function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($3,return_type($4));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();}
-                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($3,return_type($4));} CLOSE_CURLY_BRACKET {remove_node();}
+function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types  OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} function_content return_statement CLOSE_CURLY_BRACKET {
+                        remove_node();
+                        if(strcmp($9->type,"")!=0)
+                        {
+                                
+                                if(strcmp($9->type,return_type($5)) && (strcmp(return_type($5),"void")!=0))
+                                {
+                                        printf("Tipul valoarii de return a functiei [%s] nu se potriveste cu tipul de return declarat al functiei!\n",$4);
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
+                        }
+                    | OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;add_func_node($4,return_type($5));} return_statement CLOSE_CURLY_BRACKET {
+                            remove_node();
+                        if(strcmp($8->type,"")!=0)
+                        {
+                                
+                                if(strcmp($8->type,return_type($5)) && (strcmp(return_type($5),"void")!=0))
+                                {
+                                        printf("Tipul valoarii de return a functiei [%s] nu se potriveste cu tipul de return declarat al functiei!\n",$4);
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
+                            }
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;noArgs=1;add_func_node($3,return_type($4));} function_content return_statement CLOSE_CURLY_BRACKET {remove_node();
+                         if(strcmp($8->type,"")!=0)
+                        {
+                                
+                                if(strcmp($8->type,return_type($4)) && (strcmp(return_type($4),"void")!=0))
+                                {
+                                        printf("Tipul valoarii de return a functiei [%s] nu se potriveste cu tipul de return declarat al functiei!\n",$3);
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
+                    }
+                    | OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET ID available_types OPEN_CURLY_BRACKET {inArgs=0;noArgs=1;add_func_node($3,return_type($4));} return_statement CLOSE_CURLY_BRACKET {remove_node();
+                         if(strcmp($7->type,"")!=0)
+                        {
+                                
+                                if(strcmp($7->type,return_type($4)) && (strcmp(return_type($4),"void")!=0))
+                                {
+                                        printf("Tipul valoarii de return a functiei [%s] nu se potriveste cu tipul de return declarat al functiei!\n",$3);
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
+                    }
                     ;
 
-return_statement:RETURN expression
-                | 
+return_statement:RETURN expression {$$=$2;}
+                | {$$=create_expression("","");}
                 ;
 
 list_param:  list_param ',' create_single_variable
@@ -236,12 +288,26 @@ multiple_statements:multiple_statements statements
 statements:   if_statement
             | while_statement
             | for_statement
+            | ';'eval_statement
             | ';'assign_statement
             | ';'create_variable 
             | ';'function_call
             | ';'object_call_function
             | ';'string_functions
             ;
+
+eval_statement:EVAL'(' int_arithmetic ')' 
+              ;
+
+int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",$1->intvalue+$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
+              | int_arithmetic MIN int_arithmetic {$$=create_eval_expression("",$1->intvalue-$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
+              | int_arithmetic MUL int_arithmetic {$$=create_eval_expression("",$1->intvalue*$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
+              | int_arithmetic DIV int_arithmetic {$$=create_eval_expression("",$1->intvalue/$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
+              | OPEN_ROUND_BRACKET int_arithmetic CLOSE_ROUND_BRACKET {$$=create_eval_expression("",$2->intvalue);}
+              | eval_supported_value
+              ;
+
+eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
 
 string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
           | STRLEN OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
@@ -270,6 +336,10 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                                                 funcFound=1;
                                                 $$=create_expression(iteratorList->value->dataType,eString);
                                                 break;
+                                        }
+                                        else
+                                        {
+                                                printf("Functie:%s \t Apel:%s \t Args:%s \n",iteratorList->value->name,typesOfCall,iteratorList->value->paramlist);
                                         }
                                       }
                                       else
@@ -324,7 +394,11 @@ list_call:list_call ',' expression
                typesOfCall=malloc(strlen($1->type)+1);
                strcpy(typesOfCall,$1->type);
          }
-         | {typesOfCall=malloc(0);}
+         | {
+            typesOfCall=malloc(1);
+            typesOfCall[0]='\0';
+         
+         }
          ;
 
 
@@ -400,6 +474,11 @@ assign_statement: expression ASSIGN ID
                         if(!varFound)
                         {
                                 printf("Variabila [%s] nu este declarata!\n",$3);
+                                exit(EXIT_FAILURE);
+                        }
+                        if(strstr(retType,"const"))
+                        {
+                                printf("Variabila [%s] este de tipul [%s],valoarea sa nu poate fi modificata!\n",$3,retType);
                                 exit(EXIT_FAILURE);
                         }
                         if(strcmp(retType,$1->type)!=0)
@@ -577,7 +656,10 @@ create_array_variable:'['expression']' ID available_types {
                                  add_new_variable(customType,$4,1 );
                         }
                      ;
-create_single_variable:  '$' ID available_types {add_new_variable(return_type($3),$2,0);}
+create_single_variable:  '$' ID available_types {
+                       
+                        add_new_variable(return_type($3),$2,0);
+                        }
                         |'$' ID ID {
                             
                              struct Checker*iterator=head;
@@ -626,7 +708,14 @@ create_single_variable:  '$' ID available_types {add_new_variable(return_type($3
                              objName=NULL;
                              objVars=NULL;
                         }
-                        |'$' expression ASSIGN ID available_types {add_new_variable(return_type($5),$4,1);}
+                        |'$' expression ASSIGN ID available_types {
+                                add_new_variable(return_type($5),$4,1);
+                                if(strcmp($2->type,return_type($5))!=0)
+                                {
+                                        printf("Expresia [%s]-[%s] nu poate fi asignata variabilei [%s]-[%s]!\n",$2->expString,$2->type,$4,return_type($5));
+                                        exit(EXIT_FAILURE);
+                                }
+                        }
                         |'$' expression ASSIGN ID available_types CONST {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type($5))+1);
                                 strcpy(newtype,"const-");
@@ -706,6 +795,19 @@ expression: ID {
           | access_vector {$$=$1;}
           | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET {$$=create_paranthesis_expression($2);}
           | expression ADD expression 
+                {
+                        if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                        {
+                                printf("Nu se poate efectua operatia de adunare pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        if(strcmp($1->type,$3->type)!=0)
+                        {
+                                printf("Nu se poate efectua operatia de adunare pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+
+                }
           | expression MUL expression
           | expression DIV expression
           | expression MIN expression
@@ -728,6 +830,15 @@ object_call_function:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' 
                                 int funcFound=0;
                                 char*objClass=NULL;
                                 char*scopeOf=NULL;
+                                char*eString;
+                                eString=malloc(strlen(typesOfCall)+strlen($5)+strlen($7)+4);
+                                strcpy(eString,"(");
+                                strcat(eString,typesOfCall);
+                                strcat(eString,")");
+                                strcat(eString,$5);
+                                strcat(eString,".");
+                                strcat(eString,$7);
+                                eString[strlen(eString)]='\0';
                                 while(iterator && !objFound)
                                 {
                                         struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$7);
@@ -777,11 +888,8 @@ object_call_function:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' 
                                                 if((strcmp(searchList->value->whatIs,"class-function-declaration")==0) && (strcmp(searchList->value->name,$5)==0) && (strstr(searchList->value->scope,scopeOf)) && (strcmp(typesOfCall,searchList->value->paramlist)==0))
                                                 {
                                                         funcFound=1;
+                                                        $$=create_expression(searchList->value->dataType,eString);
                                                         break;
-                                                }
-                                                else
-                                                {
-                                                        printf("Nume:%s \t Param:%s \t Scope:%s \n",searchList->value->name,searchList->value->paramlist,searchList->value->scope);
                                                 }
                                                 searchList=searchList->next;
                                         }
@@ -796,7 +904,6 @@ object_call_function:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' 
                                 free(scopeOf);
                                 free(typesOfCall);
                                 typesOfCall=NULL;
-
                                 
                         }
                        
@@ -1531,4 +1638,13 @@ struct expr_info*create_expression(char*type,char*eString)
         newExp->expString=malloc(strlen(eString)+1);
         strcpy(newExp->expString,eString);
         return newExp;
+}
+struct eval_expr*create_eval_expression(char*name,int value)
+{
+        struct eval_expr*var=malloc(sizeof(struct eval_expr));
+        bzero(var,sizeof(struct eval_expr));
+        var->name=malloc(strlen(name)+1);
+        strcpy(var->name,name);
+        var->intvalue=value;
+        return var;
 }
