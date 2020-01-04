@@ -310,8 +310,7 @@ int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",
 eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
 
 string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
-          | STRLEN OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET
-          | STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
+                | STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
           ;
 
 function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID 
@@ -806,19 +805,216 @@ expression: ID {
                                 printf("Nu se poate efectua operatia de adunare pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
                                 exit(EXIT_FAILURE);
                         }
+                        char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                        strcpy(concatExp,$1->expString);
+                        strcat(concatExp,"+");
+                        strcat(concatExp,$3->expString);
+                        $$=create_expression($1->type,concatExp);
+
 
                 }
           | expression MUL expression
+          {
+                    if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                        {
+                                printf("Nu se poate efectua operatia de inmultire pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        if(strcmp($1->type,$3->type)!=0)
+                        {
+                                printf("Nu se poate efectua operatia de inmultire pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                        strcpy(concatExp,$1->expString);
+                        strcat(concatExp,"*");
+                        strcat(concatExp,$3->expString);
+                        $$=create_expression($1->type,concatExp);
+
+
+          }
           | expression DIV expression
+          {
+                   if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                        {
+                                printf("Nu se poate efectua operatia de impartire pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        if(strcmp($1->type,$3->type)!=0)
+                        {
+                                printf("Nu se poate efectua operatia de impartire pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                        strcpy(concatExp,$1->expString);
+                        strcat(concatExp,"/");
+                        strcat(concatExp,$3->expString);
+                        $$=create_expression($1->type,concatExp);
+
+          }
           | expression MIN expression
+          {
+                   if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                        {
+                                printf("Nu se poate efectua operatia de scadeere pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        if(strcmp($1->type,$3->type)!=0)
+                        {
+                                printf("Nu se poate efectua operatia de scadere pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                        }
+                        char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                        strcpy(concatExp,$1->expString);
+                        strcat(concatExp,"-");
+                        strcat(concatExp,$3->expString);
+                        $$=create_expression($1->type,concatExp);
+          }
           | expression BIGGER expression
+          {
+                if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                {
+                                printf("Nu se poate aplica operatorul logic > pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
+                {
+                                printf("Nu se poate aplica operatorul > pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,">");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression SMALLER expression
+          {
+                if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                {
+                                printf("Nu se poate aplica operatorul < tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
+                {
+                                printf("Nu se poate aplica operatorul > pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,"<");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression EQUAL expression
+          {
+                if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                {
+                                printf("Nu se poate aplica operatorul == tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
+                {
+                                printf("Nu se poate aplica operatorul == pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,"==");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression SMALLER_EQUAL expression
+          {
+                if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                {
+                                printf("Nu se poate aplica operatorul <= tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
+                {
+                                printf("Nu se poate aplica operatorul <= pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if(strcmp($1->type,$3->type)!=0)
+                {
+                                printf("Nu se poate efectua operatorul<= pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                 char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,"<=");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression GREATER_EQUAL expression
+          {
+                  if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
+                {
+                                printf("Nu se poate aplica operatorul >= tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
+                {
+                                printf("Nu se poate aplica operatorul >= pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                if(strcmp($1->type,$3->type)!=0)
+                {
+                                printf("Nu se poate efectua operatorul >= pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                 char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,">=");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression AND expression
+          {
+                if((strcmp($1->type,"bool")!=0) && (strcmp($3->type,"bool")!=0))
+                {
+                                printf("Nu se poate efectua operatorul && \n%s&&%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+3);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,"&&");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | expression OR expression
+          {
+          if((strcmp($1->type,"bool")!=0) && (strcmp($3->type,"bool")!=0))
+                {
+                                printf("Nu se poate efectua operatorul || \n%s||%s\n",$1->expString,$3->expString);
+                                exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+3);
+                strcpy(concatExp,$1->expString);
+                strcat(concatExp,"&&");
+                strcat(concatExp,$3->expString);
+                $$=create_expression("bool",concatExp);
+          }
           | NOT expression
+          {
+                if(strcmp($2->type,"bool")!=0)
+                {
+                        printf("Nu se poate aplica operatorul ! expresiei [%s]!\n",$2->expString);
+                        exit(EXIT_FAILURE);
+                }
+                char*concatExp=malloc(strlen($2->expString)+2);
+                strcat(concatExp,"!");
+                strcat(concatExp,$2->expString);
+                $$=create_expression("bool",concatExp);
+          }
+          | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET STRLEN{
+                  char*concatExp=malloc(strlen("strlen()")+strlen($2->expString)+1);
+                  strcpy(concatExp,"(");
+                  strcat(concatExp,$2->expString);
+                  strcat(concatExp,")nelrts");
+                  $$=create_expression("int",concatExp);
+                  }
           ;
 
 

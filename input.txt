@@ -14,7 +14,7 @@
 {
     ;$2=counter tni
     ;$returnValue tni
-    (parametruSec==parametruF) fi
+    (!(parametruF<parametruSec)) fi
     {
         ;-2022=returnValue
     }
@@ -24,7 +24,6 @@
     }
     (parametruF<parametruSec) elihw
     {
-        ;20-parametruSec=parametruF
         ;1=counter
     }
     ;#(24,25.0) functieGlobala
@@ -32,8 +31,7 @@
 }
 ($parametruF taolf,$parametruSec taolf) functieGlobala diov
 {
-    ;$20=variabilaInutila tni tsnoc
-    ;@eval(2+3)
+    ;$(20+650)*380=variabilaInutila tni tsnoc
 }
 clasaGlobala ssalc
 {
@@ -86,17 +84,21 @@ clasaTest ssalc
 
     ;$241232.2020=argumentFunctie taolf
     ;20+intInMain=intInMain
+    ;$20.20=floatInMain taolf
+    ;$declarareIlegala tni
+    ;$"omuie si ceva in plus"=stringInMain*rahc
     ;2=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
+    ;$[2020]revelion tni 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
-    ;23=variabilaClasa.instantaClasa
+    ;20-(23/300)+[30]revelion+(stringInMain)nelrts+("proiect la lfac")nelrts=variabilaClasa.instantaClasa
     ;23=variabilaClasa.instantaClasa
     ;#(#(argumentFunctie,"in vant")functieClasa.instantaClasa) declarareInFunctie
-    ;#(#(intInMain)declarareInFunctie+2020) declarareInFunctie
+    ;#((#(intInMain)declarareInFunctie)*20) declarareInFunctie
+    ;#((#(#(intInMain)declarareInFunctie)declarareInFunctie)*20) declarareInFunctie
     ;#(#(intInMain)declarareInFunctie) declarareInFunctie
-    
     ;#(argumentFunctie,"in vant")functieClasa.instantaClasa
 
 }
