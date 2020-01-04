@@ -6,6 +6,8 @@
 ;$2020=variabilaGlobalaConstInt tni tsnoc
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
+;$2=declaratieIlegala tni
+
 ()functieFaraParam taolf
 {
 
@@ -38,7 +40,8 @@ clasaGlobala ssalc
     ;$variabilaClasa tni
     ;$variabilaClasaString *rahc
     ;$[2020]anulNou tni
-    ;$'a'=unCharacter rahc
+    ;$'a'=unCharacter rahc 
+    ;$unCharacter= altCharacter rahc
     ($argument tni) functieClasa tni
     {
         ;#(24.5,2020.2020)functieGlobala
@@ -71,7 +74,7 @@ clasaTest ssalc
     ;#(#(12321.2020,"in vant")functieClasa.instantaClasa)declarareInFunctie
 
 }
-($obiect clasaGlobala)functieCuObiect tni
+()functieCuObiect tni
 {
 
 }
@@ -79,19 +82,22 @@ clasaTest ssalc
 {
     ;#(24.0,267.0)functieGlobala
     ;$variabilaInMain *rahc
+    ;$"o muie"=variabilaStringInMain *rahc
     ;$intInMain tni
     ;2=intInMain
-
     ;$241232.2020=argumentFunctie taolf
     ;20+intInMain=intInMain
     ;$20.20=floatInMain taolf
     ;$declarareIlegala tni
+    ;$variabilaNeInit tni
+    ;$declaratieIlegala=value tni
     ;$"omuie si ceva in plus"=stringInMain*rahc
     ;2=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
+    ;(12+2)eval
     ;#(intInMain)declarareInFunctie
     ;20-(23/300)+[30]revelion+(stringInMain)nelrts+("proiect la lfac")nelrts=variabilaClasa.instantaClasa
     ;23=variabilaClasa.instantaClasa
@@ -100,5 +106,5 @@ clasaTest ssalc
     ;#((#(#(intInMain)declarareInFunctie)declarareInFunctie)*20) declarareInFunctie
     ;#(#(intInMain)declarareInFunctie) declarareInFunctie
     ;#(argumentFunctie,"in vant")functieClasa.instantaClasa
-
+    ;("o muie",variabilaStringInMain)ypcrts
 }

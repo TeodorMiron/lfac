@@ -296,7 +296,7 @@ statements:   if_statement
             | ';'string_functions
             ;
 
-eval_statement:EVAL'(' int_arithmetic ')' 
+eval_statement:'(' int_arithmetic ')' EVAL
               ;
 
 int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",$1->intvalue+$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
@@ -304,13 +304,82 @@ int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",
               | int_arithmetic MUL int_arithmetic {$$=create_eval_expression("",$1->intvalue*$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
               | int_arithmetic DIV int_arithmetic {$$=create_eval_expression("",$1->intvalue/$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
               | OPEN_ROUND_BRACKET int_arithmetic CLOSE_ROUND_BRACKET {$$=create_eval_expression("",$2->intvalue);}
-              | eval_supported_value
+              | eval_supported_value 
               ;
 
 eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
 
-string_functions: STRCPY OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
-                | STRCAT OPEN_ROUND_BRACKET expression expression CLOSE_ROUND_BRACKET
+string_functions: OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET STRCPY 
+                {
+                        
+                        if((strcmp($2->type,"char*")!=0) || (strcmp($4->type,"char*")!=0))
+                        {
+                                printf("Functia [tacrts] accepta doar argumente de tipul [char*],Tip-Argumente:[%s][%s]\n",$2->type,$4->type);
+                                exit(EXIT_FAILURE);
+                        }
+                        int varFound=0;
+                        struct Checker*iterator=head;
+                        char*retType;
+                        while(iterator)
+                        {
+                                struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$4->expString);
+                                struct ListOfEntries*saveList=NULL;
+                                while(searchList)
+                                {
+                                        if(saveList==NULL)
+                                        {
+                                                saveList=malloc(sizeof(struct ListOfEntries));
+                                                saveList->next=NULL;
+                                                saveList->value=searchList->value;
+                                        }
+                                        else
+                                        {
+                                                struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                                                newNode->value=searchList->value;
+                                                newNode->next=saveList;
+                                                saveList=newNode;
+                                        }
+                                        struct ListOfEntries*newNode;
+                                        if(!inClass)
+                                        {
+                                                if((strcmp(searchList->value->name,$4->expString)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->whatIs,"variable")==0))
+                                                {
+                                                        varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
+                                                        saveList->value->initialised=1;
+                                                        
+                                                }
+                                        }
+                                        else
+                                        {
+                                                 if((strcmp(searchList->value->name,$4->expString)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && ((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0)))
+                                                {
+                                                        varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
+                                                        saveList->value->initialised=1;
+                                                }
+                                        }
+                                        searchList=searchList->next;
+                                }
+                                if(varFound)
+                                {
+                                        g_hash_table_replace(iterator->localScope,$4->expString,saveList);
+                                        break;
+                                }
+
+                                iterator=iterator->next;
+                        }
+                }
+                | OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET STRCAT 
+                {
+                        if((strcmp($2->type,"char*")!=0) || (strcmp($4->type,"char*")!=0))
+                        {
+                                printf("Functia [tacrts] accepta doar argumente de tipul [char*],Tip-Argumente:[%s][%s]\n",$2->type,$4->type);
+                                exit(EXIT_FAILURE);
+                        }
+                }
           ;
 
 function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID 
@@ -396,7 +465,6 @@ list_call:list_call ',' expression
          | {
             typesOfCall=malloc(1);
             typesOfCall[0]='\0';
-         
          }
          ;
 
@@ -472,7 +540,7 @@ assign_statement: expression ASSIGN ID
                         }
                         if(!varFound)
                         {
-                                printf("Variabila [%s] nu este declarata!\n",$3);
+                                printf("Variabila [%s] nu este declarata in scope-ul curent !\n",$3);
                                 exit(EXIT_FAILURE);
                         }
                         if(strstr(retType,"const"))
@@ -753,31 +821,49 @@ expression: ID {
                         struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$1);
                         while(searchList)
                         {
-                                if(strcmp(searchList->value->name,$1)==0 && strcmp(searchList->value->whatIs,"variable")==0 && strcmp(searchList->value->scope,iterator->currentScope)==0)
+                                if(!inClass)
                                 {
-                                        exists=1;
-                                        if(searchList->value->initialised)
-                                           initialised=1;
-                                        if(exists || initialised)
+                                        if(strcmp(searchList->value->name,$1)==0 && strcmp(searchList->value->whatIs,"variable")==0 && strcmp(searchList->value->scope,iterator->currentScope)==0)
                                         {
-                                          retType=malloc(strlen(searchList->value->dataType)+1);
-                                          strcpy(retType,searchList->value->dataType);
-                                          break;
+                                                exists=1;
+                                                if(searchList->value->initialised)
+                                                initialised=1;
+                                                if(exists || initialised)
+                                                {
+                                                retType=malloc(strlen(searchList->value->dataType)+1);
+                                                strcpy(retType,searchList->value->dataType);
+                                                break;
+                                                }
                                         }
                                 }
-                                searchList=searchList->next;
+                                else
+                                {
+                                      if(strcmp(searchList->value->name,$1)==0 && ((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0)) && strcmp(searchList->value->scope,iterator->currentScope)==0)
+                                        {
+                                                exists=1;
+                                                if(searchList->value->initialised)
+                                                initialised=1;
+                                                if(exists || initialised)
+                                                {
+                                                retType=malloc(strlen(searchList->value->dataType)+1);
+                                                strcpy(retType,searchList->value->dataType);
+                                                break;
+                                                }
+                                        }  
+                                }
+                                searchList=searchList->next;    
                         }
                         iterator=iterator->next;
                 }
             
             if(!exists)
             {
-                printf("Variabila [%s] nu este declarata!\n",$1);
+                printf("Variabila [%s] nu este declarata in scope-ul curent!\n",$1);
                 exit(EXIT_FAILURE);
             }   
             if(!initialised)
             {
-                    printf("Variabila [%s] este definita insa nu si initializata in expresia[%s]!\n",$1,$$->expString);
+                    printf("Variabila [%s] este definita insa nu si initializata!\n",$1);
                     exit(EXIT_FAILURE);
             }
             $$=create_variable_expression($1,retType);
