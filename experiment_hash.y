@@ -385,8 +385,87 @@ assign_statement: expression ASSIGN ID
                 }
                 | expression ASSIGN ID'.'ID
                 {
-                      
-                        
+                        struct Checker*iterator=head;
+                        int objectFound=0;
+                        while(iterator)
+                        {
+                                struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$5);
+                                while(searchList)
+                                {
+                                        if((strcmp(searchList->value->name,$5)==0) && (strcmp(searchList->value->whatIs,"object-variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0))
+                                        {
+                                                objectFound=1;
+                                                break;
+                                        }
+                                        searchList=searchList->next;
+                                }
+                                iterator=iterator->next;
+                        }
+                        if(!objectFound)
+                        {
+                                printf("Identificatorul [%s] nu reprezinta un obiect!\n",$3);
+                                exit(EXIT_FAILURE);
+                        }
+                        char*searchInstance=malloc(strlen($3)+strlen($5)+2);
+                        strcpy(searchInstance,$5);
+                        strcat(searchInstance,".");
+                        strcat(searchInstance,$3);
+                        searchInstance[strlen(searchInstance)]='\0';
+                        iterator=head;
+                        int instanceFound=0;
+                        while(iterator)
+                        {
+                                struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,searchInstance);
+                                struct ListOfEntries*saveList=NULL;
+                                while(searchList)
+                                {
+                                        if(saveList==NULL)
+                                        {
+                                                saveList=malloc(sizeof(struct ListOfEntries));
+                                                saveList->next=NULL;
+                                                saveList->value=searchList->value;
+                                        }
+                                        else
+                                        {
+                                                struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                                                newNode->value=searchList->value;
+                                                newNode->next=saveList;
+                                                saveList=newNode;
+                                        }
+                                       if(!inClass)
+                                       {
+                                               
+                                               if((strcmp(searchList->value->whatIs,"variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
+                                               {
+                                                       instanceFound=1;
+                                                       saveList->value->initialised=1;
+                                               }
+                                       }
+                                       else
+                                        {
+                                              if(((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0))&& (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
+                                               {
+                                                       instanceFound=1;
+                                                       saveList->value->initialised=1;
+                                               }
+                                        }
+                                        searchList=searchList->next;
+                                }
+                                if(instanceFound)
+                                {
+                                        g_hash_table_replace(iterator->localScope,searchInstance,saveList);
+                                        break;
+                                }
+                                iterator=iterator->next;
+                        }
+                        if(!instanceFound)
+                        {
+                                printf("Variabila [%s] nu este variabila membra a obiectului [%s]\n",$3,$5);
+                                exit(EXIT_FAILURE);
+                        }
+                        free(searchInstance);
+                        searchInstance=NULL;
+
                 }
 
                 | expression ASSIGN '['expression']'ID

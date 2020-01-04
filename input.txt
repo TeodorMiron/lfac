@@ -7,7 +7,6 @@
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
 
-
 ($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
     ;$2=counter tni
@@ -38,7 +37,6 @@ clasaGlobala ssalc
     ;$variabilaClasaString *rahc
     ($argument tni) functieClasa tni
     {
-        ;123131232=variabilaClasa
         ;#(24.5,2020.2020)functieGlobala
        
     }
@@ -59,8 +57,6 @@ clasaTest ssalc
 {
     ;$instantaClasa clasaGlobala
     ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
-    ;$variabilaClasa.instantaClasa=oVariabila tni
-
 }
 ()niam tni
 {
@@ -73,5 +69,8 @@ clasaTest ssalc
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(23)declarareInFunctie
+    ;2=variabilaClasa.instantaClasa
+    ;23=variabilaClasa.instantaDoi
     ;#(24.5,"in vant")functieClasa.instantaClasa
+
 }
