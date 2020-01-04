@@ -2,13 +2,13 @@
 49 	 instantaDoi 	 object-variable	 clasaGlobala 	 282676228 	 0 	 0 
 37 	 variabilaClasaString 	 class-variable	 char* 	 0 	 0-3 	 0 
 13 	 counter 	 variable	 int 	 0 	 0-1 	 1 
-70 	 altaInstanta 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
+71 	 altaInstanta 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
 4 	 variabilaGlobalaBool 	 variable	 bool 	 0 	 0 	 0 
 8 	 variabilaGlobalaConstFloat 	 variable	 const-float 	 0 	 0 	 1 
 32 	 parametruF 	 variable	 float 	 0 	 0-2 	 1 
 12 	 parametruF 	 variable	 int 	 0 	 0-1 	 1 
 1 	 variabilaGlobalaInt 	 variable	 int 	 0 	 0 	 1 
-69 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
+70 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
 58 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-5 	 0 
 32 	 parametruSec 	 variable	 float 	 0 	 0-2 	 1 
 12 	 parametruSec 	 variable	 float 	 0 	 0-1 	 1 
@@ -17,20 +17,20 @@
 40 	 functieClasa 	 class-function-declaration 	 int 	 int 	 0-3-1
 65 	 intInMain 	 variable	 int 	 0 	 0-6 	 1 
 32 	 variabilaInutila 	 variable	 const-int 	 0 	 0-2 	 1 
-70 	 altaInstanta.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
+71 	 altaInstanta.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
 63 	 main 	 main-declaration 	 0-6
-70 	 altaInstanta.variabilaClasa 	 variable	 int 	 0 	 0-6 	 0 
+71 	 altaInstanta.variabilaClasa 	 variable	 int 	 0 	 0-6 	 0 
 13 	 returnValue 	 variable	 int 	 0 	 0-1 	 1 
+70 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-6 	 1 
 58 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-5 	 0 
-68 	 anulNou 	 variable	 float[50] 	 0 	 0-6 	 1 
+69 	 anulNou 	 variable	 float[50] 	 0 	 0-6 	 1 
 64 	 variabilaInMain 	 variable	 char* 	 0 	 0-6 	 0 
-69 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-6 	 1 
 58 	 declarareInFunctie 	 function-declaration 	 int 	 int 	 0-5
 49 	 instantaDoi.variabilaClasaString 	 variable	 char* 	 0 	 0 	 0 
 45 	 argument 	 class-variable	 float 	 0 	 0-3-2 	 1 
 40 	 argument 	 class-variable	 int 	 0 	 0-3-1 	 1 
 58 	 unParametru 	 variable	 int 	 0 	 0-5 	 1 
-69 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
+70 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
 58 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-5 	 0 
 36 	 clasaGlobala 	 class-declaration 	 0-3
 3 	 variabilaGlobalaString 	 variable	 char* 	 0 	 0 	 0 

@@ -154,7 +154,7 @@ void add_every_variable(gpointer key,gpointer value,gpointer userdata)
 }
 
 %start start_program
-%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL GREATER_EQUAL STRING_TYPE CONST RETURN 
+%token START END ASSIGN IF ELSEIF WHILE FOR STRCPY STRLEN STRCMP STRCAT ADD DIV BIGGER SMALLER MIN MUL EQUAL OPEN_ROUND_BRACKET CLOSE_ROUND_BRACKET CLOSE_CURLY_BRACKET OPEN_CURLY_BRACKET INCR CLASS MAIN ELSE SMALLER_EQUAL GREATER_EQUAL STRING_TYPE CONST RETURN AND OR NOT 
 %left ADD 
 %left MIN
 %left MUL
@@ -165,6 +165,11 @@ void add_every_variable(gpointer key,gpointer value,gpointer userdata)
 %left EQUAL
 %left IF
 %left ELSEIF
+%left GREATER_EQUAL
+%left SMALLER_EQUAL
+%left NOT
+%left AND
+%left OR
 
 
 %token<strname> ID
@@ -463,14 +468,13 @@ assign_statement: expression ASSIGN ID
                                 printf("Variabila [%s] nu este variabila membra a obiectului [%s]\n",$3,$5);
                                 exit(EXIT_FAILURE);
                         }
-                        free(searchInstance);
                         searchInstance=NULL;
 
                 }
 
                 | expression ASSIGN '['expression']'ID
                 {
-
+                        
                 }
                 ;
 
@@ -624,6 +628,11 @@ expression: ID {
           | expression BIGGER expression
           | expression SMALLER expression
           | expression EQUAL expression
+          | expression SMALLER_EQUAL expression
+          | expression GREATER_EQUAL expression
+          | expression AND expression
+          | expression OR expression
+          | NOT expression
           ;
 
 
@@ -771,8 +780,6 @@ object_access_var:ID'.'ID
                         }
                         free(searchInstance);
                         searchInstance=NULL;
-
-
                 }
 
 access_vector:'['expression']' ID {

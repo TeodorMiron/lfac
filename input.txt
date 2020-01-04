@@ -63,13 +63,15 @@ clasaTest ssalc
     ;#(24.0,267.0)functieGlobala
     ;$variabilaInMain *rahc
     ;$intInMain tni
-    ;20=intInMain
+    ;2=intInMain
+    ;20+intInMain=intInMain
     ;2021=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(23)declarareInFunctie
-    ;2=variabilaClasa.instantaClasa
+    ;23=variabilaClasa.instantaClasa
+    ;23=variabilaClasa.instantaDoi
     ;23=variabilaClasa.instantaDoi
     ;#(24.5,"in vant")functieClasa.instantaClasa
 

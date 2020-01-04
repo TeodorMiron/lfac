@@ -33,6 +33,9 @@
 "*" {return MUL;}
 "/" {return DIV;}
 ">" {return BIGGER;}
+"||" {return OR;}
+"&&" {return AND;}
+"!" {return NOT;}
 "<" {return SMALLER;}
 "<=" {return SMALLER_EQUAL;}
 ">=" {return GREATER_EQUAL;}

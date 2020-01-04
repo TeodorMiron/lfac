@@ -80,19 +80,22 @@ extern int yydebug;
     STRING_TYPE = 286,
     CONST = 287,
     RETURN = 288,
-    ID = 289,
-    INT_VAL = 290,
-    STRING_VAL = 291,
-    FLOAT_VAL = 292,
-    CHAR_VAL = 293,
-    INT = 294,
-    STRING = 295,
-    FLOAT = 296,
-    CHAR = 297,
-    BOOL = 298,
-    VOID = 299,
-    BOOL_TRUE = 300,
-    BOOL_FALSE = 301
+    AND = 289,
+    OR = 290,
+    NOT = 291,
+    ID = 292,
+    INT_VAL = 293,
+    STRING_VAL = 294,
+    FLOAT_VAL = 295,
+    CHAR_VAL = 296,
+    INT = 297,
+    STRING = 298,
+    FLOAT = 299,
+    CHAR = 300,
+    BOOL = 301,
+    VOID = 302,
+    BOOL_TRUE = 303,
+    BOOL_FALSE = 304
   };
 #endif
 /* Tokens.  */
@@ -127,19 +130,22 @@ extern int yydebug;
 #define STRING_TYPE 286
 #define CONST 287
 #define RETURN 288
-#define ID 289
-#define INT_VAL 290
-#define STRING_VAL 291
-#define FLOAT_VAL 292
-#define CHAR_VAL 293
-#define INT 294
-#define STRING 295
-#define FLOAT 296
-#define CHAR 297
-#define BOOL 298
-#define VOID 299
-#define BOOL_TRUE 300
-#define BOOL_FALSE 301
+#define AND 289
+#define OR 290
+#define NOT 291
+#define ID 292
+#define INT_VAL 293
+#define STRING_VAL 294
+#define FLOAT_VAL 295
+#define CHAR_VAL 296
+#define INT 297
+#define STRING 298
+#define FLOAT 299
+#define CHAR 300
+#define BOOL 301
+#define VOID 302
+#define BOOL_TRUE 303
+#define BOOL_FALSE 304
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -156,7 +162,7 @@ union YYSTYPE
         float floatval;
         struct expr_info* expr_ptr;
 
-#line 160 "y.tab.h"
+#line 166 "y.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
