@@ -75,7 +75,7 @@ struct expr_info*create_bool_expression(const char*boolValue);
 struct expr_info*create_float_expression(float floatValue);
 struct expr_info*create_string_expression(char*stringValue);
 struct expr_info*create_char_expression(const char charValue);
-struct expr_info*create_variable_expression(const char*identifier);
+struct expr_info*create_variable_expression(const char*identifier,char*type);
 struct expr_info*create_paranthesis_expression(struct expr_info*exp);
 struct expr_info*create_expression(char*type,char*eString);
 char* is_class_object(char*identifier);
@@ -252,6 +252,11 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                 {
                       struct Checker*iterator=head;
                       int funcFound=0;
+                      char*eString=malloc(strlen(typesOfCall)+strlen($5)+3);
+                      strcpy(eString,"(");
+                      strcat(eString,typesOfCall);
+                      strcat(eString,")");
+                      strcat(eString,$5);
                       while(iterator)
                       {
                               struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$5);
@@ -263,6 +268,7 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                                         if((strcmp(iteratorList->value->whatIs,"function-declaration")==0) && (strcmp(iteratorList->value->name,$5)==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
                                         {
                                                 funcFound=1;
+                                                $$=create_expression(iteratorList->value->dataType,eString);
                                                 break;
                                         }
                                       }
@@ -271,6 +277,7 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                                         if((strcmp(iteratorList->value->whatIs,"function-declaration")==0 || (strcmp(iteratorList->value->whatIs,"class-function-declaration")==0)) && (strcmp(iteratorList->value->name,$5)==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
                                         {
                                                 funcFound=1;
+                                                $$=create_expression(iteratorList->value->dataType,eString);
                                                 break;
                                         }
                                       }
@@ -282,13 +289,17 @@ function_call:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET  ID
                               iterator=iterator->next;
                       }
                         
-                        free(typesOfCall);
-                        typesOfCall=NULL;
+                        
                         if(!funcFound)
                         {
                                 printf("Functia [%s] pe care ati apelat-o nu este definita!\n",$5);
                                 exit(EXIT_FAILURE);
                         }
+                        
+                        free(typesOfCall);
+                        free(eString);
+                        eString=NULL;
+                        typesOfCall=NULL;
                 }
 
 list_call:list_call ',' expression      
@@ -334,7 +345,7 @@ assign_statement: expression ASSIGN ID
                 {
                         int varFound=0;
                         struct Checker*iterator=head;
-                        struct ListOfEntries*assgVar;
+                        char*retType;
                         while(iterator)
                         {
                                 struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$3);
@@ -360,6 +371,8 @@ assign_statement: expression ASSIGN ID
                                                 if((strcmp(searchList->value->name,$3)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->whatIs,"variable")==0))
                                                 {
                                                         varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
                                                         saveList->value->initialised=1;
                                                         
                                                 }
@@ -369,6 +382,8 @@ assign_statement: expression ASSIGN ID
                                                  if((strcmp(searchList->value->name,$3)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && ((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0)))
                                                 {
                                                         varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
                                                         saveList->value->initialised=1;
                                                 }
                                         }
@@ -379,6 +394,7 @@ assign_statement: expression ASSIGN ID
                                         g_hash_table_replace(iterator->localScope,$3,saveList);
                                         break;
                                 }
+
                                 iterator=iterator->next;
                         }
                         if(!varFound)
@@ -386,12 +402,21 @@ assign_statement: expression ASSIGN ID
                                 printf("Variabila [%s] nu este declarata!\n",$3);
                                 exit(EXIT_FAILURE);
                         }
+                        if(strcmp(retType,$1->type)!=0)
+                        {
+                                printf("Expresia [%s]-[%s] nu poate fi asignata variabilei [%s]-[%s]!\n",$1->expString,$1->type,$3,retType);
+                                exit(EXIT_FAILURE);
+                        }
+                        free(retType);
+                        retType=NULL;
+                        
                         
                 }
                 | expression ASSIGN ID'.'ID
                 {
                         struct Checker*iterator=head;
                         int objectFound=0;
+                        char*retType;
                         while(iterator)
                         {
                                 struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$5);
@@ -442,7 +467,10 @@ assign_statement: expression ASSIGN ID
                                                
                                                if((strcmp(searchList->value->whatIs,"variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
-                                                       instanceFound=1;
+                                                       instanceFound=1;;
+                                                       retType=malloc(strlen(searchList->value->dataType)+1);
+                                                       strcpy(retType,searchList->value->dataType);
+                                                       retType[strlen(retType)]='\0';
                                                        saveList->value->initialised=1;
                                                }
                                        }
@@ -451,6 +479,9 @@ assign_statement: expression ASSIGN ID
                                               if(((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0))&& (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       retType=malloc(strlen(searchList->value->dataType)+1);
+                                                       strcpy(retType,searchList->value->dataType);
+                                                       retType[strlen(retType)]='\0';
                                                        saveList->value->initialised=1;
                                                }
                                         }
@@ -468,13 +499,56 @@ assign_statement: expression ASSIGN ID
                                 printf("Variabila [%s] nu este variabila membra a obiectului [%s]\n",$3,$5);
                                 exit(EXIT_FAILURE);
                         }
+                        if(strcmp($1->type,retType)!=0)
+                        {
+                                printf("Expresia [%s]-[%s] nu poate fi asignata [%s]-[%s]!\n",$1->expString,$1->type,searchInstance,retType);
+                                exit(EXIT_FAILURE);
+                        }
+                        free(retType);
+                        retType=NULL ;
                         searchInstance=NULL;
 
                 }
 
                 | expression ASSIGN '['expression']'ID
                 {
-                        
+                int exists=0;
+                struct Checker*iterator=head;
+                char*retType;
+                while(iterator && !exists)
+                {
+                        struct ListOfEntries*searchList;
+                        if(searchList=g_hash_table_lookup(iterator->localScope,$6))
+                        {
+                                while(searchList)
+                                {
+                                        if(strstr(searchList->value->dataType,"[") && strstr(searchList->value->dataType,"]") && strcmp(searchList->value->name,$6)==0)
+                                        {
+                                                char*extChar;
+                                                int noChr=strcspn(searchList->value->dataType,"[");
+                                                extChar=malloc(noChr+1);
+                                                strncpy(extChar,searchList->value->dataType,noChr);
+                                                retType=malloc(strlen(extChar)+1);
+                                                strcpy(retType,extChar);
+                                                exists=1;
+                                                break;
+                                        } 
+                                        searchList=searchList->next;
+                                }
+                        }
+                        iterator=iterator->next;
+                }
+                if(!exists)
+                {
+                        printf("Identificatorul [%s] nu defineste un vector!\n",$6);
+                        exit(EXIT_FAILURE);
+
+                }
+                if(strcmp($4->type,"int")!=0)
+                {
+                        printf("Pozitia pe care ati incercat sa o accesati din vectorul [%s] nu exista!\n",$6);
+                        exit(EXIT_FAILURE);
+                }
                 }
                 ;
 
@@ -491,6 +565,11 @@ create_variable: create_single_variable
 create_array_variable:'['expression']' ID available_types {
                                  
                                  char*customType=malloc(strlen(return_type($5))+strlen("50"));
+                                 if((strcmp($2->type,"int")!=0))
+                                 {
+                                         printf("Ati incercat sa declarati un vector [%s] cu un numar maxim de elemente invalid [%s]-[%s]!\n",$4,$2->expString,$2->type);
+                                         exit(EXIT_FAILURE);
+                                 }
                                  strcpy(customType,return_type($5));
                                  strcat(customType,"[");
                                  strcat(customType,"50");
@@ -576,10 +655,10 @@ available_types: INT {$$=$1;}
                ;
 
 expression: ID {
-            $$=create_variable_expression($1); 
             int initialised=0;
             int exists=0;
             int line;
+            char*retType;
                 struct Checker*iterator=head;
                 while(iterator)
                 {
@@ -592,7 +671,11 @@ expression: ID {
                                         if(searchList->value->initialised)
                                            initialised=1;
                                         if(exists || initialised)
-                                         break;
+                                        {
+                                          retType=malloc(strlen(searchList->value->dataType)+1);
+                                          strcpy(retType,searchList->value->dataType);
+                                          break;
+                                        }
                                 }
                                 searchList=searchList->next;
                         }
@@ -601,7 +684,7 @@ expression: ID {
             
             if(!exists)
             {
-                printf("Variabila [%s] din expresia [%s] nu este definita!\n",$1,$$->expString);
+                printf("Variabila [%s] nu este declarata!\n",$1);
                 exit(EXIT_FAILURE);
             }   
             if(!initialised)
@@ -609,6 +692,7 @@ expression: ID {
                     printf("Variabila [%s] este definita insa nu si initializata in expresia[%s]!\n",$1,$$->expString);
                     exit(EXIT_FAILURE);
             }
+            $$=create_variable_expression($1,retType);
         }       
           | INT_VAL {$$=create_int_expression($1);}
           | FLOAT_VAL {$$=create_float_expression($1);}
@@ -617,9 +701,9 @@ expression: ID {
           | STRING_VAL {$$=create_string_expression($1);}
           | CHAR_VAL {$$=create_char_expression($1);}
           | function_call {$$=$1;}
-          | object_call_function
-          | object_access_var 
-          | access_vector 
+          | object_call_function {$$=$1;}
+          | object_access_var {$$=$1;}
+          | access_vector {$$=$1;}
           | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET {$$=create_paranthesis_expression($2);}
           | expression ADD expression 
           | expression MUL expression
@@ -638,6 +722,7 @@ expression: ID {
 
 object_call_function:'#'OPEN_ROUND_BRACKET list_call CLOSE_ROUND_BRACKET ID '.' ID
                         {
+
                                 struct Checker*iterator=head;
                                 int objFound=0;
                                 int funcFound=0;
@@ -758,6 +843,7 @@ object_access_var:ID'.'ID
                                                if((strcmp(searchList->value->whatIs,"variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       $$=create_expression(searchList->value->dataType,searchInstance);
                                                        break;
                                                }
                                        }
@@ -766,6 +852,7 @@ object_access_var:ID'.'ID
                                               if(((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0))&& (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       $$=create_expression(searchList->value->dataType,searchInstance);
                                                        break;
                                                }
                                         }
@@ -1369,18 +1456,19 @@ int is_object_variable(char*object,char*variable)
 struct expr_info*create_int_expression(int intValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("int"))+1;
+        newExp->type=malloc(strlen("int")+1);
         strcpy(newExp->type,"int");
         char toString[20];
         sprintf(toString,"%i",intValue);
         newExp->expString=malloc(strlen(toString)+1);
         strcpy(newExp->expString,toString);
+
         return newExp;
 }
 struct expr_info*create_bool_expression(const char*boolValue)
 {
        struct expr_info*newExp=malloc(sizeof(struct expr_info));
-       newExp->type=malloc(strlen("bool"));
+       newExp->type=malloc(strlen("bool")+1);
        strcpy(newExp->type,"bool");
        newExp->expString=malloc(strlen(boolValue)+1);
        strcpy(newExp->expString,boolValue);
@@ -1389,7 +1477,7 @@ struct expr_info*create_bool_expression(const char*boolValue)
 struct expr_info*create_float_expression(float floatValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("float"))+1;
+        newExp->type=malloc(strlen("float")+1);
         strcpy(newExp->type,"float");
         char toString[20];
         sprintf(toString,"%f",floatValue);
@@ -1409,18 +1497,18 @@ struct expr_info*create_string_expression(char*stringValue)
 struct expr_info*create_char_expression(const char charValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("char"))+1;
+        newExp->type=malloc(strlen("char")+1);
         strcpy(newExp->type,"char");
         newExp->expString=malloc(2);
         newExp->expString[0]=charValue;
         
         return newExp;
 }
-struct expr_info*create_variable_expression(const char*identifier)
+struct expr_info*create_variable_expression(const char*identifier,char*type)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-       newExp->type=malloc(strlen("variable"));
-       strcpy(newExp->type,"variable");
+       newExp->type=malloc(strlen(type)+1);
+       strcpy(newExp->type,type);
        newExp->expString=malloc(strlen(identifier)+1);
        strcpy(newExp->expString,identifier);
        return newExp;

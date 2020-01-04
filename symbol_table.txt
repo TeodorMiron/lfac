@@ -1,45 +1,51 @@
 6 	 variabilaGlobalaConstInt 	 variable	 const-int 	 0 	 0 	 1 
-49 	 instantaDoi 	 object-variable	 clasaGlobala 	 282676228 	 0 	 0 
+50 	 instantaDoi 	 object-variable	 clasaGlobala 	 282676228 	 0 	 0 
 37 	 variabilaClasaString 	 class-variable	 char* 	 0 	 0-3 	 0 
 13 	 counter 	 variable	 int 	 0 	 0-1 	 1 
-71 	 altaInstanta 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
-4 	 variabilaGlobalaBool 	 variable	 bool 	 0 	 0 	 0 
-8 	 variabilaGlobalaConstFloat 	 variable	 const-float 	 0 	 0 	 1 
+73 	 altaInstanta 	 object-variable	 clasaGlobala 	 -1632125152 	 0-6 	 0 
 32 	 parametruF 	 variable	 float 	 0 	 0-2 	 1 
 12 	 parametruF 	 variable	 int 	 0 	 0-1 	 1 
+8 	 variabilaGlobalaConstFloat 	 variable	 const-float 	 0 	 0 	 1 
+73 	 altaInstanta.anulNou 	 variable	 int[50] 	 0 	 0-6 	 1 
+4 	 variabilaGlobalaBool 	 variable	 bool 	 0 	 0 	 0 
 1 	 variabilaGlobalaInt 	 variable	 int 	 0 	 0 	 1 
-70 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
-58 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-5 	 0 
+32 	 variabilaInutila 	 variable	 const-int 	 0 	 0-2 	 1 
 32 	 parametruSec 	 variable	 float 	 0 	 0-2 	 1 
 12 	 parametruSec 	 variable	 float 	 0 	 0-1 	 1 
-45 	 cuvinte 	 class-variable	 char* 	 0 	 0-3-2 	 1 
-45 	 functieClasa 	 class-function-declaration 	 int 	 float,char* 	 0-3-2
-40 	 functieClasa 	 class-function-declaration 	 int 	 int 	 0-3-1
-65 	 intInMain 	 variable	 int 	 0 	 0-6 	 1 
-32 	 variabilaInutila 	 variable	 const-int 	 0 	 0-2 	 1 
-71 	 altaInstanta.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
-63 	 main 	 main-declaration 	 0-6
-71 	 altaInstanta.variabilaClasa 	 variable	 int 	 0 	 0-6 	 0 
+46 	 cuvinte 	 class-variable	 char* 	 0 	 0-3-2 	 1 
+72 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-6 	 0 
+59 	 instantaClasa 	 object-variable	 clasaGlobala 	 0 	 0-5 	 0 
+46 	 functieClasa 	 class-function-declaration 	 int 	 float,char* 	 0-3-2
+41 	 functieClasa 	 class-function-declaration 	 int 	 int 	 0-3-1
+69 	 argumentFunctie 	 variable	 float 	 0 	 0-6 	 1 
+72 	 instantaClasa.anulNou 	 variable	 int[50] 	 0 	 0-6 	 1 
+59 	 instantaClasa.anulNou 	 variable	 int[50] 	 0 	 0-5 	 1 
+71 	 anulNou 	 variable	 float[50] 	 0 	 0-6 	 1 
+38 	 anulNou 	 class-variable	 int[50] 	 0 	 0-3 	 1 
+73 	 altaInstanta.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
+66 	 intInMain 	 variable	 int 	 0 	 0-6 	 1 
+64 	 main 	 main-declaration 	 0-6
+65 	 variabilaInMain 	 variable	 char* 	 0 	 0-6 	 0 
 13 	 returnValue 	 variable	 int 	 0 	 0-1 	 1 
-70 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-6 	 1 
-58 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-5 	 0 
-69 	 anulNou 	 variable	 float[50] 	 0 	 0-6 	 1 
-64 	 variabilaInMain 	 variable	 char* 	 0 	 0-6 	 0 
-58 	 declarareInFunctie 	 function-declaration 	 int 	 int 	 0-5
-49 	 instantaDoi.variabilaClasaString 	 variable	 char* 	 0 	 0 	 0 
-45 	 argument 	 class-variable	 float 	 0 	 0-3-2 	 1 
-40 	 argument 	 class-variable	 int 	 0 	 0-3-1 	 1 
-58 	 unParametru 	 variable	 int 	 0 	 0-5 	 1 
-70 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-6 	 0 
-58 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-5 	 0 
+50 	 instantaDoi.anulNou 	 variable	 int[50] 	 0 	 0 	 1 
+72 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-6 	 1 
+59 	 instantaClasa.variabilaClasa 	 variable	 int 	 0 	 0-5 	 0 
+73 	 altaInstanta.variabilaClasa 	 variable	 int 	 0 	 0-6 	 0 
+59 	 declarareInFunctie 	 function-declaration 	 int 	 int 	 0-5
+50 	 instantaDoi.variabilaClasaString 	 variable	 char* 	 0 	 0 	 0 
+46 	 argument 	 class-variable	 float 	 0 	 0-3-2 	 1 
+41 	 argument 	 class-variable	 int 	 0 	 0-3-1 	 1 
+59 	 unParametru 	 variable	 int 	 0 	 0-5 	 1 
+72 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 -1632124688 	 0-6 	 0 
+59 	 instantaClasa.variabilaClasaString 	 variable	 char* 	 0 	 0-5 	 0 
 36 	 clasaGlobala 	 class-declaration 	 0-3
 3 	 variabilaGlobalaString 	 variable	 char* 	 0 	 0 	 0 
 32 	 functieGlobala 	 function-declaration 	 void 	 float,float 	 0-2
 12 	 functieGlobala 	 function-declaration 	 void 	 int,float 	 0-1
 5 	 variabileGlobalaChar 	 variable	 char 	 0 	 0 	 0 
-55 	 oVariabila 	 class-variable	 int 	 0 	 0-4 	 1 
-49 	 instantaDoi.variabilaClasa 	 variable	 int 	 0 	 0 	 1 
+56 	 oVariabila 	 class-variable	 int 	 0 	 0-4 	 1 
+50 	 instantaDoi.variabilaClasa 	 variable	 int 	 0 	 0 	 0 
 2 	 variabilaGlobalChar 	 variable	 char 	 0 	 0 	 0 
 36 	 variabilaClasa 	 class-variable	 int 	 0 	 0-3 	 0 
-53 	 clasaTest 	 class-declaration 	 0-4
+54 	 clasaTest 	 class-declaration 	 0-4
 7 	 variabilaGlobalaConstString 	 variable	 const-char* 	 0 	 0 	 1 

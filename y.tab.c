@@ -144,7 +144,7 @@ struct expr_info*create_bool_expression(const char*boolValue);
 struct expr_info*create_float_expression(float floatValue);
 struct expr_info*create_string_expression(char*stringValue);
 struct expr_info*create_char_expression(const char charValue);
-struct expr_info*create_variable_expression(const char*identifier);
+struct expr_info*create_variable_expression(const char*identifier,char*type);
 struct expr_info*create_paranthesis_expression(struct expr_info*exp);
 struct expr_info*create_expression(char*type,char*eString);
 char* is_class_object(char*identifier);
@@ -675,14 +675,14 @@ static const yytype_uint16 yyrline[] =
      202,   202,   203,   203,   206,   207,   210,   211,   214,   214,
      215,   215,   216,   216,   217,   217,   220,   221,   224,   225,
      225,   228,   229,   232,   233,   236,   237,   238,   239,   240,
-     241,   242,   243,   246,   247,   248,   251,   294,   311,   316,
-     320,   320,   320,   321,   321,   321,   324,   324,   325,   325,
-     326,   329,   329,   330,   330,   333,   391,   475,   482,   482,
-     485,   486,   491,   501,   502,   550,   551,   570,   571,   572,
-     573,   574,   575,   578,   613,   614,   615,   616,   617,   618,
-     619,   620,   621,   622,   623,   624,   625,   626,   627,   628,
-     629,   630,   631,   632,   633,   634,   635,   639,   720,   785,
-     833,   833,   834,   834
+     241,   242,   243,   246,   247,   248,   251,   305,   322,   327,
+     331,   331,   331,   332,   332,   332,   335,   335,   336,   336,
+     337,   340,   340,   341,   341,   344,   415,   513,   556,   556,
+     559,   560,   565,   580,   581,   629,   630,   649,   650,   651,
+     652,   653,   654,   657,   697,   698,   699,   700,   701,   702,
+     703,   704,   705,   706,   707,   708,   709,   710,   711,   712,
+     713,   714,   715,   716,   717,   718,   719,   723,   805,   872,
+     920,   920,   921,   921
 };
 #endif
 
@@ -1786,6 +1786,11 @@ yyreduce:
     {
                       struct Checker*iterator=head;
                       int funcFound=0;
+                      char*eString=malloc(strlen(typesOfCall)+strlen((yyvsp[0].strname))+3);
+                      strcpy(eString,"(");
+                      strcat(eString,typesOfCall);
+                      strcat(eString,")");
+                      strcat(eString,(yyvsp[0].strname));
                       while(iterator)
                       {
                               struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,(yyvsp[0].strname));
@@ -1797,6 +1802,7 @@ yyreduce:
                                         if((strcmp(iteratorList->value->whatIs,"function-declaration")==0) && (strcmp(iteratorList->value->name,(yyvsp[0].strname))==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
                                         {
                                                 funcFound=1;
+                                                (yyval.expr_ptr)=create_expression(iteratorList->value->dataType,eString);
                                                 break;
                                         }
                                       }
@@ -1805,6 +1811,7 @@ yyreduce:
                                         if((strcmp(iteratorList->value->whatIs,"function-declaration")==0 || (strcmp(iteratorList->value->whatIs,"class-function-declaration")==0)) && (strcmp(iteratorList->value->name,(yyvsp[0].strname))==0) && (strcmp(iteratorList->value->paramlist,typesOfCall)==0))
                                         {
                                                 funcFound=1;
+                                                (yyval.expr_ptr)=create_expression(iteratorList->value->dataType,eString);
                                                 break;
                                         }
                                       }
@@ -1816,19 +1823,23 @@ yyreduce:
                               iterator=iterator->next;
                       }
                         
-                        free(typesOfCall);
-                        typesOfCall=NULL;
+                        
                         if(!funcFound)
                         {
                                 printf("Functia [%s] pe care ati apelat-o nu este definita!\n",(yyvsp[0].strname));
                                 exit(EXIT_FAILURE);
                         }
+                        
+                        free(typesOfCall);
+                        free(eString);
+                        eString=NULL;
+                        typesOfCall=NULL;
                 }
-#line 1828 "y.tab.c"
+#line 1839 "y.tab.c"
     break;
 
   case 47:
-#line 295 "experiment_hash.y"
+#line 306 "experiment_hash.y"
     {
          if(typesOfCall==NULL)
                 {
@@ -1845,102 +1856,102 @@ yyreduce:
                         typesOfCall[strlen(typesOfCall)]='\0';
                 }
         }
-#line 1849 "y.tab.c"
+#line 1860 "y.tab.c"
     break;
 
   case 48:
-#line 312 "experiment_hash.y"
+#line 323 "experiment_hash.y"
     {
                typesOfCall=malloc(strlen((yyvsp[0].expr_ptr)->type)+1);
                strcpy(typesOfCall,(yyvsp[0].expr_ptr)->type);
          }
-#line 1858 "y.tab.c"
+#line 1869 "y.tab.c"
     break;
 
   case 49:
-#line 316 "experiment_hash.y"
+#line 327 "experiment_hash.y"
     {typesOfCall=malloc(0);}
-#line 1864 "y.tab.c"
+#line 1875 "y.tab.c"
     break;
 
   case 50:
-#line 320 "experiment_hash.y"
+#line 331 "experiment_hash.y"
     {add_statement_node();}
-#line 1870 "y.tab.c"
+#line 1881 "y.tab.c"
     break;
 
   case 51:
-#line 320 "experiment_hash.y"
+#line 331 "experiment_hash.y"
     {remove_node();}
-#line 1876 "y.tab.c"
+#line 1887 "y.tab.c"
     break;
 
   case 53:
-#line 321 "experiment_hash.y"
+#line 332 "experiment_hash.y"
     {add_statement_node();}
-#line 1882 "y.tab.c"
+#line 1893 "y.tab.c"
     break;
 
   case 54:
-#line 321 "experiment_hash.y"
+#line 332 "experiment_hash.y"
     {remove_node();}
-#line 1888 "y.tab.c"
+#line 1899 "y.tab.c"
     break;
 
   case 56:
-#line 324 "experiment_hash.y"
+#line 335 "experiment_hash.y"
     {add_statement_node();}
-#line 1894 "y.tab.c"
+#line 1905 "y.tab.c"
     break;
 
   case 57:
-#line 324 "experiment_hash.y"
+#line 335 "experiment_hash.y"
     {remove_node();}
-#line 1900 "y.tab.c"
+#line 1911 "y.tab.c"
     break;
 
   case 58:
-#line 325 "experiment_hash.y"
+#line 336 "experiment_hash.y"
     {add_statement_node();}
-#line 1906 "y.tab.c"
+#line 1917 "y.tab.c"
     break;
 
   case 59:
-#line 325 "experiment_hash.y"
+#line 336 "experiment_hash.y"
     {remove_node();}
-#line 1912 "y.tab.c"
+#line 1923 "y.tab.c"
     break;
 
   case 61:
-#line 329 "experiment_hash.y"
+#line 340 "experiment_hash.y"
     {add_statement_node();}
-#line 1918 "y.tab.c"
+#line 1929 "y.tab.c"
     break;
 
   case 62:
-#line 329 "experiment_hash.y"
+#line 340 "experiment_hash.y"
     {remove_node();}
-#line 1924 "y.tab.c"
+#line 1935 "y.tab.c"
     break;
 
   case 63:
-#line 330 "experiment_hash.y"
+#line 341 "experiment_hash.y"
     {add_statement_node();}
-#line 1930 "y.tab.c"
+#line 1941 "y.tab.c"
     break;
 
   case 64:
-#line 330 "experiment_hash.y"
+#line 341 "experiment_hash.y"
     {remove_node();}
-#line 1936 "y.tab.c"
+#line 1947 "y.tab.c"
     break;
 
   case 65:
-#line 334 "experiment_hash.y"
+#line 345 "experiment_hash.y"
     {
                         int varFound=0;
                         struct Checker*iterator=head;
-                        struct ListOfEntries*assgVar;
+                        char*retType;
                         while(iterator)
                         {
                                 struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,(yyvsp[0].strname));
@@ -1966,6 +1977,8 @@ yyreduce:
                                                 if((strcmp(searchList->value->name,(yyvsp[0].strname))==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->whatIs,"variable")==0))
                                                 {
                                                         varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
                                                         saveList->value->initialised=1;
                                                         
                                                 }
@@ -1975,6 +1988,8 @@ yyreduce:
                                                  if((strcmp(searchList->value->name,(yyvsp[0].strname))==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && ((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0)))
                                                 {
                                                         varFound=1;
+                                                        retType=malloc(strlen(searchList->value->dataType)+1);
+                                                        strcpy(retType,searchList->value->dataType);
                                                         saveList->value->initialised=1;
                                                 }
                                         }
@@ -1985,6 +2000,7 @@ yyreduce:
                                         g_hash_table_replace(iterator->localScope,(yyvsp[0].strname),saveList);
                                         break;
                                 }
+
                                 iterator=iterator->next;
                         }
                         if(!varFound)
@@ -1992,16 +2008,25 @@ yyreduce:
                                 printf("Variabila [%s] nu este declarata!\n",(yyvsp[0].strname));
                                 exit(EXIT_FAILURE);
                         }
+                        if(strcmp(retType,(yyvsp[-2].expr_ptr)->type)!=0)
+                        {
+                                printf("Expresia [%s]-[%s] nu poate fi asignata variabilei [%s]-[%s]!\n",(yyvsp[-2].expr_ptr)->expString,(yyvsp[-2].expr_ptr)->type,(yyvsp[0].strname),retType);
+                                exit(EXIT_FAILURE);
+                        }
+                        free(retType);
+                        retType=NULL;
+                        
                         
                 }
-#line 1998 "y.tab.c"
+#line 2022 "y.tab.c"
     break;
 
   case 66:
-#line 392 "experiment_hash.y"
+#line 416 "experiment_hash.y"
     {
                         struct Checker*iterator=head;
                         int objectFound=0;
+                        char*retType;
                         while(iterator)
                         {
                                 struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,(yyvsp[0].strname));
@@ -2052,7 +2077,10 @@ yyreduce:
                                                
                                                if((strcmp(searchList->value->whatIs,"variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
-                                                       instanceFound=1;
+                                                       instanceFound=1;;
+                                                       retType=malloc(strlen(searchList->value->dataType)+1);
+                                                       strcpy(retType,searchList->value->dataType);
+                                                       retType[strlen(retType)]='\0';
                                                        saveList->value->initialised=1;
                                                }
                                        }
@@ -2061,6 +2089,9 @@ yyreduce:
                                               if(((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0))&& (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       retType=malloc(strlen(searchList->value->dataType)+1);
+                                                       strcpy(retType,searchList->value->dataType);
+                                                       retType[strlen(retType)]='\0';
                                                        saveList->value->initialised=1;
                                                }
                                         }
@@ -2078,54 +2109,102 @@ yyreduce:
                                 printf("Variabila [%s] nu este variabila membra a obiectului [%s]\n",(yyvsp[-2].strname),(yyvsp[0].strname));
                                 exit(EXIT_FAILURE);
                         }
+                        if(strcmp((yyvsp[-4].expr_ptr)->type,retType)!=0)
+                        {
+                                printf("Expresia [%s]-[%s] nu poate fi asignata [%s]-[%s]!\n",(yyvsp[-4].expr_ptr)->expString,(yyvsp[-4].expr_ptr)->type,searchInstance,retType);
+                                exit(EXIT_FAILURE);
+                        }
+                        free(retType);
+                        retType=NULL ;
                         searchInstance=NULL;
 
                 }
-#line 2085 "y.tab.c"
+#line 2123 "y.tab.c"
     break;
 
   case 67:
-#line 476 "experiment_hash.y"
+#line 514 "experiment_hash.y"
     {
-                        
+                int exists=0;
+                struct Checker*iterator=head;
+                char*retType;
+                while(iterator && !exists)
+                {
+                        struct ListOfEntries*searchList;
+                        if(searchList=g_hash_table_lookup(iterator->localScope,(yyvsp[0].strname)))
+                        {
+                                while(searchList)
+                                {
+                                        if(strstr(searchList->value->dataType,"[") && strstr(searchList->value->dataType,"]") && strcmp(searchList->value->name,(yyvsp[0].strname))==0)
+                                        {
+                                                char*extChar;
+                                                int noChr=strcspn(searchList->value->dataType,"[");
+                                                extChar=malloc(noChr+1);
+                                                strncpy(extChar,searchList->value->dataType,noChr);
+                                                retType=malloc(strlen(extChar)+1);
+                                                strcpy(retType,extChar);
+                                                exists=1;
+                                                break;
+                                        } 
+                                        searchList=searchList->next;
+                                }
+                        }
+                        iterator=iterator->next;
                 }
-#line 2093 "y.tab.c"
+                if(!exists)
+                {
+                        printf("Identificatorul [%s] nu defineste un vector!\n",(yyvsp[0].strname));
+                        exit(EXIT_FAILURE);
+
+                }
+                if(strcmp((yyvsp[-2].expr_ptr)->type,"int")!=0)
+                {
+                        printf("Pozitia pe care ati incercat sa o accesati din vectorul [%s] nu exista!\n",(yyvsp[0].strname));
+                        exit(EXIT_FAILURE);
+                }
+                }
+#line 2167 "y.tab.c"
     break;
 
   case 68:
-#line 482 "experiment_hash.y"
+#line 556 "experiment_hash.y"
     {add_statement_node();}
-#line 2099 "y.tab.c"
+#line 2173 "y.tab.c"
     break;
 
   case 69:
-#line 482 "experiment_hash.y"
+#line 556 "experiment_hash.y"
     {remove_node();}
-#line 2105 "y.tab.c"
+#line 2179 "y.tab.c"
     break;
 
   case 72:
-#line 491 "experiment_hash.y"
+#line 565 "experiment_hash.y"
     {
                                  
                                  char*customType=malloc(strlen(return_type((yyvsp[0].type)))+strlen("50"));
+                                 if((strcmp((yyvsp[-3].expr_ptr)->type,"int")!=0))
+                                 {
+                                         printf("Ati incercat sa declarati un vector [%s] cu un numar maxim de elemente invalid [%s]-[%s]!\n",(yyvsp[-1].strname),(yyvsp[-3].expr_ptr)->expString,(yyvsp[-3].expr_ptr)->type);
+                                         exit(EXIT_FAILURE);
+                                 }
                                  strcpy(customType,return_type((yyvsp[0].type)));
                                  strcat(customType,"[");
                                  strcat(customType,"50");
                                  strcat(customType,"]");
                                  add_new_variable(customType,(yyvsp[-1].strname),1 );
                         }
-#line 2119 "y.tab.c"
+#line 2198 "y.tab.c"
     break;
 
   case 73:
-#line 501 "experiment_hash.y"
+#line 580 "experiment_hash.y"
     {add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname),0);}
-#line 2125 "y.tab.c"
+#line 2204 "y.tab.c"
     break;
 
   case 74:
-#line 502 "experiment_hash.y"
+#line 581 "experiment_hash.y"
     {
                             
                              struct Checker*iterator=head;
@@ -2174,17 +2253,17 @@ yyreduce:
                              objName=NULL;
                              objVars=NULL;
                         }
-#line 2178 "y.tab.c"
+#line 2257 "y.tab.c"
     break;
 
   case 75:
-#line 550 "experiment_hash.y"
+#line 629 "experiment_hash.y"
     {add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname),1);}
-#line 2184 "y.tab.c"
+#line 2263 "y.tab.c"
     break;
 
   case 76:
-#line 551 "experiment_hash.y"
+#line 630 "experiment_hash.y"
     {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type((yyvsp[-1].type)))+1);
                                 strcpy(newtype,"const-");
@@ -2197,52 +2276,52 @@ yyreduce:
                                         exit(EXIT_FAILURE);
                                 }
                         }
-#line 2201 "y.tab.c"
+#line 2280 "y.tab.c"
     break;
 
   case 77:
-#line 570 "experiment_hash.y"
+#line 649 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2207 "y.tab.c"
+#line 2286 "y.tab.c"
     break;
 
   case 78:
-#line 571 "experiment_hash.y"
+#line 650 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2213 "y.tab.c"
+#line 2292 "y.tab.c"
     break;
 
   case 79:
-#line 572 "experiment_hash.y"
+#line 651 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2219 "y.tab.c"
+#line 2298 "y.tab.c"
     break;
 
   case 80:
-#line 573 "experiment_hash.y"
+#line 652 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2225 "y.tab.c"
+#line 2304 "y.tab.c"
     break;
 
   case 81:
-#line 574 "experiment_hash.y"
+#line 653 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2231 "y.tab.c"
+#line 2310 "y.tab.c"
     break;
 
   case 82:
-#line 575 "experiment_hash.y"
+#line 654 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2237 "y.tab.c"
+#line 2316 "y.tab.c"
     break;
 
   case 83:
-#line 578 "experiment_hash.y"
+#line 657 "experiment_hash.y"
     {
-            (yyval.expr_ptr)=create_variable_expression((yyvsp[0].strname)); 
             int initialised=0;
             int exists=0;
             int line;
+            char*retType;
                 struct Checker*iterator=head;
                 while(iterator)
                 {
@@ -2255,7 +2334,11 @@ yyreduce:
                                         if(searchList->value->initialised)
                                            initialised=1;
                                         if(exists || initialised)
-                                         break;
+                                        {
+                                          retType=malloc(strlen(searchList->value->dataType)+1);
+                                          strcpy(retType,searchList->value->dataType);
+                                          break;
+                                        }
                                 }
                                 searchList=searchList->next;
                         }
@@ -2264,7 +2347,7 @@ yyreduce:
             
             if(!exists)
             {
-                printf("Variabila [%s] din expresia [%s] nu este definita!\n",(yyvsp[0].strname),(yyval.expr_ptr)->expString);
+                printf("Variabila [%s] nu este declarata!\n",(yyvsp[0].strname));
                 exit(EXIT_FAILURE);
             }   
             if(!initialised)
@@ -2272,61 +2355,81 @@ yyreduce:
                     printf("Variabila [%s] este definita insa nu si initializata in expresia[%s]!\n",(yyvsp[0].strname),(yyval.expr_ptr)->expString);
                     exit(EXIT_FAILURE);
             }
+            (yyval.expr_ptr)=create_variable_expression((yyvsp[0].strname),retType);
         }
-#line 2277 "y.tab.c"
+#line 2361 "y.tab.c"
     break;
 
   case 84:
-#line 613 "experiment_hash.y"
+#line 697 "experiment_hash.y"
     {(yyval.expr_ptr)=create_int_expression((yyvsp[0].intval));}
-#line 2283 "y.tab.c"
+#line 2367 "y.tab.c"
     break;
 
   case 85:
-#line 614 "experiment_hash.y"
+#line 698 "experiment_hash.y"
     {(yyval.expr_ptr)=create_float_expression((yyvsp[0].floatval));}
-#line 2289 "y.tab.c"
+#line 2373 "y.tab.c"
     break;
 
   case 86:
-#line 615 "experiment_hash.y"
+#line 699 "experiment_hash.y"
     {(yyval.expr_ptr)=create_bool_expression((yyvsp[0].boolVal));}
-#line 2295 "y.tab.c"
+#line 2379 "y.tab.c"
     break;
 
   case 87:
-#line 616 "experiment_hash.y"
+#line 700 "experiment_hash.y"
     {(yyval.expr_ptr)=create_bool_expression((yyvsp[0].boolVal));}
-#line 2301 "y.tab.c"
+#line 2385 "y.tab.c"
     break;
 
   case 88:
-#line 617 "experiment_hash.y"
+#line 701 "experiment_hash.y"
     {(yyval.expr_ptr)=create_string_expression((yyvsp[0].strval));}
-#line 2307 "y.tab.c"
+#line 2391 "y.tab.c"
     break;
 
   case 89:
-#line 618 "experiment_hash.y"
+#line 702 "experiment_hash.y"
     {(yyval.expr_ptr)=create_char_expression((yyvsp[0].charval));}
-#line 2313 "y.tab.c"
+#line 2397 "y.tab.c"
     break;
 
   case 90:
-#line 619 "experiment_hash.y"
+#line 703 "experiment_hash.y"
     {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
-#line 2319 "y.tab.c"
+#line 2403 "y.tab.c"
+    break;
+
+  case 91:
+#line 704 "experiment_hash.y"
+    {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
+#line 2409 "y.tab.c"
+    break;
+
+  case 92:
+#line 705 "experiment_hash.y"
+    {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
+#line 2415 "y.tab.c"
+    break;
+
+  case 93:
+#line 706 "experiment_hash.y"
+    {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
+#line 2421 "y.tab.c"
     break;
 
   case 94:
-#line 623 "experiment_hash.y"
+#line 707 "experiment_hash.y"
     {(yyval.expr_ptr)=create_paranthesis_expression((yyvsp[-1].expr_ptr));}
-#line 2325 "y.tab.c"
+#line 2427 "y.tab.c"
     break;
 
   case 107:
-#line 640 "experiment_hash.y"
+#line 724 "experiment_hash.y"
     {
+
                                 struct Checker*iterator=head;
                                 int objFound=0;
                                 int funcFound=0;
@@ -2403,11 +2506,11 @@ yyreduce:
 
                                 
                         }
-#line 2407 "y.tab.c"
+#line 2510 "y.tab.c"
     break;
 
   case 108:
-#line 721 "experiment_hash.y"
+#line 806 "experiment_hash.y"
     {
                         struct Checker*iterator=head;
                         int objectFound=0;
@@ -2448,6 +2551,7 @@ yyreduce:
                                                if((strcmp(searchList->value->whatIs,"variable")==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       (yyval.expr_ptr)=create_expression(searchList->value->dataType,searchInstance);
                                                        break;
                                                }
                                        }
@@ -2456,6 +2560,7 @@ yyreduce:
                                               if(((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0))&& (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->name,searchInstance)==0))
                                                {
                                                        instanceFound=1;
+                                                       (yyval.expr_ptr)=create_expression(searchList->value->dataType,searchInstance);
                                                        break;
                                                }
                                         }
@@ -2471,11 +2576,11 @@ yyreduce:
                         free(searchInstance);
                         searchInstance=NULL;
                 }
-#line 2475 "y.tab.c"
+#line 2580 "y.tab.c"
     break;
 
   case 109:
-#line 785 "experiment_hash.y"
+#line 872 "experiment_hash.y"
     {
                 int exists=0;
                 struct Checker*iterator=head;
@@ -2522,35 +2627,35 @@ yyreduce:
                   strcat(eString,(yyvsp[0].strname));
                 (yyval.expr_ptr)=create_expression(retType,eString);
                 }
-#line 2526 "y.tab.c"
+#line 2631 "y.tab.c"
     break;
 
   case 110:
-#line 833 "experiment_hash.y"
+#line 920 "experiment_hash.y"
     {add_main_node();}
-#line 2532 "y.tab.c"
+#line 2637 "y.tab.c"
     break;
 
   case 111:
-#line 833 "experiment_hash.y"
+#line 920 "experiment_hash.y"
     {remove_node();}
-#line 2538 "y.tab.c"
+#line 2643 "y.tab.c"
     break;
 
   case 112:
-#line 834 "experiment_hash.y"
+#line 921 "experiment_hash.y"
     {add_main_node();}
-#line 2544 "y.tab.c"
+#line 2649 "y.tab.c"
     break;
 
   case 113:
-#line 834 "experiment_hash.y"
+#line 921 "experiment_hash.y"
     {remove_node();}
-#line 2550 "y.tab.c"
+#line 2655 "y.tab.c"
     break;
 
 
-#line 2554 "y.tab.c"
+#line 2659 "y.tab.c"
 
       default: break;
     }
@@ -2782,7 +2887,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 836 "experiment_hash.y"
+#line 923 "experiment_hash.y"
 
 int yyerror(char * s){
     printf("eroare: %s la linia:%d\n",s,yylineno);
@@ -3319,18 +3424,19 @@ int is_object_variable(char*object,char*variable)
 struct expr_info*create_int_expression(int intValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("int"))+1;
+        newExp->type=malloc(strlen("int")+1);
         strcpy(newExp->type,"int");
         char toString[20];
         sprintf(toString,"%i",intValue);
         newExp->expString=malloc(strlen(toString)+1);
         strcpy(newExp->expString,toString);
+
         return newExp;
 }
 struct expr_info*create_bool_expression(const char*boolValue)
 {
        struct expr_info*newExp=malloc(sizeof(struct expr_info));
-       newExp->type=malloc(strlen("bool"));
+       newExp->type=malloc(strlen("bool")+1);
        strcpy(newExp->type,"bool");
        newExp->expString=malloc(strlen(boolValue)+1);
        strcpy(newExp->expString,boolValue);
@@ -3339,7 +3445,7 @@ struct expr_info*create_bool_expression(const char*boolValue)
 struct expr_info*create_float_expression(float floatValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("float"))+1;
+        newExp->type=malloc(strlen("float")+1);
         strcpy(newExp->type,"float");
         char toString[20];
         sprintf(toString,"%f",floatValue);
@@ -3359,18 +3465,18 @@ struct expr_info*create_string_expression(char*stringValue)
 struct expr_info*create_char_expression(const char charValue)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-        newExp->type=malloc(strlen("char"))+1;
+        newExp->type=malloc(strlen("char")+1);
         strcpy(newExp->type,"char");
         newExp->expString=malloc(2);
         newExp->expString[0]=charValue;
         
         return newExp;
 }
-struct expr_info*create_variable_expression(const char*identifier)
+struct expr_info*create_variable_expression(const char*identifier,char*type)
 {
         struct expr_info*newExp=malloc(sizeof(struct expr_info));
-       newExp->type=malloc(strlen("variable"));
-       strcpy(newExp->type,"variable");
+       newExp->type=malloc(strlen(type)+1);
+       strcpy(newExp->type,type);
        newExp->expString=malloc(strlen(identifier)+1);
        strcpy(newExp->expString,identifier);
        return newExp;
