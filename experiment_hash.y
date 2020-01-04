@@ -327,15 +327,69 @@ while_statement: OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET WHILE OPEN_CU
 
 assign_statement: expression ASSIGN ID 
                 {
-                
+                        int varFound=0;
+                        struct Checker*iterator=head;
+                        struct ListOfEntries*assgVar;
+                        while(iterator)
+                        {
+                                struct ListOfEntries*searchList=g_hash_table_lookup(iterator->localScope,$3);
+                                struct ListOfEntries*saveList=NULL;
+                                while(searchList)
+                                {
+                                        if(saveList==NULL)
+                                        {
+                                                saveList=malloc(sizeof(struct ListOfEntries));
+                                                saveList->next=NULL;
+                                                saveList->value=searchList->value;
+                                        }
+                                        else
+                                        {
+                                                struct ListOfEntries*newNode=malloc(sizeof(struct ListOfEntries));
+                                                newNode->value=searchList->value;
+                                                newNode->next=saveList;
+                                                saveList=newNode;
+                                        }
+                                        struct ListOfEntries*newNode;
+                                        if(!inClass)
+                                        {
+                                                if((strcmp(searchList->value->name,$3)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && (strcmp(searchList->value->whatIs,"variable")==0))
+                                                {
+                                                        varFound=1;
+                                                        saveList->value->initialised=1;
+                                                        
+                                                }
+                                        }
+                                        else
+                                        {
+                                                 if((strcmp(searchList->value->name,$3)==0) && (strcmp(searchList->value->scope,iterator->currentScope)==0) && ((strcmp(searchList->value->whatIs,"variable")==0) || (strcmp(searchList->value->whatIs,"class-variable")==0)))
+                                                {
+                                                        varFound=1;
+                                                        saveList->value->initialised=1;
+                                                }
+                                        }
+                                        searchList=searchList->next;
+                                }
+                                if(varFound)
+                                {
+                                        g_hash_table_replace(iterator->localScope,$3,saveList);
+                                        break;
+                                }
+                                iterator=iterator->next;
+                        }
+                        if(!varFound)
+                        {
+                                printf("Variabila [%s] nu este declarata!\n",$3);
+                                exit(EXIT_FAILURE);
+                        }
+                        
                 }
-
-                | expression ASSIGN object_access_var
+                | expression ASSIGN ID'.'ID
                 {
                       
-
+                        
                 }
-                | expression ASSIGN access_vector
+
+                | expression ASSIGN '['expression']'ID
                 {
 
                 }

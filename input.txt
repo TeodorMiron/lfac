@@ -38,6 +38,7 @@ clasaGlobala ssalc
     ;$variabilaClasaString *rahc
     ($argument tni) functieClasa tni
     {
+        ;123131232=variabilaClasa
         ;#(24.5,2020.2020)functieGlobala
        
     }
@@ -66,10 +67,11 @@ clasaTest ssalc
     ;#(24.0,267.0)functieGlobala
     ;$variabilaInMain *rahc
     ;$intInMain tni
+    ;20=intInMain
+    ;2021=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
-    ;variabilaClasa.instantaClasa=intInMain 
     ;#(23)declarareInFunctie
     ;#(24.5,"in vant")functieClasa.instantaClasa
 }
