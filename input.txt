@@ -7,9 +7,10 @@
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
 
+
 ($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
-    ;$counter tni
+    ;$2=counter tni
     ;$returnValue tni
     (parametruSec==parametruF) fi
     {
@@ -46,9 +47,19 @@ clasaGlobala ssalc
         ;#(24.0,"vant")functieClasa
     }
 }
-($unParametru tni) declarareInFunctie tni
+;$instantaDoi clasaGlobala
+clasaTest ssalc
+{
+
+    ;$variabilaClasa.instantaDoi=oVariabila tni
+    
+}
+($unParametru tni)declarareInFunctie tni
 {
     ;$instantaClasa clasaGlobala
+    ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
+    ;$variabilaClasa.instantaClasa=oVariabila tni
+
 }
 ()niam tni
 {
@@ -57,6 +68,8 @@ clasaGlobala ssalc
     ;$intInMain tni
     ;$[2020]anulNou taolf 
     ;$instantaClasa clasaGlobala
-    ;variabilaClasa.clasaGlobala=intInMain
-    ;#(24.5)ofunctie.clasaGlobala
+    ;$altaInstanta clasaGlobala
+    ;variabilaClasa.instantaClasa=intInMain 
+    ;#(23)declarareInFunctie
+    ;#(24.5,"in vant")functieClasa.instantaClasa
 }
