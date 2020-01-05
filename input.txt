@@ -97,7 +97,6 @@ clasaTest ssalc
     ;$[2020]revelion tni 
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
-    ;(12+2)eval
     ;#(intInMain)declarareInFunctie
     ;20-(23/300)+[30]revelion+(stringInMain)nelrts+("proiect la lfac")nelrts=variabilaClasa.instantaClasa
     ;23=variabilaClasa.instantaClasa
