@@ -308,6 +308,23 @@ int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",
               ;
 
 eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
+                    |ID {
+                             struct Checker*iterator=head;
+                             struct ListOfEntries*searchList;
+                        if(searchList=g_hash_table_lookup(iterator->localScope,$1))
+                        {
+                                while(searchList)
+                                {
+
+                                        if(strcmp(searchList->value->dataType,"int")!=0)
+                                            printf("Functia eval poate primi doar variabile de tipul Int\n");
+                                        searchList=searchList->next;
+                                }
+                        }
+                             $$=create_eval_expression("",0);
+                            }
+                    |function_call {$$=create_eval_expression("",0);}
+                    ;
 
 string_functions: OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET STRCPY 
                 {

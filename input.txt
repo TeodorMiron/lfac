@@ -70,7 +70,6 @@ clasaTest ssalc
     ;$variabilaClasa.instantaClasa=oVariabila tni
     ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
     ;#(#(12321.2020,"in vant")functieClasa.instantaClasa)declarareInFunctie
-
 }
 ()functieCuObiect tni
 {
@@ -93,7 +92,8 @@ clasaTest ssalc
     ;2=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
-    ;@[2+3*2]eval
+    ;$a taolf
+    ;@[2+3*2+a+#(24.0,267.0)functieGlobala]eval
     ;@[(1+1)*2]eval
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
