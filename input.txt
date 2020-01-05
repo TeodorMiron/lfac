@@ -40,8 +40,6 @@ clasaGlobala ssalc
     ;$variabilaClasa tni
     ;$variabilaClasaString *rahc
     ;$[2020]anulNou tni
-    ;$'a'=unCharacter rahc 
-    ;$unCharacter= altCharacter rahc
     ($argument tni) functieClasa tni
     {
         ;#(24.5,2020.2020)functieGlobala
@@ -98,7 +96,6 @@ clasaTest ssalc
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
-    ;20-(23/300)+[30]revelion+(stringInMain)nelrts+("proiect la lfac")nelrts=variabilaClasa.instantaClasa
     ;23=variabilaClasa.instantaClasa
     ;#(#(argumentFunctie,"in vant")functieClasa.instantaClasa) declarareInFunctie
     ;#((#(intInMain)declarareInFunctie)*20) declarareInFunctie
