@@ -93,6 +93,8 @@ clasaTest ssalc
     ;2=variabilaGlobalaInt
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
+    ;@[2+3*2]eval
+    ;@[(1+1)*2]eval
     ;$instantaClasa clasaGlobala
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie

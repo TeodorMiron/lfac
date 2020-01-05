@@ -288,7 +288,7 @@ multiple_statements:multiple_statements statements
 statements:   if_statement
             | while_statement
             | for_statement
-            | ';'eval_statement
+            | ';''@'eval_statement
             | ';'assign_statement
             | ';'create_variable 
             | ';'function_call
@@ -296,7 +296,7 @@ statements:   if_statement
             | ';'string_functions
             ;
 
-eval_statement:'(' int_arithmetic ')' EVAL
+eval_statement:'[' int_arithmetic ']' EVAL
               ;
 
 int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",$1->intvalue+$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
