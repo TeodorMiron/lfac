@@ -206,6 +206,7 @@ declaration_section:declaration_section declaration_content;
 declaration_content: function_declaration 
                     | object_declaration  
                     | ';'create_variable 
+                    | ';'assign_statement
                     ;
 
 
@@ -269,7 +270,7 @@ function_declaration: OPEN_ROUND_BRACKET list_param CLOSE_ROUND_BRACKET ID avail
                     }
                     ;
 
-return_statement:RETURN expression {$$=$2;}
+return_statement: RETURN expression {$$=$2;}
                 | {$$=create_expression("","");}
                 ;
 
@@ -288,7 +289,7 @@ multiple_statements:multiple_statements statements
 statements:   if_statement
             | while_statement
             | for_statement
-            | ';'eval_statement
+            | ';''@'eval_statement
             | ';'assign_statement
             | ';'create_variable 
             | ';'function_call
@@ -296,7 +297,7 @@ statements:   if_statement
             | ';'string_functions
             ;
 
-eval_statement:'(' int_arithmetic ')' EVAL
+eval_statement:'[' int_arithmetic ']' EVAL
               ;
 
 int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",$1->intvalue+$3->intvalue);printf("Rezultat:%i\n",$$->intvalue);}
@@ -308,6 +309,23 @@ int_arithmetic:int_arithmetic ADD int_arithmetic  {$$=create_eval_expression("",
               ;
 
 eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
+                    |ID {
+                             struct Checker*iterator=head;
+                             struct ListOfEntries*searchList;
+                        if(searchList=g_hash_table_lookup(iterator->localScope,$1))
+                        {
+                                while(searchList)
+                                {
+
+                                        if(strcmp(searchList->value->dataType,"int")!=0)
+                                            printf("Functia eval poate primi doar variabile de tipul Int\n");
+                                        searchList=searchList->next;
+                                }
+                        }
+                             $$=create_eval_expression("",0);
+                            }
+                    |function_call {$$=create_eval_expression("",0);}
+                    ;
 
 string_functions: OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET STRCPY 
                 {
@@ -379,6 +397,14 @@ string_functions: OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET
                                 printf("Functia [tacrts] accepta doar argumente de tipul [char*],Tip-Argumente:[%s][%s]\n",$2->type,$4->type);
                                 exit(EXIT_FAILURE);
                         }
+                }
+                | OPEN_ROUND_BRACKET expression','expression CLOSE_ROUND_BRACKET STRCMP
+                {
+                        if((strcmp($2->type,"char*")!=0) || (strcmp($4->type,"char*")!=0))
+                        {
+                                printf("Functia [tacrts] accepta doar argumente de tipul [char*],Tip-Argumente:[%s][%s]\n",$2->type,$4->type);
+                                exit(EXIT_FAILURE);
+                        } 
                 }
           ;
 
@@ -881,11 +907,6 @@ expression: ID {
           | OPEN_ROUND_BRACKET expression CLOSE_ROUND_BRACKET {$$=create_paranthesis_expression($2);}
           | expression ADD expression 
                 {
-                        if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
-                        {
-                                printf("Nu se poate efectua operatia de adunare pe tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
-                                exit(EXIT_FAILURE);
-                        }
                         if(strcmp($1->type,$3->type)!=0)
                         {
                                 printf("Nu se poate efectua operatia de adunare pe tipul [%s] si tipul [%s] \n%s+%s\n",$1->expString,$3->expString,$1->expString,$3->expString);
@@ -896,8 +917,6 @@ expression: ID {
                         strcat(concatExp,"+");
                         strcat(concatExp,$3->expString);
                         $$=create_expression($1->type,concatExp);
-
-
                 }
           | expression MUL expression
           {
@@ -994,16 +1013,6 @@ expression: ID {
           }
           | expression EQUAL expression
           {
-                if((strcmp($1->type,"char*")==0) || (strcmp($3->type,"char*")==0))
-                {
-                                printf("Nu se poate aplica operatorul == tipul [*rahc]\n%s+%s\n",$1->expString,$3->expString);
-                                exit(EXIT_FAILURE);
-                }
-                if((strcmp($1->type,"bool")==0) || (strcmp($3->type,"bool")==0))
-                {
-                                printf("Nu se poate aplica operatorul == pe tipul [bool]\n%s+%s\n",$1->expString,$3->expString);
-                                exit(EXIT_FAILURE);
-                }
                 char*concatExp=malloc(strlen($1->expString)+strlen($3->expString)+2);
                 strcpy(concatExp,$1->expString);
                 strcat(concatExp,"==");

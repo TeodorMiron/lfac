@@ -6,11 +6,12 @@
 ;$2020=variabilaGlobalaConstInt tni tsnoc
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
+;'a'=variabilaGlobalChar
 ;$2=declaratieIlegala tni
 
 ()functieFaraParam taolf
 {
-
+    ;$a rahc
 }
 ($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
@@ -27,9 +28,17 @@
     (parametruF<parametruSec) elihw
     {
         ;1=counter
+        (25.0==25) fi
+        {
+            ;$2=variabilaPusaAdanc tni
+            ("string"=="string") fi
+            {
+                ;$siMaiAdanc rahc
+            }
+        }
     }
     ;#(24,25.0) functieGlobala
-    
+    nruter 2 
 }
 ($parametruF taolf,$parametruSec taolf) functieGlobala diov
 {
@@ -56,6 +65,10 @@ clasaGlobala ssalc
         ;#(24.0,"vant")functieClasa
         ;#()functieClasa
     }
+    ($argument rahc) functieFloat taolf
+    {
+        ;$2020.20=oVariabilaFloat taolf
+    }
 }
 ;$instantaDoi clasaGlobala
 clasaTest ssalc
@@ -70,17 +83,22 @@ clasaTest ssalc
     ;$variabilaClasa.instantaClasa=oVariabila tni
     ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
     ;#(#(12321.2020,"in vant")functieClasa.instantaClasa)declarareInFunctie
+    nruter 2
+
+}
+() functieFloat taolf
+{
 
 }
 ()functieCuObiect tni
 {
-
+    ;#()functieCuObiect
 }
 ()niam tni
 {
     ;#(24.0,267.0)functieGlobala
     ;$variabilaInMain *rahc
-    ;$"o muie"=variabilaStringInMain *rahc
+    ;$"un text"=variabilaStringInMain *rahc
     ;$intInMain tni
     ;2=intInMain
     ;$241232.2020=argumentFunctie taolf
@@ -89,11 +107,13 @@ clasaTest ssalc
     ;$declarareIlegala tni
     ;$variabilaNeInit tni
     ;$declaratieIlegala=value tni
-    ;$"omuie si ceva in plus"=stringInMain*rahc
+    ;$"ceva in plus"=stringInMain*rahc
     ;2=variabilaGlobalaInt
+    ;$"un text"+"alt text"=concatSir *rahc
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
     ;$instantaClasa clasaGlobala
+    ;@[(2+3)*5+2009+intInMain] eval
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
     ;23=variabilaClasa.instantaClasa
@@ -102,5 +122,6 @@ clasaTest ssalc
     ;#((#(#(intInMain)declarareInFunctie)declarareInFunctie)*20) declarareInFunctie
     ;#(#(intInMain)declarareInFunctie) declarareInFunctie
     ;#(argumentFunctie,"in vant")functieClasa.instantaClasa
-    ;("o muie",variabilaStringInMain)ypcrts
+    ;("ce vreme frumoase",variabilaStringInMain)ypcrts
+    ;#(#('a')functieFloat.instantaClasa,"in vant")functieClasa.instantaClasa
 }
