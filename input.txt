@@ -6,6 +6,7 @@
 ;$2020=variabilaGlobalaConstInt tni tsnoc
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
+
 ;'a'=variabilaGlobalChar
 ;$2=declaratieIlegala tni
 
@@ -25,7 +26,7 @@
     {
         ;1=returnValue
     }
-    (parametruF<parametruSec) elihw
+    (((parametruF<parametruSec)&&eurt)||eslaf) elihw
     {
         ;1=counter
         (25.0==25) fi
@@ -73,7 +74,7 @@ clasaGlobala ssalc
 ;$instantaDoi clasaGlobala
 clasaTest ssalc
 {
-
+    
     ;$variabilaClasa.instantaDoi=oVariabila tni
     
 }
@@ -88,7 +89,7 @@ clasaTest ssalc
 }
 () functieFloat taolf
 {
-
+    nruter 22.0
 }
 ()functieCuObiect tni
 {
@@ -113,7 +114,7 @@ clasaTest ssalc
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
     ;$instantaClasa clasaGlobala
-    ;@[(2+3)*5+2009+intInMain] eval
+    ;@[(2+3)*5+2009+intInMain+#()functieCuObiect] eval
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
     ;23=variabilaClasa.instantaClasa
