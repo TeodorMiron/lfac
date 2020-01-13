@@ -687,14 +687,14 @@ static const yytype_uint16 yyrline[] =
      225,   237,   237,   249,   249,   260,   260,   273,   274,   277,
      278,   278,   281,   282,   285,   286,   289,   290,   291,   292,
      293,   294,   295,   296,   297,   300,   303,   304,   305,   306,
-     307,   308,   311,   312,   327,   330,   393,   401,   411,   469,
-     486,   491,   498,   498,   498,   499,   499,   499,   502,   502,
-     503,   503,   504,   507,   507,   508,   508,   511,   587,   685,
-     728,   728,   731,   732,   737,   752,   756,   804,   812,   831,
-     832,   833,   834,   835,   836,   839,   897,   898,   899,   900,
-     901,   902,   903,   904,   905,   906,   907,   908,   921,   941,
-     960,   978,   996,  1014,  1022,  1045,  1068,  1081,  1094,  1106,
-    1116,  1203,  1270,  1318,  1318,  1319,  1319
+     307,   308,   311,   312,   330,   333,   396,   404,   414,   472,
+     489,   494,   501,   501,   501,   502,   502,   502,   505,   505,
+     506,   506,   507,   510,   510,   511,   511,   514,   590,   688,
+     731,   731,   734,   735,   740,   755,   759,   807,   815,   834,
+     835,   836,   837,   838,   839,   842,   900,   901,   902,   903,
+     904,   905,   906,   907,   908,   909,   910,   911,   924,   944,
+     963,   981,   999,  1017,  1025,  1048,  1071,  1084,  1097,  1109,
+    1119,  1206,  1273,  1321,  1321,  1322,  1322
 };
 #endif
 
@@ -1893,23 +1893,26 @@ yyreduce:
                                 {
 
                                         if(strcmp(searchList->value->dataType,"int")!=0)
+                                        {
                                             printf("Functia eval poate primi doar variabile de tipul Int\n");
+                                            exit(EXIT_FAILURE);
+                                        }
                                         searchList=searchList->next;
                                 }
                         }
                              (yyval.eval_info)=create_eval_expression("",0);
                             }
-#line 1903 "y.tab.c"
+#line 1906 "y.tab.c"
     break;
 
   case 54:
-#line 327 "experiment_hash.y"
+#line 330 "experiment_hash.y"
     {(yyval.eval_info)=create_eval_expression("",0);}
-#line 1909 "y.tab.c"
+#line 1912 "y.tab.c"
     break;
 
   case 55:
-#line 331 "experiment_hash.y"
+#line 334 "experiment_hash.y"
     {
                         
                         if((strcmp((yyvsp[-4].expr_ptr)->type,"char*")!=0) || (strcmp((yyvsp[-2].expr_ptr)->type,"char*")!=0))
@@ -1972,11 +1975,11 @@ yyreduce:
                                 iterator=iterator->next;
                         }
                 }
-#line 1976 "y.tab.c"
+#line 1979 "y.tab.c"
     break;
 
   case 56:
-#line 394 "experiment_hash.y"
+#line 397 "experiment_hash.y"
     {
                         if((strcmp((yyvsp[-4].expr_ptr)->type,"char*")!=0) || (strcmp((yyvsp[-2].expr_ptr)->type,"char*")!=0))
                         {
@@ -1984,11 +1987,11 @@ yyreduce:
                                 exit(EXIT_FAILURE);
                         }
                 }
-#line 1988 "y.tab.c"
+#line 1991 "y.tab.c"
     break;
 
   case 57:
-#line 402 "experiment_hash.y"
+#line 405 "experiment_hash.y"
     {
                         if((strcmp((yyvsp[-4].expr_ptr)->type,"char*")!=0) || (strcmp((yyvsp[-2].expr_ptr)->type,"char*")!=0))
                         {
@@ -1996,11 +1999,11 @@ yyreduce:
                                 exit(EXIT_FAILURE);
                         } 
                 }
-#line 2000 "y.tab.c"
+#line 2003 "y.tab.c"
     break;
 
   case 58:
-#line 412 "experiment_hash.y"
+#line 415 "experiment_hash.y"
     {
                       struct Checker*iterator=head;
                       int funcFound=0;
@@ -2057,11 +2060,11 @@ yyreduce:
                         eString=NULL;
                         typesOfCall=NULL;
                 }
-#line 2061 "y.tab.c"
+#line 2064 "y.tab.c"
     break;
 
   case 59:
-#line 470 "experiment_hash.y"
+#line 473 "experiment_hash.y"
     {
          if(typesOfCall==NULL)
                 {
@@ -2078,101 +2081,101 @@ yyreduce:
                         typesOfCall[strlen(typesOfCall)]='\0';
                 }
         }
-#line 2082 "y.tab.c"
+#line 2085 "y.tab.c"
     break;
 
   case 60:
-#line 487 "experiment_hash.y"
+#line 490 "experiment_hash.y"
     {
                typesOfCall=malloc(strlen((yyvsp[0].expr_ptr)->type)+1);
                strcpy(typesOfCall,(yyvsp[0].expr_ptr)->type);
          }
-#line 2091 "y.tab.c"
+#line 2094 "y.tab.c"
     break;
 
   case 61:
-#line 491 "experiment_hash.y"
+#line 494 "experiment_hash.y"
     {
             typesOfCall=malloc(1);
             typesOfCall[0]='\0';
          }
-#line 2100 "y.tab.c"
+#line 2103 "y.tab.c"
     break;
 
   case 62:
-#line 498 "experiment_hash.y"
+#line 501 "experiment_hash.y"
     {add_statement_node();}
-#line 2106 "y.tab.c"
+#line 2109 "y.tab.c"
     break;
 
   case 63:
-#line 498 "experiment_hash.y"
+#line 501 "experiment_hash.y"
     {remove_node();}
-#line 2112 "y.tab.c"
+#line 2115 "y.tab.c"
     break;
 
   case 65:
-#line 499 "experiment_hash.y"
+#line 502 "experiment_hash.y"
     {add_statement_node();}
-#line 2118 "y.tab.c"
+#line 2121 "y.tab.c"
     break;
 
   case 66:
-#line 499 "experiment_hash.y"
+#line 502 "experiment_hash.y"
     {remove_node();}
-#line 2124 "y.tab.c"
+#line 2127 "y.tab.c"
     break;
 
   case 68:
-#line 502 "experiment_hash.y"
+#line 505 "experiment_hash.y"
     {add_statement_node();}
-#line 2130 "y.tab.c"
+#line 2133 "y.tab.c"
     break;
 
   case 69:
-#line 502 "experiment_hash.y"
+#line 505 "experiment_hash.y"
     {remove_node();}
-#line 2136 "y.tab.c"
+#line 2139 "y.tab.c"
     break;
 
   case 70:
-#line 503 "experiment_hash.y"
+#line 506 "experiment_hash.y"
     {add_statement_node();}
-#line 2142 "y.tab.c"
+#line 2145 "y.tab.c"
     break;
 
   case 71:
-#line 503 "experiment_hash.y"
+#line 506 "experiment_hash.y"
     {remove_node();}
-#line 2148 "y.tab.c"
+#line 2151 "y.tab.c"
     break;
 
   case 73:
-#line 507 "experiment_hash.y"
+#line 510 "experiment_hash.y"
     {add_statement_node();}
-#line 2154 "y.tab.c"
+#line 2157 "y.tab.c"
     break;
 
   case 74:
-#line 507 "experiment_hash.y"
+#line 510 "experiment_hash.y"
     {remove_node();}
-#line 2160 "y.tab.c"
+#line 2163 "y.tab.c"
     break;
 
   case 75:
-#line 508 "experiment_hash.y"
+#line 511 "experiment_hash.y"
     {add_statement_node();}
-#line 2166 "y.tab.c"
+#line 2169 "y.tab.c"
     break;
 
   case 76:
-#line 508 "experiment_hash.y"
+#line 511 "experiment_hash.y"
     {remove_node();}
-#line 2172 "y.tab.c"
+#line 2175 "y.tab.c"
     break;
 
   case 77:
-#line 512 "experiment_hash.y"
+#line 515 "experiment_hash.y"
     {
                         int varFound=0;
                         struct Checker*iterator=head;
@@ -2248,11 +2251,11 @@ yyreduce:
                         
                         
                 }
-#line 2252 "y.tab.c"
+#line 2255 "y.tab.c"
     break;
 
   case 78:
-#line 588 "experiment_hash.y"
+#line 591 "experiment_hash.y"
     {
                         struct Checker*iterator=head;
                         int objectFound=0;
@@ -2349,11 +2352,11 @@ yyreduce:
                         searchInstance=NULL;
 
                 }
-#line 2353 "y.tab.c"
+#line 2356 "y.tab.c"
     break;
 
   case 79:
-#line 686 "experiment_hash.y"
+#line 689 "experiment_hash.y"
     {
                 int exists=0;
                 struct Checker*iterator=head;
@@ -2393,23 +2396,23 @@ yyreduce:
                         exit(EXIT_FAILURE);
                 }
                 }
-#line 2397 "y.tab.c"
+#line 2400 "y.tab.c"
     break;
 
   case 80:
-#line 728 "experiment_hash.y"
+#line 731 "experiment_hash.y"
     {add_statement_node();}
-#line 2403 "y.tab.c"
+#line 2406 "y.tab.c"
     break;
 
   case 81:
-#line 728 "experiment_hash.y"
+#line 731 "experiment_hash.y"
     {remove_node();}
-#line 2409 "y.tab.c"
+#line 2412 "y.tab.c"
     break;
 
   case 84:
-#line 737 "experiment_hash.y"
+#line 740 "experiment_hash.y"
     {
                                  
                                  char*customType=malloc(strlen(return_type((yyvsp[0].type)))+strlen("50"));
@@ -2424,20 +2427,20 @@ yyreduce:
                                  strcat(customType,"]");
                                  add_new_variable(customType,(yyvsp[-1].strname),1 );
                         }
-#line 2428 "y.tab.c"
+#line 2431 "y.tab.c"
     break;
 
   case 85:
-#line 752 "experiment_hash.y"
+#line 755 "experiment_hash.y"
     {
                        
                         add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname),0);
                         }
-#line 2437 "y.tab.c"
+#line 2440 "y.tab.c"
     break;
 
   case 86:
-#line 756 "experiment_hash.y"
+#line 759 "experiment_hash.y"
     {
                             
                              struct Checker*iterator=head;
@@ -2486,11 +2489,11 @@ yyreduce:
                              objName=NULL;
                              objVars=NULL;
                         }
-#line 2490 "y.tab.c"
+#line 2493 "y.tab.c"
     break;
 
   case 87:
-#line 804 "experiment_hash.y"
+#line 807 "experiment_hash.y"
     {
                                 add_new_variable(return_type((yyvsp[0].type)),(yyvsp[-1].strname),1);
                                 if(strcmp((yyvsp[-3].expr_ptr)->type,return_type((yyvsp[0].type)))!=0)
@@ -2499,11 +2502,11 @@ yyreduce:
                                         exit(EXIT_FAILURE);
                                 }
                         }
-#line 2503 "y.tab.c"
+#line 2506 "y.tab.c"
     break;
 
   case 88:
-#line 812 "experiment_hash.y"
+#line 815 "experiment_hash.y"
     {
                                 char*newtype=malloc(strlen("const-")+strlen(return_type((yyvsp[-1].type)))+1);
                                 strcpy(newtype,"const-");
@@ -2516,47 +2519,47 @@ yyreduce:
                                         exit(EXIT_FAILURE);
                                 }
                         }
-#line 2520 "y.tab.c"
+#line 2523 "y.tab.c"
     break;
 
   case 89:
-#line 831 "experiment_hash.y"
+#line 834 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2526 "y.tab.c"
+#line 2529 "y.tab.c"
     break;
 
   case 90:
-#line 832 "experiment_hash.y"
+#line 835 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2532 "y.tab.c"
+#line 2535 "y.tab.c"
     break;
 
   case 91:
-#line 833 "experiment_hash.y"
+#line 836 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2538 "y.tab.c"
+#line 2541 "y.tab.c"
     break;
 
   case 92:
-#line 834 "experiment_hash.y"
+#line 837 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2544 "y.tab.c"
+#line 2547 "y.tab.c"
     break;
 
   case 93:
-#line 835 "experiment_hash.y"
+#line 838 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2550 "y.tab.c"
+#line 2553 "y.tab.c"
     break;
 
   case 94:
-#line 836 "experiment_hash.y"
+#line 839 "experiment_hash.y"
     {(yyval.type)=(yyvsp[0].type);}
-#line 2556 "y.tab.c"
+#line 2559 "y.tab.c"
     break;
 
   case 95:
-#line 839 "experiment_hash.y"
+#line 842 "experiment_hash.y"
     {
             int initialised=0;
             int exists=0;
@@ -2615,77 +2618,77 @@ yyreduce:
             }
             (yyval.expr_ptr)=create_variable_expression((yyvsp[0].strname),retType);
         }
-#line 2619 "y.tab.c"
+#line 2622 "y.tab.c"
     break;
 
   case 96:
-#line 897 "experiment_hash.y"
+#line 900 "experiment_hash.y"
     {(yyval.expr_ptr)=create_int_expression((yyvsp[0].intval));}
-#line 2625 "y.tab.c"
+#line 2628 "y.tab.c"
     break;
 
   case 97:
-#line 898 "experiment_hash.y"
+#line 901 "experiment_hash.y"
     {(yyval.expr_ptr)=create_float_expression((yyvsp[0].floatval));}
-#line 2631 "y.tab.c"
+#line 2634 "y.tab.c"
     break;
 
   case 98:
-#line 899 "experiment_hash.y"
+#line 902 "experiment_hash.y"
     {(yyval.expr_ptr)=create_bool_expression((yyvsp[0].boolVal));}
-#line 2637 "y.tab.c"
+#line 2640 "y.tab.c"
     break;
 
   case 99:
-#line 900 "experiment_hash.y"
+#line 903 "experiment_hash.y"
     {(yyval.expr_ptr)=create_bool_expression((yyvsp[0].boolVal));}
-#line 2643 "y.tab.c"
+#line 2646 "y.tab.c"
     break;
 
   case 100:
-#line 901 "experiment_hash.y"
+#line 904 "experiment_hash.y"
     {(yyval.expr_ptr)=create_string_expression((yyvsp[0].strval));}
-#line 2649 "y.tab.c"
+#line 2652 "y.tab.c"
     break;
 
   case 101:
-#line 902 "experiment_hash.y"
+#line 905 "experiment_hash.y"
     {(yyval.expr_ptr)=create_char_expression((yyvsp[0].charval));}
-#line 2655 "y.tab.c"
+#line 2658 "y.tab.c"
     break;
 
   case 102:
-#line 903 "experiment_hash.y"
+#line 906 "experiment_hash.y"
     {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
-#line 2661 "y.tab.c"
+#line 2664 "y.tab.c"
     break;
 
   case 103:
-#line 904 "experiment_hash.y"
+#line 907 "experiment_hash.y"
     {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
-#line 2667 "y.tab.c"
+#line 2670 "y.tab.c"
     break;
 
   case 104:
-#line 905 "experiment_hash.y"
+#line 908 "experiment_hash.y"
     {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
-#line 2673 "y.tab.c"
+#line 2676 "y.tab.c"
     break;
 
   case 105:
-#line 906 "experiment_hash.y"
+#line 909 "experiment_hash.y"
     {(yyval.expr_ptr)=(yyvsp[0].expr_ptr);}
-#line 2679 "y.tab.c"
+#line 2682 "y.tab.c"
     break;
 
   case 106:
-#line 907 "experiment_hash.y"
+#line 910 "experiment_hash.y"
     {(yyval.expr_ptr)=create_paranthesis_expression((yyvsp[-1].expr_ptr));}
-#line 2685 "y.tab.c"
+#line 2688 "y.tab.c"
     break;
 
   case 107:
-#line 909 "experiment_hash.y"
+#line 912 "experiment_hash.y"
     {
                         if(strcmp((yyvsp[-2].expr_ptr)->type,(yyvsp[0].expr_ptr)->type)!=0)
                         {
@@ -2698,11 +2701,11 @@ yyreduce:
                         strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                         (yyval.expr_ptr)=create_expression((yyvsp[-2].expr_ptr)->type,concatExp);
                 }
-#line 2702 "y.tab.c"
+#line 2705 "y.tab.c"
     break;
 
   case 108:
-#line 922 "experiment_hash.y"
+#line 925 "experiment_hash.y"
     {
                     if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                         {
@@ -2722,11 +2725,11 @@ yyreduce:
 
 
           }
-#line 2726 "y.tab.c"
+#line 2729 "y.tab.c"
     break;
 
   case 109:
-#line 942 "experiment_hash.y"
+#line 945 "experiment_hash.y"
     {
                    if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                         {
@@ -2745,11 +2748,11 @@ yyreduce:
                         (yyval.expr_ptr)=create_expression((yyvsp[-2].expr_ptr)->type,concatExp);
 
           }
-#line 2749 "y.tab.c"
+#line 2752 "y.tab.c"
     break;
 
   case 110:
-#line 961 "experiment_hash.y"
+#line 964 "experiment_hash.y"
     {
                    if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                         {
@@ -2767,11 +2770,11 @@ yyreduce:
                         strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                         (yyval.expr_ptr)=create_expression((yyvsp[-2].expr_ptr)->type,concatExp);
           }
-#line 2771 "y.tab.c"
+#line 2774 "y.tab.c"
     break;
 
   case 111:
-#line 979 "experiment_hash.y"
+#line 982 "experiment_hash.y"
     {
                 if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                 {
@@ -2789,11 +2792,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2793 "y.tab.c"
+#line 2796 "y.tab.c"
     break;
 
   case 112:
-#line 997 "experiment_hash.y"
+#line 1000 "experiment_hash.y"
     {
                 if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                 {
@@ -2811,11 +2814,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2815 "y.tab.c"
+#line 2818 "y.tab.c"
     break;
 
   case 113:
-#line 1015 "experiment_hash.y"
+#line 1018 "experiment_hash.y"
     {
                 char*concatExp=malloc(strlen((yyvsp[-2].expr_ptr)->expString)+strlen((yyvsp[0].expr_ptr)->expString)+2);
                 strcpy(concatExp,(yyvsp[-2].expr_ptr)->expString);
@@ -2823,11 +2826,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2827 "y.tab.c"
+#line 2830 "y.tab.c"
     break;
 
   case 114:
-#line 1023 "experiment_hash.y"
+#line 1026 "experiment_hash.y"
     {
                 if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                 {
@@ -2850,11 +2853,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2854 "y.tab.c"
+#line 2857 "y.tab.c"
     break;
 
   case 115:
-#line 1046 "experiment_hash.y"
+#line 1049 "experiment_hash.y"
     {
                   if((strcmp((yyvsp[-2].expr_ptr)->type,"char*")==0) || (strcmp((yyvsp[0].expr_ptr)->type,"char*")==0))
                 {
@@ -2877,11 +2880,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2881 "y.tab.c"
+#line 2884 "y.tab.c"
     break;
 
   case 116:
-#line 1069 "experiment_hash.y"
+#line 1072 "experiment_hash.y"
     {
                 if((strcmp((yyvsp[-2].expr_ptr)->type,"bool")!=0) && (strcmp((yyvsp[0].expr_ptr)->type,"bool")!=0))
                 {
@@ -2894,11 +2897,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2898 "y.tab.c"
+#line 2901 "y.tab.c"
     break;
 
   case 117:
-#line 1082 "experiment_hash.y"
+#line 1085 "experiment_hash.y"
     {
           if((strcmp((yyvsp[-2].expr_ptr)->type,"bool")!=0) && (strcmp((yyvsp[0].expr_ptr)->type,"bool")!=0))
                 {
@@ -2911,11 +2914,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2915 "y.tab.c"
+#line 2918 "y.tab.c"
     break;
 
   case 118:
-#line 1095 "experiment_hash.y"
+#line 1098 "experiment_hash.y"
     {
                 if(strcmp((yyvsp[0].expr_ptr)->type,"bool")!=0)
                 {
@@ -2927,11 +2930,11 @@ yyreduce:
                 strcat(concatExp,(yyvsp[0].expr_ptr)->expString);
                 (yyval.expr_ptr)=create_expression("bool",concatExp);
           }
-#line 2931 "y.tab.c"
+#line 2934 "y.tab.c"
     break;
 
   case 119:
-#line 1106 "experiment_hash.y"
+#line 1109 "experiment_hash.y"
     {
                   char*concatExp=malloc(strlen("strlen()")+strlen((yyvsp[-2].expr_ptr)->expString)+1);
                   strcpy(concatExp,"(");
@@ -2939,11 +2942,11 @@ yyreduce:
                   strcat(concatExp,")nelrts");
                   (yyval.expr_ptr)=create_expression("int",concatExp);
                   }
-#line 2943 "y.tab.c"
+#line 2946 "y.tab.c"
     break;
 
   case 120:
-#line 1117 "experiment_hash.y"
+#line 1120 "experiment_hash.y"
     {
 
                                 struct Checker*iterator=head;
@@ -3027,11 +3030,11 @@ yyreduce:
                                 typesOfCall=NULL;
                                 
                         }
-#line 3031 "y.tab.c"
+#line 3034 "y.tab.c"
     break;
 
   case 121:
-#line 1204 "experiment_hash.y"
+#line 1207 "experiment_hash.y"
     {
                         struct Checker*iterator=head;
                         int objectFound=0;
@@ -3097,11 +3100,11 @@ yyreduce:
                         free(searchInstance);
                         searchInstance=NULL;
                 }
-#line 3101 "y.tab.c"
+#line 3104 "y.tab.c"
     break;
 
   case 122:
-#line 1270 "experiment_hash.y"
+#line 1273 "experiment_hash.y"
     {
                 int exists=0;
                 struct Checker*iterator=head;
@@ -3148,35 +3151,35 @@ yyreduce:
                   strcat(eString,(yyvsp[0].strname));
                 (yyval.expr_ptr)=create_expression(retType,eString);
                 }
-#line 3152 "y.tab.c"
+#line 3155 "y.tab.c"
     break;
 
   case 123:
-#line 1318 "experiment_hash.y"
+#line 1321 "experiment_hash.y"
     {add_main_node();}
-#line 3158 "y.tab.c"
+#line 3161 "y.tab.c"
     break;
 
   case 124:
-#line 1318 "experiment_hash.y"
+#line 1321 "experiment_hash.y"
     {remove_node();}
-#line 3164 "y.tab.c"
+#line 3167 "y.tab.c"
     break;
 
   case 125:
-#line 1319 "experiment_hash.y"
+#line 1322 "experiment_hash.y"
     {add_main_node();}
-#line 3170 "y.tab.c"
+#line 3173 "y.tab.c"
     break;
 
   case 126:
-#line 1319 "experiment_hash.y"
+#line 1322 "experiment_hash.y"
     {remove_node();}
-#line 3176 "y.tab.c"
+#line 3179 "y.tab.c"
     break;
 
 
-#line 3180 "y.tab.c"
+#line 3183 "y.tab.c"
 
       default: break;
     }
@@ -3408,7 +3411,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 1321 "experiment_hash.y"
+#line 1324 "experiment_hash.y"
 
 int yyerror(char * s){
     printf("eroare: %s la linia:%d\n",s,yylineno);

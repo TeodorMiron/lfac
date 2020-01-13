@@ -318,7 +318,10 @@ eval_supported_value:INT_VAL {$$=create_eval_expression("",$<intval>1);}
                                 {
 
                                         if(strcmp(searchList->value->dataType,"int")!=0)
+                                        {
                                             printf("Functia eval poate primi doar variabile de tipul Int\n");
+                                            exit(EXIT_FAILURE);
+                                        }
                                         searchList=searchList->next;
                                 }
                         }

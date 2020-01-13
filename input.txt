@@ -1,18 +1,25 @@
 ;$variabilaGlobalaInt tni
 ;$variabilaGlobalChar rahc 
 ;$variabilaGlobalaString *rahc
-;$variabilaGlobalaBool loob
+;$eurt=variabilaGlobalaBool loob
 ;$variabileGlobalaChar rahc
+;$variabilaGlobalaFloat taolf
 ;$2020=variabilaGlobalaConstInt tni tsnoc
 ;$"un text"=variabilaGlobalaConstString *rahc tsnoc
 ;$2020.2020=variabilaGlobalaConstFloat taolf tsnoc
 
 ;'a'=variabilaGlobalChar
+;2020.2020=variabilaGlobalaFloat
 ;$2=declaratieIlegala tni
-
 ()functieFaraParam taolf
 {
-    ;$a rahc
+    ;$'a'=a rahc
+    nruter 2.5
+}
+($ab tni)functieFaraParam taolf
+{
+    ;$'a'=a rahc
+    nruter 2.5
 }
 ($parametruF tni,$parametruSec taolf) functieGlobala diov
 {
@@ -50,9 +57,10 @@ clasaGlobala ssalc
     ;$variabilaClasa tni
     ;$variabilaClasaString *rahc
     ;$[2020]anulNou tni
+    ;$variabilaClasaFloat taolf
     ($argument tni) functieClasa tni
     {
-        ;#(24.5,2020.2020)functieGlobala
+        ;#(24.5,variabilaGlobalaFloat)functieGlobala
        
     }
      () functieClasa tni
@@ -84,8 +92,6 @@ clasaTest ssalc
     ;$variabilaClasa.instantaClasa=oVariabila tni
     ;#(24.0,"pierdute in timp")functieClasa.instantaClasa
     ;#(#(12321.2020,"in vant")functieClasa.instantaClasa)declarareInFunctie
-    nruter 2
-
 }
 () functieFloat taolf
 {
@@ -113,16 +119,22 @@ clasaTest ssalc
     ;$"un text"+"alt text"=concatSir *rahc
     ;$[2020]anulNou taolf 
     ;$[2020]revelion tni 
+    ;$a taolf
+    ;@[2+3*2]eval
+    ;@[(1+1)*2]eval
     ;$instantaClasa clasaGlobala
-    ;@[(2+3)*5+2009+intInMain+#()functieCuObiect] eval
+    ;@[(2+3)*5+2009] eval
     ;$altaInstanta clasaGlobala
     ;#(intInMain)declarareInFunctie
     ;23=variabilaClasa.instantaClasa
     ;#(#(argumentFunctie,"in vant")functieClasa.instantaClasa) declarareInFunctie
     ;#((#(intInMain)declarareInFunctie)*20) declarareInFunctie
-    ;#((#(#(intInMain)declarareInFunctie)declarareInFunctie)*20) declarareInFunctie
+    ;$#((#(#(intInMain)declarareInFunctie)declarareInFunctie)*20) declarareInFunctie+5 = test tni
     ;#(#(intInMain)declarareInFunctie) declarareInFunctie
     ;#(argumentFunctie,"in vant")functieClasa.instantaClasa
     ;("ce vreme frumoase",variabilaStringInMain)ypcrts
     ;#(#('a')functieFloat.instantaClasa,"in vant")functieClasa.instantaClasa
+    ;$#(125.0)functieFaraParam=xzz tni
+    ;@ [xzz *5 *2] eval
+
 }
