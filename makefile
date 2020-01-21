@@ -1,6 +1,6 @@
 Filename = limbaj
 
 all:
-	yacc -d --verbose experiment_hash.y
+	yacc -d --verbose yacc.y
 	lex lex.l
 	gcc lex.yy.c y.tab.c `pkg-config --cflags --libs glib-2.0` -lfl -g -o test 
